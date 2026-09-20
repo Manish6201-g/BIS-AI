@@ -1,0 +1,26 @@
+# Python & Virtual Environments
+**/venv/
+**/env/
+**/ENV/
+**/__pycache__/
+**/*.py[cod]
+.pytest_cache/
+*.db
+*.sqlite3
+
+# Node & Frontend
+**/node_modules/
+**/dist/
+.vite/
+npm-debug.log*
+
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+
+# OS & IDE Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
