@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "http://127.0.0.1:8000/api/$1"
+      "destination": "https://bis-ai-pcdh.onrender.com/api/$1"
     },
     {
       "source": "/(.*)",
