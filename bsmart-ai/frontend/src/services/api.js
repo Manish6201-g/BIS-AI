@@ -18,10 +18,91 @@ api.interceptors.request.use((config) => {
   return Promise.reject(error);
 });
 
+// Response interceptor for automatic silent token refresh on 401
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+  failedQueue.forEach(prom => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+  failedQueue = [];
+};
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    // Check if error is 401, not a retry, and not an auth endpoint
+    if (
+      error.response?.status === 401 && 
+      !originalRequest._retry &&
+      !originalRequest.url?.includes('/auth/login') &&
+      !originalRequest.url?.includes('/auth/refresh')
+    ) {
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        }).then(token => {
+          originalRequest.headers.Authorization = `Bearer ${token}`;
+          return api(originalRequest);
+        }).catch(err => {
+          return Promise.reject(err);
+        });
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      const refreshToken = localStorage.getItem('bismart_refresh_token');
+      if (!refreshToken) {
+        isRefreshing = false;
+        return Promise.reject(error);
+      }
+
+      try {
+        const res = await axios.post('/api/auth/refresh', { refresh_token: refreshToken });
+        const { access_token, refresh_token: newRefreshToken, user } = res.data;
+
+        localStorage.setItem('bismart_token', access_token);
+        localStorage.setItem('bismart_refresh_token', newRefreshToken);
+        if (user) {
+          localStorage.setItem('bismart_user', JSON.stringify(user));
+        }
+
+        api.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
+        originalRequest.headers['Authorization'] = `Bearer ${access_token}`;
+
+        processQueue(null, access_token);
+        return api(originalRequest);
+      } catch (refreshErr) {
+        processQueue(refreshErr, null);
+        localStorage.removeItem('bismart_token');
+        localStorage.removeItem('bismart_refresh_token');
+        localStorage.removeItem('bismart_user');
+        window.dispatchEvent(new Event('bismart_auth_logout'));
+        return Promise.reject(refreshErr);
+      } finally {
+        isRefreshing = false;
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
+
 export const authService = {
   login: (email, password) => api.post('/auth/login', { email, password }),
   register: (userData) => api.post('/auth/register', userData),
   getMe: () => api.get('/auth/me'),
+  updateProfile: (userData) => api.put('/auth/me', userData),
+  refresh: (refreshToken) => api.post('/auth/refresh', { refresh_token: refreshToken }),
+  logout: (refreshToken) => api.post('/auth/logout', { refresh_token: refreshToken }),
 };
 
 export const chatService = {

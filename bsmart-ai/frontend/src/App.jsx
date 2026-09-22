@@ -4,6 +4,7 @@ import { LanguageProvider } from './context/LanguageContext';
 import { AuthProvider } from './context/AuthContext';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 // Pages
 import { LandingPage } from './pages/LandingPage';
@@ -34,7 +35,14 @@ function App() {
                 <Route path="/verify-huid" element={<VerifyHuidPage />} />
                 <Route path="/standards" element={<StandardsExplorerPage />} />
                 <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/admin" element={<AdminPortalPage />} />
+                <Route 
+                  path="/admin" 
+                  element={
+                    <ProtectedRoute requiredRole="admin">
+                      <AdminPortalPage />
+                    </ProtectedRoute>
+                  } 
+                />
                 <Route path="/auth" element={<AuthPage />} />
               </Routes>
             </main>
