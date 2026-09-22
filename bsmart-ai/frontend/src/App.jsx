@@ -34,7 +34,14 @@ function App() {
                 <Route path="/verify-isi" element={<VerifyIsiPage />} />
                 <Route path="/verify-huid" element={<VerifyHuidPage />} />
                 <Route path="/standards" element={<StandardsExplorerPage />} />
-                <Route path="/dashboard" element={<DashboardPage />} />
+                <Route 
+                  path="/dashboard" 
+                  element={
+                    <ProtectedRoute requiredRole="admin">
+                      <DashboardPage />
+                    </ProtectedRoute>
+                  } 
+                />
                 <Route 
                   path="/admin" 
                   element={

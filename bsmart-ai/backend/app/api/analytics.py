@@ -2,13 +2,17 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from app.database.database import get_db
-from app.models.models import Standard, ChatMessage, CertificationWorkflow, VerificationRecord, Product
+from app.models.models import Standard, ChatMessage, CertificationWorkflow, VerificationRecord, Product, User
 from app.schemas.schemas import AnalyticsSummary
+from app.auth.security import require_role
 
 router = APIRouter(prefix="/analytics", tags=["Analytics & Dashboard"])
 
 @router.get("", response_model=AnalyticsSummary)
-def get_analytics(db: Session = Depends(get_db)):
+def get_analytics(
+    db: Session = Depends(get_db),
+    admin_user: User = Depends(require_role(["admin"]))
+):
     total_questions = db.query(ChatMessage).filter(ChatMessage.role == "user").count()
     total_standards = db.query(Standard).count()
     total_certifications = db.query(CertificationWorkflow).count()

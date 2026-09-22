@@ -61,8 +61,10 @@ export const Navbar = () => {
     { name: t('nav_isi'), path: '/verify-isi', icon: CheckCircle2 },
     { name: t('nav_huid'), path: '/verify-huid', icon: Sparkles },
     { name: t('nav_standards'), path: '/standards', icon: FileText },
-    { name: t('nav_dashboard'), path: '/dashboard', icon: BarChart3 },
-    ...(user?.role === 'admin' ? [{ name: t('nav_admin'), path: '/admin', icon: Lock }] : [])
+    ...(user?.role === 'admin' ? [
+      { name: t('nav_dashboard'), path: '/dashboard', icon: BarChart3 },
+      { name: t('nav_admin'), path: '/admin', icon: Lock }
+    ] : [])
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -188,14 +190,24 @@ export const Navbar = () => {
                         </button>
 
                         {user.role === 'admin' && (
-                          <Link
-                            to="/admin"
-                            onClick={() => setUserDropdownOpen(false)}
-                            className="flex items-center space-x-2 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
-                          >
-                            <Lock className="w-4 h-4 text-red-500" />
-                            <span>Admin Control Center</span>
-                          </Link>
+                          <>
+                            <Link
+                              to="/dashboard"
+                              onClick={() => setUserDropdownOpen(false)}
+                              className="flex items-center space-x-2 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                            >
+                              <BarChart3 className="w-4 h-4 text-gov-blue" />
+                              <span>Analytics Dashboard</span>
+                            </Link>
+                            <Link
+                              to="/admin"
+                              onClick={() => setUserDropdownOpen(false)}
+                              className="flex items-center space-x-2 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                            >
+                              <Lock className="w-4 h-4 text-red-500" />
+                              <span>Admin Control Center</span>
+                            </Link>
+                          </>
                         )}
                       </div>
 
