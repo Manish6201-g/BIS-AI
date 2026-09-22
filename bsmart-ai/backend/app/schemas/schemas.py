@@ -14,12 +14,26 @@ class UserLogin(BaseModel):
     email: EmailStr
     password: str
 
+class UserUpdate(BaseModel):
+    email: Optional[EmailStr] = None
+    full_name: Optional[str] = None
+    organization: Optional[str] = None
+    password: Optional[str] = Field(None, min_length=6)
+
+class AdminUserUpdate(BaseModel):
+    role: Optional[str] = None
+    is_active: Optional[bool] = None
+    is_verified: Optional[bool] = None
+
 class UserResponse(BaseModel):
     id: str
     email: str
     full_name: str
     role: str
     organization: Optional[str] = None
+    is_active: bool
+    is_verified: bool
+    last_login: Optional[datetime] = None
     created_at: datetime
 
     class Config:
@@ -27,8 +41,12 @@ class UserResponse(BaseModel):
 
 class Token(BaseModel):
     access_token: str
+    refresh_token: str
     token_type: str = "bearer"
     user: UserResponse
+
+class RefreshTokenRequest(BaseModel):
+    refresh_token: str
 
 # --- Standard & Clause Schemas ---
 class ClauseResponse(BaseModel):

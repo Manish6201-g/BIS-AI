@@ -5,7 +5,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.config import settings
 from app.database.database import init_db, engine, Base
-from app.api import auth, chat, standards, product_matcher, certification, verify, documents, feedback, analytics
+from app.api import auth, chat, standards, product_matcher, certification, verify, documents, feedback, analytics, admin_users
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -48,6 +48,7 @@ app.include_router(verify.router, prefix="/api")
 app.include_router(documents.router, prefix="/api")
 app.include_router(feedback.router, prefix="/api")
 app.include_router(analytics.router, prefix="/api")
+app.include_router(admin_users.router, prefix="/api")
 
 @app.get("/")
 def root():

@@ -15,7 +15,8 @@ class Settings(BaseSettings):
     # Security
     JWT_SECRET: str = "bismart_super_secret_jwt_key_sih2026_secure_random_string_xyz"
     JWT_ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30  # 30 minutes for security
+    REFRESH_TOKEN_EXPIRE_MINUTES: int = 10080  # 7 days
     
     # AI / LLM Configuration
     LLM_API_KEY: Optional[str] = "demo"

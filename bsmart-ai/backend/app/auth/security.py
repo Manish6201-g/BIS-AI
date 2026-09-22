@@ -1,13 +1,14 @@
 import bcrypt
+import secrets
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Optional, Union, Any
 from jose import JWTError, jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from app.config import settings
 from app.database.database import get_db
-from app.models.models import User
+from app.models.models import User, RefreshToken
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login", auto_error=False)
 
@@ -30,6 +31,19 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
     return encoded_jwt
+
+def create_refresh_token(user_id: str, db: Session) -> str:
+    expires_at = datetime.utcnow() + timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES)
+    token = secrets.token_urlsafe(64)
+    
+    db_token = RefreshToken(
+        user_id=user_id,
+        token=token,
+        expires_at=expires_at
+    )
+    db.add(db_token)
+    db.commit()
+    return token
 
 def get_current_user(
     token: Optional[str] = Depends(oauth2_scheme),
@@ -55,13 +69,17 @@ def get_current_user(
         raise credentials_exception
     return user
 
+def get_current_active_user(
+    current_user: User = Depends(get_current_user)
+) -> User:
+    if not current_user:
+        raise HTTPException(status_code=401, detail="Authentication required")
+    if not current_user.is_active:
+        raise HTTPException(status_code=400, detail="Inactive user")
+    return current_user
+
 def require_role(allowed_roles: list):
-    def role_checker(current_user: Optional[User] = Depends(get_current_user)):
-        if not current_user:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Authentication required for this resource"
-            )
+    def role_checker(current_user: User = Depends(get_current_active_user)):
         if current_user.role not in allowed_roles:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
