@@ -71,7 +71,7 @@ export const Navbar = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-xs">
+      <header className={`sticky top-0 z-40 bg-white border-b border-slate-200 shadow-xs ${location.pathname === '/' ? 'landing-navbar' : ''}`}>
         {/* Top Gov Banner */}
         <div className="bg-gov-navy text-slate-200 text-xs py-1 px-4 sm:px-8 flex justify-between items-center border-b border-slate-800">
           <div className="flex items-center space-x-2">

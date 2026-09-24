@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Shield, 
@@ -20,7 +20,46 @@ import {
 import { useLanguage } from '../context/LanguageContext';
 
 export const LandingPage = () => {
+  const pageRef = useRef(null);
   const { t } = useLanguage();
+
+  useEffect(() => {
+    const root = pageRef.current;
+    if (!root) return;
+
+    const revealItems = root.querySelectorAll('[data-reveal]');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -60px 0px' }
+    );
+
+    revealItems.forEach((el) => observer.observe(el));
+
+    const handleScroll = () => {
+      const y = window.scrollY;
+      root.style.setProperty('--scroll-y', `${y}px`);
+
+      root.querySelectorAll('[data-parallax]').forEach((el) => {
+        const speed = Number(el.getAttribute('data-parallax')) || 0.08;
+        el.style.transform = `translate3d(0, ${y * speed * -1}px, 0)`;
+      });
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const stats = [
     { label: "Standards Indexed", value: "20,000+", sub: "Official BIS Specifications" },
@@ -94,9 +133,13 @@ export const LandingPage = () => {
   ];
 
   return (
-    <div className="space-y-16 pb-12">
+    <div ref={pageRef} className="landing-page space-y-16 pb-12">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-blue-50/70 via-white to-gov-bg pt-12 pb-20 border-b border-slate-200">
+      <section className="landing-hero relative overflow-hidden bg-gradient-to-b from-blue-50/70 via-white to-gov-bg pt-12 pb-20 border-b border-slate-200" data-reveal>
+        <div className="hero-grid" />
+        <div className="hero-orb hero-orb-one" data-parallax="0.06" />
+        <div className="hero-orb hero-orb-two" data-parallax="0.11" />
+        <div className="hero-scanline" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           {/* SIH Pill */}
           <div className="inline-flex items-center space-x-2 bg-amber-100/80 border border-amber-300 text-amber-900 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-6 shadow-xs">
@@ -152,8 +195,14 @@ export const LandingPage = () => {
         </div>
       </section>
 
+      <section className="landing-marquee" aria-hidden="true">
+        <div className="landing-marquee-track">
+          BIS • STANDARDS • CERTIFICATION • INTELLIGENCE • BIS • STANDARDS • CERTIFICATION • INTELLIGENCE •
+        </div>
+      </section>
+
       {/* Complete Demo Journey Flow */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="journey-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-reveal>
         <div className="text-center max-w-2xl mx-auto mb-10">
           <span className="text-xs font-bold text-gov-blue uppercase tracking-wider">End-to-End Assistance Flow</span>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-gov-navy mt-1">
@@ -172,7 +221,7 @@ export const LandingPage = () => {
             { step: "04", title: "CERTIFY", desc: "10-step wizard walks through Scheme-I licensing" },
             { step: "05", title: "VERIFY", desc: "Instant CM/L ISI and 6-digit HUID validation" }
           ].map((item, idx) => (
-            <div key={idx} className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs relative">
+            <div key={idx} className="journey-card bg-white p-5 rounded-xl border border-slate-200 shadow-xs relative">
               <span className="text-[11px] font-extrabold text-gov-blue bg-blue-50 px-2 py-0.5 rounded-full">
                 STEP {item.step}
               </span>
@@ -184,7 +233,7 @@ export const LandingPage = () => {
       </section>
 
       {/* Feature Cards Grid */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="features-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-reveal>
         <div className="text-center max-w-2xl mx-auto mb-10">
           <span className="text-xs font-bold text-amber-700 uppercase tracking-wider">Platform Capabilities</span>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-gov-navy mt-1">
@@ -196,7 +245,7 @@ export const LandingPage = () => {
           {features.map((feat, idx) => {
             const Icon = feat.icon;
             return (
-              <div key={idx} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between">
+              <div key={idx} className="feature-card bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between">
                 <div>
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${feat.color}`}>
                     <Icon className="w-6 h-6" />
@@ -218,10 +267,10 @@ export const LandingPage = () => {
       </section>
 
       {/* Consumer vs Industry Dedicated Dual Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="audience-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-reveal>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Consumer Box */}
-          <div className="bg-gradient-to-br from-blue-900 to-gov-navy text-white p-8 rounded-3xl shadow-sm relative overflow-hidden">
+          <div className="audience-card audience-card-blue bg-gradient-to-br from-blue-900 to-gov-navy text-white p-8 rounded-3xl shadow-sm relative overflow-hidden">
             <div className="flex items-center space-x-3 mb-4">
               <div className="p-2 bg-blue-800 rounded-lg">
                 <Users className="w-6 h-6 text-amber-400" />
@@ -255,7 +304,7 @@ export const LandingPage = () => {
           </div>
 
           {/* Industry Box */}
-          <div className="bg-gradient-to-br from-slate-900 to-slate-800 text-white p-8 rounded-3xl shadow-sm relative overflow-hidden">
+          <div className="audience-card audience-card-dark bg-gradient-to-br from-slate-900 to-slate-800 text-white p-8 rounded-3xl shadow-sm relative overflow-hidden">
             <div className="flex items-center space-x-3 mb-4">
               <div className="p-2 bg-slate-700 rounded-lg">
                 <Building className="w-6 h-6 text-emerald-400" />
@@ -291,7 +340,7 @@ export const LandingPage = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="faq-section max-w-4xl mx-auto px-4 sm:px-6 lg:px-8" data-reveal>
         <div className="text-center mb-8">
           <HelpCircle className="w-8 h-8 text-gov-blue mx-auto mb-2" />
           <h2 className="text-2xl font-extrabold text-gov-navy">Frequently Asked Questions</h2>
@@ -300,7 +349,7 @@ export const LandingPage = () => {
 
         <div className="space-y-3">
           {faqs.map((f, i) => (
-            <div key={i} className="bg-white p-5 rounded-xl border border-slate-200">
+            <div key={i} className="faq-item bg-white p-5 rounded-xl border border-slate-200">
               <h4 className="text-sm font-bold text-slate-900">{f.q}</h4>
               <p className="text-xs text-slate-600 mt-2 leading-relaxed">{f.a}</p>
             </div>
