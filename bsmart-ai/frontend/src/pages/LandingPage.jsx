@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Shield, 
@@ -8,6 +8,7 @@ import {
   CheckCircle2, 
   Sparkles, 
   ArrowRight, 
+  ArrowUpRight,
   BookOpen, 
   CheckCheck, 
   Building, 
@@ -15,101 +16,95 @@ import {
   FileText, 
   ChevronRight,
   HelpCircle,
-  BarChart2
+  BarChart2,
+  ChevronDown,
+  Layers,
+  Cpu,
+  Compass,
+  Check
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 export const LandingPage = () => {
-  const pageRef = useRef(null);
   const { t } = useLanguage();
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [activeAccordion, setActiveAccordion] = useState(0);
 
-  useEffect(() => {
-    const root = pageRef.current;
-    if (!root) return;
+  // Mouse move for glowing ambient aura in hero
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMousePos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
 
-    const revealItems = root.querySelectorAll('[data-reveal]');
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.12, rootMargin: '0px 0px -60px 0px' }
-    );
-
-    revealItems.forEach((el) => observer.observe(el));
-
-    const handleScroll = () => {
-      const y = window.scrollY;
-      root.style.setProperty('--scroll-y', `${y}px`);
-
-      root.querySelectorAll('[data-parallax]').forEach((el) => {
-        const speed = Number(el.getAttribute('data-parallax')) || 0.08;
-        el.style.transform = `translate3d(0, ${y * speed * -1}px, 0)`;
-      });
-    };
-
-    handleScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    return () => {
-      observer.disconnect();
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  const stats = [
-    { label: "Standards Indexed", value: "20,000+", sub: "Official BIS Specifications" },
-    { label: "Grounding Accuracy", value: "100%", sub: "Verifiable Clause Citations" },
-    { label: "Quality Control Orders", value: "150+", sub: "Statutory DPIIT Orders" },
-    { label: "Indian Languages", value: "11", sub: "Bhashini AI Voice & Text" }
+  const stackCards = [
+    {
+      id: "001",
+      title: "GROUNDED RAG ENGINE",
+      tag: "100% Anti-Hallucination / Exact Clause Citations",
+      desc: "Every response is legally anchored in official BIS gazettes, specifications, and amendments. Inspect exact clause numbers (e.g., [1] IS 2347:2017 Clause 5.1) directly with interactive drawer previews.",
+      cta: "Launch Assistant",
+      link: "/assistant",
+      borderColor: "neon-border-cyan",
+      badgeColor: "text-cyan-400 bg-cyan-950/60 border-cyan-800",
+      numberColor: "text-cyan-400",
+      graphicType: "rag"
+    },
+    {
+      id: "002",
+      title: "PRODUCT-TO-STANDARD MATCHER",
+      tag: "Semantic AI Resolution / Mandatory QCOs",
+      desc: "Search by commercial product name, material composition, or capacity. The engine maps items to mandatory Indian Standards (IS Code), identifies DPIIT Quality Control Orders, and displays enforcement deadlines.",
+      cta: "Find My Standard",
+      link: "/matcher",
+      borderColor: "neon-border-purple",
+      badgeColor: "text-purple-400 bg-purple-950/60 border-purple-800",
+      numberColor: "text-purple-400",
+      graphicType: "matcher"
+    },
+    {
+      id: "003",
+      title: "SCHEME-I CERTIFICATION WIZARD",
+      tag: "10-Step Interactive Manufacturer Roadmap",
+      desc: "Guided operational workflow for MSMEs and industrial manufacturers: application filing, factory testing checklists, independent lab evaluations, technical documentation, and audit readiness reports.",
+      cta: "Start 10-Step Wizard",
+      link: "/certification",
+      borderColor: "neon-border-emerald",
+      badgeColor: "text-emerald-400 bg-emerald-950/60 border-emerald-800",
+      numberColor: "text-emerald-400",
+      graphicType: "wizard"
+    },
+    {
+      id: "004",
+      title: "AUTHENTICITY VERIFICATION ENGINE",
+      tag: "7-Digit ISI CM/L & 6-Digit Gold HUID Checks",
+      desc: "Protect Indian citizens against counterfeit, uncertified products. Verify genuine 7-digit CM/L licence numbers and decode 6-character laser-engraved HUID hallmarking codes on 22K/18K gold jewellery in seconds.",
+      cta: "Verify Product",
+      link: "/verify-isi",
+      borderColor: "neon-border-amber",
+      badgeColor: "text-amber-400 bg-amber-950/60 border-amber-800",
+      numberColor: "text-amber-400",
+      graphicType: "verify"
+    }
   ];
 
-  const features = [
+  const accordionItems = [
     {
-      icon: MessageSquare,
-      title: "Multilingual AI Assistant",
-      desc: "Ask queries in Hindi, English, Punjabi, Tamil and 7 more languages with instant voice or text support.",
-      link: "/assistant",
-      color: "bg-blue-50 text-gov-blue"
+      domain: "TECHNICAL ARCHITECTURE",
+      title: "Bhashini Multilingual Speech & Vector Retrieval",
+      summary: "Full end-to-end voice and text pipeline supporting Hindi, Punjabi, Tamil, and 8 additional Indian languages with hybrid lexical + semantic embedding search."
     },
     {
-      icon: Search,
-      title: "Product-to-Standard Matcher",
-      desc: "Input your product details to instantly discover applicable IS codes, mandatory QCOs, and testing clauses.",
-      link: "/matcher",
-      color: "bg-amber-50 text-amber-700"
+      domain: "OPERATIONAL COMPLIANCE",
+      title: "Quality Control Orders & DPIIT Gazette Registry",
+      summary: "Statutory order tracking covering electricals, steel, chemicals, toys, and cookware, flagging mandatory enforcement dates and legal consequences."
     },
     {
-      icon: BookOpen,
-      title: "Clause-Level Evidence Engine",
-      desc: "Every AI response is backed by exact clause citations like [1] IS 2347:2017 — Clause 5.1 with live drawer inspection.",
-      link: "/standards",
-      color: "bg-purple-50 text-purple-700"
-    },
-    {
-      icon: Award,
-      title: "10-Step Certification Wizard",
-      desc: "Guided roadmap for manufacturers: from Scheme-I ISI application, lab testing, factory audit to final licence.",
-      link: "/certification",
-      color: "bg-emerald-50 text-emerald-700"
-    },
-    {
-      icon: CheckCircle2,
-      title: "ISI Mark CM/L Verification",
-      desc: "Validate 7-digit CM/L licence numbers to confirm genuine BIS certification and eliminate fake ISI marks.",
-      link: "/verify-isi",
-      color: "bg-teal-50 text-teal-700"
-    },
-    {
-      icon: Sparkles,
-      title: "HUID Gold Hallmark Verifier",
-      desc: "Verify 6-character laser-engraved HUID codes on gold jewellery to guarantee 22K/18K purity and assay authenticity.",
-      link: "/verify-huid",
-      color: "bg-orange-50 text-orange-700"
+      domain: "CONFORMITY ASSESSMENT",
+      title: "Scheme-I, Scheme-II, and Compulsory Registration (CRS)",
+      summary: "Covers standard mark issuance, factory testing protocols, surveillance audits, and laboratory test sample validation."
     }
   ];
 
@@ -133,229 +128,476 @@ export const LandingPage = () => {
   ];
 
   return (
-    <div ref={pageRef} className="landing-page space-y-16 pb-12">
-      {/* Hero Section */}
-      <section className="landing-hero relative overflow-hidden bg-gradient-to-b from-blue-50/70 via-white to-gov-bg pt-12 pb-20 border-b border-slate-200" data-reveal>
-        <div className="hero-grid" />
-        <div className="hero-orb hero-orb-one" data-parallax="0.06" />
-        <div className="hero-orb hero-orb-two" data-parallax="0.11" />
-        <div className="hero-scanline" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          {/* SIH Pill */}
-          <div className="inline-flex items-center space-x-2 bg-amber-100/80 border border-amber-300 text-amber-900 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-6 shadow-xs">
-            <span className="w-2 h-2 rounded-full bg-amber-600 animate-pulse"></span>
-            <span>Smart India Hackathon 2026 • Problem SIH26107</span>
+    <div className="bg-black text-white min-h-screen overflow-x-hidden">
+      {/* ========================================================
+          SECTION 1: DARK CYBERNETIC HERO (CODEZEN AESTHETIC)
+          ======================================================== */}
+      <section 
+        onMouseMove={handleMouseMove}
+        className="relative min-h-[92vh] flex items-center justify-center cz-grid-dark px-4 sm:px-6 lg:px-8 py-16 overflow-hidden border-b border-zinc-900"
+      >
+        {/* Ambient Cursor Aura */}
+        <div 
+          className="pointer-events-none absolute w-[450px] h-[450px] rounded-full blur-[100px] opacity-25 transition-all duration-300"
+          style={{
+            background: 'radial-gradient(circle, rgba(16,185,129,0.8), rgba(139,92,246,0.5), transparent)',
+            left: `${mousePos.x - 225}px`,
+            top: `${mousePos.y - 225}px`
+          }}
+        />
+
+        {/* Right Vertical Floating Links Rail */}
+        <div className="hidden lg:flex fixed right-6 top-1/2 -translate-y-1/2 z-40 flex-col items-center space-y-6 text-[10px] font-mono tracking-widest text-zinc-500 uppercase">
+          <span className="[writing-mode:vertical-rl] hover:text-emerald-400 transition-colors cursor-pointer">
+            <Link to="/assistant">ASSISTANT</Link>
+          </span>
+          <span className="w-px h-6 bg-zinc-800" />
+          <span className="[writing-mode:vertical-rl] hover:text-emerald-400 transition-colors cursor-pointer">
+            <Link to="/matcher">MATCHER</Link>
+          </span>
+          <span className="w-px h-6 bg-zinc-800" />
+          <span className="[writing-mode:vertical-rl] hover:text-emerald-400 transition-colors cursor-pointer">
+            <Link to="/certification">CERTIFY</Link>
+          </span>
+          <span className="w-px h-6 bg-zinc-800" />
+          <span className="[writing-mode:vertical-rl] hover:text-emerald-400 transition-colors cursor-pointer">
+            <Link to="/verify-isi">VERIFY</Link>
+          </span>
+        </div>
+
+        <div className="max-w-6xl w-full mx-auto relative z-10">
+          {/* Top Emerald Badge */}
+          <div className="flex justify-center sm:justify-start mb-6">
+            <div className="inline-flex items-center space-x-2.5 px-3.5 py-1.5 rounded-full bg-zinc-900/90 border border-emerald-500/30 text-emerald-400 text-xs font-mono tracking-wide shadow-xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>SIH26107 • STANDARDS INTELLIGENCE</span>
+              <span className="text-zinc-600">|</span>
+              <span className="text-zinc-300 font-bold flex items-center hover:text-white cursor-pointer">
+                <Link to="/assistant" className="flex items-center space-x-1">
+                  <span>DISCOVER</span>
+                  <ArrowUpRight className="w-3 h-3" />
+                </Link>
+              </span>
+            </div>
           </div>
 
-          {/* Title */}
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-gov-navy tracking-tight max-w-4xl mx-auto leading-tight sm:leading-none">
-            {t('hero_title')}
-          </h1>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* Left Headline Area */}
+            <div className="lg:col-span-7 text-center sm:text-left space-y-5">
+              <div className="text-[11px] font-mono uppercase tracking-[0.25em] text-zinc-400">
+                BUREAU OF INDIAN STANDARDS • AI ASSISTANT
+              </div>
+              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black uppercase tracking-tight text-white leading-[0.92]">
+                STANDARDS <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400">
+                  INTELLIGENCE.
+                </span>
+              </h1>
+              <p className="text-sm sm:text-base text-zinc-400 max-w-xl font-normal leading-relaxed">
+                National regulatory platform for Indian Standards (IS), mandatory Quality Control Orders (QCOs), 10-step ISI licensing, and product authenticity verification.
+              </p>
 
-          {/* Subtitle */}
-          <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto mt-6 leading-relaxed">
-            {t('hero_subtitle')}
+              {/* Action Buttons */}
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 pt-2">
+                <Link
+                  to="/assistant"
+                  className="px-6 py-3.5 rounded-full bg-emerald-400 hover:bg-emerald-300 text-black font-extrabold text-xs uppercase tracking-wider transition-all transform hover:scale-105 shadow-lg shadow-emerald-500/20 flex items-center space-x-2"
+                >
+                  <MessageSquare className="w-4 h-4" />
+                  <span>Ask BIS Assistant</span>
+                </Link>
+
+                <Link
+                  to="/matcher"
+                  className="px-6 py-3.5 rounded-full bg-zinc-900 hover:bg-zinc-800 text-white border border-zinc-800 hover:border-zinc-700 font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2"
+                >
+                  <Search className="w-4 h-4 text-emerald-400" />
+                  <span>Find My Standard</span>
+                </Link>
+              </div>
+            </div>
+
+            {/* Right Centerpiece: Glowing 4-Ring HUD & Radar Enter */}
+            <div className="lg:col-span-5 flex flex-col items-center justify-center relative py-6">
+              {/* Drone / Radar Centerpiece Box */}
+              <div className="relative w-72 h-72 sm:w-80 sm:h-80 flex items-center justify-center">
+                {/* Outer Dashed Rotating Ring */}
+                <div className="absolute inset-0 rounded-full border border-dashed border-emerald-500/30 animate-spin-slow" />
+                <div className="absolute inset-4 rounded-full border border-zinc-800 animate-spin-reverse" />
+                <div className="absolute inset-16 rounded-full border border-emerald-500/20 animate-pulse-glow" />
+
+                {/* 4 Thruster Rings at 4 Corners */}
+                <div className="absolute -top-3 -left-3 thruster-ring">
+                  <span className="text-[10px] font-mono text-emerald-400 font-bold">IS</span>
+                </div>
+                <div className="absolute -top-3 -right-3 thruster-ring">
+                  <span className="text-[10px] font-mono text-emerald-400 font-bold">QCO</span>
+                </div>
+                <div className="absolute -bottom-3 -left-3 thruster-ring">
+                  <span className="text-[10px] font-mono text-emerald-400 font-bold">ISI</span>
+                </div>
+                <div className="absolute -bottom-3 -right-3 thruster-ring">
+                  <span className="text-[10px] font-mono text-emerald-400 font-bold">HUID</span>
+                </div>
+
+                {/* Radar Enter Button Centerpiece */}
+                <Link to="/assistant" className="radar-enter-btn bg-black/80 border border-emerald-500/50">
+                  <div className="radar-ring" />
+                  <div className="radar-ring-inner" />
+                  <Sparkles className="w-5 h-5 text-emerald-400 mb-1" />
+                  <span className="font-mono text-xs font-black text-white tracking-widest">ENTER</span>
+                  <span className="text-[8px] font-mono text-emerald-400 tracking-wider">AI SYSTEM</span>
+                </Link>
+              </div>
+
+              <div className="text-[11px] font-mono text-zinc-500 mt-4 tracking-widest text-center uppercase">
+                4 PILLARS OF COMPLIANCE • REAL-TIME
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================
+          SECTION 2: HIGH-CONTRAST EDITORIAL SPLIT (CRISP WHITE)
+          ======================================================== */}
+      <section className="bg-white text-black py-20 px-4 sm:px-6 lg:px-8 border-b border-zinc-200">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+          {/* Left Column: 01 What We Are */}
+          <div className="lg:col-span-6 space-y-6 lg:border-r lg:border-zinc-200 lg:pr-12">
+            <span className="text-xs font-mono font-bold tracking-widest uppercase text-zinc-500 block">
+              01 — WHAT WE ARE
+            </span>
+            <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-black leading-[0.95]">
+              INTELLIGENT <br />
+              COMPLIANCE FOR <br />
+              INDIAN STANDARDS.
+            </h2>
+            <p className="text-sm text-zinc-600 leading-relaxed font-normal">
+              BISmart AI is an authoritative regulatory assistant engineered for Smart India Hackathon (SIH26107). It bridges technical standards, mandatory DPIIT Quality Control Orders, and citizen safety verification using exact clause-grounded retrieval.
+            </p>
+            <div className="pt-2 text-xs font-mono text-zinc-400 tracking-wider uppercase">
+              GROUNDED • VERIFIABLE • STATUTORY
+            </div>
+          </div>
+
+          {/* Right Column: 02 By The Numbers Grid */}
+          <div className="lg:col-span-6 space-y-6">
+            <span className="text-xs font-mono font-bold tracking-widest uppercase text-zinc-500 block">
+              02 — BY THE NUMBERS
+            </span>
+            <div className="grid grid-cols-2 gap-8 pt-2">
+              <div className="border-b border-zinc-200 pb-6">
+                <div className="text-4xl sm:text-5xl font-black tracking-tight text-black">20,000+</div>
+                <div className="text-xs font-mono text-zinc-500 tracking-wider uppercase mt-1">Standards Indexed</div>
+              </div>
+              <div className="border-b border-zinc-200 pb-6">
+                <div className="text-4xl sm:text-5xl font-black tracking-tight text-black">150+</div>
+                <div className="text-xs font-mono text-zinc-500 tracking-wider uppercase mt-1">Mandatory QCOs</div>
+              </div>
+              <div className="border-b border-zinc-200 pb-6">
+                <div className="text-4xl sm:text-5xl font-black tracking-tight text-black">100%</div>
+                <div className="text-xs font-mono text-zinc-500 tracking-wider uppercase mt-1">Clause Accuracy</div>
+              </div>
+              <div className="border-b border-zinc-200 pb-6">
+                <div className="text-4xl sm:text-5xl font-black tracking-tight text-black">11</div>
+                <div className="text-xs font-mono text-zinc-500 tracking-wider uppercase mt-1">Bhashini Languages</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================
+          SECTION 3: INFINITE RUNNING OUTLINE TYPOGRAPHY MARQUEE
+          ======================================================== */}
+      <section className="bg-black py-8 border-b border-zinc-900 overflow-hidden" aria-hidden="true">
+        <div className="marquee-container">
+          <div className="marquee-content text-4xl sm:text-7xl">
+            <span className="marquee-text-outline mx-6">BISMART MILESTONES</span>
+            <span className="text-emerald-400 font-black mx-4">•</span>
+            <span className="marquee-text-outline mx-6">STANDARDS INTELLIGENCE</span>
+            <span className="text-emerald-400 font-black mx-4">•</span>
+            <span className="marquee-text-outline mx-6">QUALITY CONTROL ORDERS</span>
+            <span className="text-emerald-400 font-black mx-4">•</span>
+            <span className="marquee-text-outline mx-6">CONFORMITY ASSESSMENT</span>
+            <span className="text-emerald-400 font-black mx-4">•</span>
+          </div>
+          <div className="marquee-content text-4xl sm:text-7xl">
+            <span className="marquee-text-outline mx-6">BISMART MILESTONES</span>
+            <span className="text-emerald-400 font-black mx-4">•</span>
+            <span className="marquee-text-outline mx-6">STANDARDS INTELLIGENCE</span>
+            <span className="text-emerald-400 font-black mx-4">•</span>
+            <span className="marquee-text-outline mx-6">QUALITY CONTROL ORDERS</span>
+            <span className="text-emerald-400 font-black mx-4">•</span>
+            <span className="marquee-text-outline mx-6">CONFORMITY ASSESSMENT</span>
+            <span className="text-emerald-400 font-black mx-4">•</span>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================
+          SECTION 4: STICKY STACKING 3D CARDS (001 TO 004)
+          ======================================================== */}
+      <section className="bg-black py-20 px-4 sm:px-6 lg:px-8 relative">
+        <div className="max-w-6xl mx-auto mb-16 text-center">
+          <span className="text-xs font-mono font-bold uppercase tracking-widest text-emerald-400 block mb-2">
+            REGULATORY CAPABILITIES
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white">
+            CORE PLATFORM MODULES
+          </h2>
+          <p className="text-xs font-mono text-zinc-500 mt-2 uppercase tracking-wider">
+            Scroll to reveal stacked milestone cards
           </p>
+        </div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-wrap justify-center gap-3.5 mt-8">
-            <Link
-              to="/assistant"
-              className="inline-flex items-center space-x-2 bg-gov-blue hover:bg-blue-900 text-white font-semibold px-6 py-3 rounded-xl text-sm shadow-md hover:shadow-lg transition-all"
-            >
-              <MessageSquare className="w-4 h-4 text-amber-400" />
-              <span>{t('btn_ask_ai')}</span>
-            </Link>
-            <Link
-              to="/matcher"
-              className="inline-flex items-center space-x-2 bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 font-semibold px-6 py-3 rounded-xl text-sm shadow-xs transition-all"
-            >
-              <Search className="w-4 h-4 text-gov-blue" />
-              <span>{t('btn_find_standard')}</span>
-            </Link>
-            <Link
-              to="/verify-isi"
-              className="inline-flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-3 rounded-xl text-sm shadow-xs transition-all"
-            >
-              <CheckCircle2 className="w-4 h-4" />
-              <span>{t('btn_verify_product')}</span>
-            </Link>
+        {/* The 4 Stack Cards */}
+        <div className="space-y-12">
+          {stackCards.map((card, idx) => (
+            <div key={card.id} className="stack-card-wrapper" style={{ zIndex: 10 + idx }}>
+              <div className={`stack-card-inner ${card.borderColor}`}>
+                {/* Card Top Row */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-zinc-800">
+                  <div className="flex items-center space-x-6">
+                    <span className={`huge-number ${card.numberColor}`}>{card.id}</span>
+                    <div>
+                      <h3 className="text-lg sm:text-xl font-black text-white tracking-wide uppercase">
+                        {card.title}
+                      </h3>
+                      <span className={`inline-block mt-1 text-[11px] font-mono px-2.5 py-0.5 rounded-full border ${card.badgeColor}`}>
+                        {card.tag}
+                      </span>
+                    </div>
+                  </div>
+
+                  <Link to={card.link} className="cz-pill-btn self-start sm:self-auto">
+                    <span>{card.cta}</span>
+                    <ArrowUpRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+
+                {/* Card Body Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pt-6 items-center">
+                  {/* Left Column Graphic Preview */}
+                  <div className="md:col-span-5 bg-zinc-950/80 border border-zinc-800 rounded-2xl p-6 min-h-[190px] flex flex-col justify-between">
+                    <div className="flex items-center justify-between text-xs font-mono text-zinc-500">
+                      <span>MODULE PREVIEW</span>
+                      <span className="text-emerald-400">ACTIVE</span>
+                    </div>
+
+                    {card.graphicType === 'rag' && (
+                      <div className="space-y-2 font-mono text-xs">
+                        <div className="p-2 rounded bg-zinc-900 border border-zinc-800 text-cyan-300">
+                          [1] IS 2347:2017 — Clause 5.1
+                        </div>
+                        <div className="p-2 rounded bg-zinc-900 border border-zinc-800 text-zinc-400 text-[10px]">
+                          "Safety relief device must operate between 1.5x and 3.0x nominal pressure."
+                        </div>
+                      </div>
+                    )}
+
+                    {card.graphicType === 'matcher' && (
+                      <div className="space-y-2 font-mono text-xs">
+                        <div className="flex justify-between p-2 rounded bg-zinc-900 text-purple-300">
+                          <span>Product: Pressure Cooker</span>
+                          <span>→ IS 2347</span>
+                        </div>
+                        <div className="p-2 rounded bg-zinc-900 border border-zinc-800 text-[10px] text-zinc-400">
+                          QCO Status: MANDATORY (DPIIT 2020 Order)
+                        </div>
+                      </div>
+                    )}
+
+                    {card.graphicType === 'wizard' && (
+                      <div className="space-y-1.5 font-mono text-[11px]">
+                        <div className="flex items-center space-x-2 text-emerald-400">
+                          <Check className="w-3.5 h-3.5" />
+                          <span>Step 01: Application Form-V</span>
+                        </div>
+                        <div className="flex items-center space-x-2 text-emerald-400">
+                          <Check className="w-3.5 h-3.5" />
+                          <span>Step 02: In-House Testing Lab</span>
+                        </div>
+                        <div className="flex items-center space-x-2 text-zinc-500">
+                          <span className="w-3.5 h-3.5 flex items-center justify-center">○</span>
+                          <span>Step 03: Factory Audit Assessment</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {card.graphicType === 'verify' && (
+                      <div className="space-y-2 font-mono text-xs">
+                        <div className="p-2 rounded bg-zinc-900 text-amber-300 flex justify-between">
+                          <span>CM/L-8400123</span>
+                          <span className="text-emerald-400 font-bold">VERIFIED</span>
+                        </div>
+                        <div className="p-2 rounded bg-zinc-900 text-[10px] text-zinc-400">
+                          Mfr: Hawkins Cookers Ltd • Operative
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="text-[10px] font-mono text-zinc-600">
+                      OFFICIAL BIS CONNECT MIRROR
+                    </div>
+                  </div>
+
+                  {/* Right Column Description */}
+                  <div className="md:col-span-7 space-y-4">
+                    <p className="text-sm sm:text-base text-zinc-300 font-normal leading-relaxed">
+                      {card.desc}
+                    </p>
+                    <div className="flex items-center space-x-3 pt-2">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                      <span className="text-xs font-mono text-zinc-400">Instant Execution • Zero Manual Work</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ========================================================
+          SECTION 5: BRUTALIST DOMAIN ACCORDION & SECONDARY MARQUEE
+          ======================================================== */}
+      <section className="bg-white text-black py-16 px-4 sm:px-6 lg:px-8 border-t border-zinc-200">
+        <div className="max-w-6xl mx-auto space-y-8">
+          <div className="text-center sm:text-left">
+            <span className="text-xs font-mono font-bold uppercase tracking-widest text-zinc-500 block">
+              SYSTEM CAPABILITIES
+            </span>
+            <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-black mt-1">
+              BUILD. DEVELOP. GROW.
+            </h2>
           </div>
 
-          {/* Stats Bar */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mt-16 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-            {stats.map((st, i) => (
-              <div key={i} className="text-center">
-                <div className="text-2xl sm:text-3xl font-extrabold text-gov-navy">{st.value}</div>
-                <div className="text-xs font-bold text-slate-800 mt-1">{st.label}</div>
-                <div className="text-[11px] text-slate-500">{st.sub}</div>
+          <div className="divide-y divide-zinc-200">
+            {accordionItems.map((item, idx) => (
+              <div 
+                key={idx}
+                onClick={() => setActiveAccordion(activeAccordion === idx ? -1 : idx)}
+                className="py-5 cursor-pointer group transition-colors"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="space-y-1">
+                    <span className="text-[11px] font-mono font-bold text-zinc-400 uppercase tracking-widest block">
+                      {item.domain}
+                    </span>
+                    <h3 className="text-base sm:text-xl font-extrabold text-black group-hover:text-emerald-600 transition-colors flex items-center space-x-2">
+                      <span>{item.title}</span>
+                      <ArrowUpRight className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity" />
+                    </h3>
+                  </div>
+                  <ChevronDown className={`w-5 h-5 text-zinc-400 transition-transform duration-300 ${activeAccordion === idx ? 'rotate-180 text-black' : ''}`} />
+                </div>
+
+                {activeAccordion === idx && (
+                  <div className="pt-3 text-xs sm:text-sm text-zinc-600 leading-relaxed font-normal animate-in fade-in duration-200">
+                    {item.summary}
+                  </div>
+                )}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="landing-marquee" aria-hidden="true">
-        <div className="landing-marquee-track">
-          BIS • STANDARDS • CERTIFICATION • INTELLIGENCE • BIS • STANDARDS • CERTIFICATION • INTELLIGENCE •
+      {/* ========================================================
+          SECTION 6: FAQ SECTION
+          ======================================================== */}
+      <section className="bg-black py-20 px-4 sm:px-6 lg:px-8 border-t border-zinc-900">
+        <div className="max-w-4xl mx-auto space-y-8">
+          <div className="text-center">
+            <HelpCircle className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
+            <h2 className="text-2xl sm:text-3xl font-black uppercase text-white tracking-wide">
+              FREQUENTLY ASKED QUESTIONS
+            </h2>
+            <p className="text-xs font-mono text-zinc-500 mt-1 uppercase tracking-wider">
+              Authoritative Guidance & SIH26107 Compliance
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            {faqs.map((f, i) => (
+              <div key={i} className="bg-zinc-900/60 p-5 rounded-2xl border border-zinc-800 hover:border-zinc-700 transition-colors">
+                <h4 className="text-sm font-bold text-white">{f.q}</h4>
+                <p className="text-xs text-zinc-400 mt-2 leading-relaxed font-normal">{f.a}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Complete Demo Journey Flow */}
-      <section className="journey-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-reveal>
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <span className="text-xs font-bold text-gov-blue uppercase tracking-wider">End-to-End Assistance Flow</span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-gov-navy mt-1">
-            From Question to Verified Certification
-          </h2>
-          <p className="text-xs text-slate-600 mt-2">
-            A seamless, integrated experience that connects citizen inquiry with authoritative regulatory compliance.
-          </p>
-        </div>
+      {/* ========================================================
+          SECTION 7: GIANT KINETIC FOOTER (CODEZEN FOOTER STYLE)
+          ======================================================== */}
+      <footer className="bg-zinc-950 border-t border-zinc-900 pt-16 pb-8 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          {/* Top Footer Columns */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="space-y-3">
+              <div className="flex items-center space-x-2">
+                <Shield className="w-5 h-5 text-emerald-400" />
+                <span className="font-black text-lg text-white uppercase tracking-tight">BISmart AI</span>
+              </div>
+              <p className="text-xs text-zinc-400 leading-relaxed font-normal">
+                AI Regulatory Assistant developed for SIH26107. Standardizing national compliance across Indian manufacturing and citizen consumer protection.
+              </p>
+            </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 text-center">
-          {[
-            { step: "01", title: "QUESTION", desc: "Speak or type inquiry in 11 Indian languages" },
-            { step: "02", title: "STANDARD", desc: "AI maps product to exact Indian Standard (IS Code)" },
-            { step: "03", title: "CLAUSE", desc: "Direct citations with verifiable statutory text" },
-            { step: "04", title: "CERTIFY", desc: "10-step wizard walks through Scheme-I licensing" },
-            { step: "05", title: "VERIFY", desc: "Instant CM/L ISI and 6-digit HUID validation" }
-          ].map((item, idx) => (
-            <div key={idx} className="journey-card bg-white p-5 rounded-xl border border-slate-200 shadow-xs relative">
-              <span className="text-[11px] font-extrabold text-gov-blue bg-blue-50 px-2 py-0.5 rounded-full">
-                STEP {item.step}
+            <div className="space-y-2">
+              <span className="text-[11px] font-mono font-bold text-zinc-400 uppercase tracking-widest block">
+                NAVIGATE
               </span>
-              <h3 className="text-sm font-bold text-slate-900 mt-2">{item.title}</h3>
-              <p className="text-xs text-slate-500 mt-1">{item.desc}</p>
+              <ul className="space-y-1.5 text-xs text-zinc-400">
+                <li><Link to="/assistant" className="hover:text-emerald-400 transition-colors">AI Assistant</Link></li>
+                <li><Link to="/matcher" className="hover:text-emerald-400 transition-colors">Find Standard</Link></li>
+                <li><Link to="/certification" className="hover:text-emerald-400 transition-colors">10-Step Wizard</Link></li>
+                <li><Link to="/verify-isi" className="hover:text-emerald-400 transition-colors">Verify ISI Mark</Link></li>
+                <li><Link to="/verify-huid" className="hover:text-emerald-400 transition-colors">Verify Gold HUID</Link></li>
+              </ul>
             </div>
-          ))}
-        </div>
-      </section>
 
-      {/* Feature Cards Grid */}
-      <section className="features-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-reveal>
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <span className="text-xs font-bold text-amber-700 uppercase tracking-wider">Platform Capabilities</span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-gov-navy mt-1">
-            Intelligent Tools for Standards & Safety
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((feat, idx) => {
-            const Icon = feat.icon;
-            return (
-              <div key={idx} className="feature-card bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between">
-                <div>
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${feat.color}`}>
-                    <Icon className="w-6 h-6" />
-                  </div>
-                  <h3 className="text-base font-bold text-gov-navy">{feat.title}</h3>
-                  <p className="text-xs text-slate-600 mt-2 leading-relaxed">{feat.desc}</p>
-                </div>
-                <Link
-                  to={feat.link}
-                  className="mt-5 inline-flex items-center space-x-1 text-xs font-bold text-gov-blue hover:text-blue-800"
-                >
-                  <span>Explore Feature</span>
-                  <ChevronRight className="w-4 h-4" />
-                </Link>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Consumer vs Industry Dedicated Dual Section */}
-      <section className="audience-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-reveal>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Consumer Box */}
-          <div className="audience-card audience-card-blue bg-gradient-to-br from-blue-900 to-gov-navy text-white p-8 rounded-3xl shadow-sm relative overflow-hidden">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="p-2 bg-blue-800 rounded-lg">
-                <Users className="w-6 h-6 text-amber-400" />
-              </div>
-              <h3 className="text-xl font-bold">For Indian Consumers & Citizens</h3>
+            <div className="space-y-2">
+              <span className="text-[11px] font-mono font-bold text-zinc-400 uppercase tracking-widest block">
+                CHANNELS
+              </span>
+              <ul className="space-y-1.5 text-xs text-zinc-400">
+                <li><a href="https://www.bis.gov.in" target="_blank" rel="noreferrer" className="hover:text-emerald-400">BIS Official Portal ↗</a></li>
+                <li><a href="https://www.manakonline.in" target="_blank" rel="noreferrer" className="hover:text-emerald-400">Manakonline e-Services ↗</a></li>
+                <li><a href="https://dpiit.gov.in" target="_blank" rel="noreferrer" className="hover:text-emerald-400">DPIIT Quality Orders ↗</a></li>
+              </ul>
             </div>
-            <p className="text-xs text-slate-300 leading-relaxed mb-6">
-              Protect your family from substandard, hazardous counterfeit goods. Verify ISI licence numbers on kitchenware, packaged water, and laser-engraved HUID codes on gold jewellery.
-            </p>
-            <ul className="space-y-2.5 text-xs text-slate-200 mb-6">
-              <li className="flex items-center space-x-2">
-                <CheckCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Verify 7-digit CM/L mark authenticity in 1 click</span>
-              </li>
-              <li className="flex items-center space-x-2">
-                <CheckCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Check 6-character HUID for 22K 916 gold hallmarking purity</span>
-              </li>
-              <li className="flex items-center space-x-2">
-                <CheckCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Ask everyday safety questions in Hindi and 10 regional languages</span>
-              </li>
-            </ul>
-            <Link
-              to="/verify-isi"
-              className="inline-flex items-center space-x-2 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-4 py-2 rounded-lg text-xs"
-            >
-              <span>Verify a Product Now</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
+
+            <div className="space-y-2">
+              <span className="text-[11px] font-mono font-bold text-zinc-400 uppercase tracking-widest block">
+                COLOPHON
+              </span>
+              <p className="text-xs text-zinc-400 leading-relaxed font-normal">
+                Smart India Hackathon 2026. Problem Statement SIH26107. Clause Grounding & RAG Architecture.
+              </p>
+              <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded bg-zinc-900 border border-zinc-800 text-[10px] font-mono text-emerald-400">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span>ONLINE • DEMO MODE</span>
+              </div>
+            </div>
           </div>
 
-          {/* Industry Box */}
-          <div className="audience-card audience-card-dark bg-gradient-to-br from-slate-900 to-slate-800 text-white p-8 rounded-3xl shadow-sm relative overflow-hidden">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="p-2 bg-slate-700 rounded-lg">
-                <Building className="w-6 h-6 text-emerald-400" />
-              </div>
-              <h3 className="text-xl font-bold">For Manufacturers & MSMEs</h3>
+          {/* Huge Outline Brand Typography */}
+          <div className="pt-8 border-t border-zinc-900/60">
+            <div className="footer-giant-text">
+              BISMART
             </div>
-            <p className="text-xs text-slate-300 leading-relaxed mb-6">
-              Stay ahead of mandatory Quality Control Orders (QCOs). Navigate Scheme-I (ISI Mark) licensing requirements, factory testing checklists, and prepare for official technical audits.
-            </p>
-            <ul className="space-y-2.5 text-xs text-slate-200 mb-6">
-              <li className="flex items-center space-x-2">
-                <CheckCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Automatic product to applicable IS code resolution</span>
-              </li>
-              <li className="flex items-center space-x-2">
-                <CheckCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Statutory QCO enforcement tracking and deadline monitoring</span>
-              </li>
-              <li className="flex items-center space-x-2">
-                <CheckCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Download audit-ready pre-assessment compliance reports</span>
-              </li>
-            </ul>
-            <Link
-              to="/certification"
-              className="inline-flex items-center space-x-2 bg-emerald-500 hover:bg-emerald-600 text-slate-900 font-bold px-4 py-2 rounded-lg text-xs"
-            >
-              <span>Launch 10-Step Wizard</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
+            <div className="flex flex-col sm:flex-row justify-between items-center text-[11px] font-mono text-zinc-600 pt-4">
+              <span>© 2026 BISMART AI. ALL RIGHTS RESERVED.</span>
+              <span className="mt-2 sm:mt-0">DEVELOPED FOR BUREAU OF INDIAN STANDARDS</span>
+            </div>
           </div>
         </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="faq-section max-w-4xl mx-auto px-4 sm:px-6 lg:px-8" data-reveal>
-        <div className="text-center mb-8">
-          <HelpCircle className="w-8 h-8 text-gov-blue mx-auto mb-2" />
-          <h2 className="text-2xl font-extrabold text-gov-navy">Frequently Asked Questions</h2>
-          <p className="text-xs text-slate-500 mt-1">Official guidelines regarding Indian Standards and BIS compliance</p>
-        </div>
-
-        <div className="space-y-3">
-          {faqs.map((f, i) => (
-            <div key={i} className="faq-item bg-white p-5 rounded-xl border border-slate-200">
-              <h4 className="text-sm font-bold text-slate-900">{f.q}</h4>
-              <p className="text-xs text-slate-600 mt-2 leading-relaxed">{f.a}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      </footer>
     </div>
   );
 };
