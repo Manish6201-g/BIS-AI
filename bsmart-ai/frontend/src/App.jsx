@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { LanguageProvider } from './context/LanguageContext';
 import { AuthProvider } from './context/AuthContext';
 import { Navbar } from './components/Navbar';
@@ -18,43 +18,52 @@ import { DashboardPage } from './pages/DashboardPage';
 import { AdminPortalPage } from './pages/AdminPortalPage';
 import { AuthPage } from './pages/AuthPage';
 
+function AppContent() {
+  const location = useLocation();
+  const isLanding = location.pathname === '/';
+
+  return (
+    <div className={`flex flex-col min-h-screen ${isLanding ? 'bg-black text-white' : 'bg-gov-bg'}`}>
+      <Navbar />
+      <main className="flex-grow">
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/assistant" element={<AssistantPage />} />
+          <Route path="/matcher" element={<ProductMatcherPage />} />
+          <Route path="/certification" element={<CertificationWizardPage />} />
+          <Route path="/verify-isi" element={<VerifyIsiPage />} />
+          <Route path="/verify-huid" element={<VerifyHuidPage />} />
+          <Route path="/standards" element={<StandardsExplorerPage />} />
+          <Route 
+            path="/dashboard" 
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <DashboardPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin" 
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminPortalPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route path="/auth" element={<AuthPage />} />
+        </Routes>
+      </main>
+      {!isLanding && <Footer />}
+    </div>
+  );
+}
+
 function App() {
   return (
     <AuthProvider>
       <LanguageProvider>
         <Router>
-          <div className="flex flex-col min-h-screen bg-gov-bg">
-            <Navbar />
-            <main className="flex-grow">
-              <Routes>
-                <Route path="/" element={<LandingPage />} />
-                <Route path="/assistant" element={<AssistantPage />} />
-                <Route path="/matcher" element={<ProductMatcherPage />} />
-                <Route path="/certification" element={<CertificationWizardPage />} />
-                <Route path="/verify-isi" element={<VerifyIsiPage />} />
-                <Route path="/verify-huid" element={<VerifyHuidPage />} />
-                <Route path="/standards" element={<StandardsExplorerPage />} />
-                <Route 
-                  path="/dashboard" 
-                  element={
-                    <ProtectedRoute requiredRole="admin">
-                      <DashboardPage />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/admin" 
-                  element={
-                    <ProtectedRoute requiredRole="admin">
-                      <AdminPortalPage />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route path="/auth" element={<AuthPage />} />
-              </Routes>
-            </main>
-            <Footer />
-          </div>
+          <AppContent />
         </Router>
       </LanguageProvider>
     </AuthProvider>
