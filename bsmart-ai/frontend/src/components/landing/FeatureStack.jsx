@@ -17,7 +17,7 @@ export const FeatureStack = () => {
       tag: "GROUNDED RAG / ZERO HALLUCINATION",
       desc: "Ask regulatory questions about Indian Standards in natural language. Every answer is legally grounded in verified BIS specifications with exact clause citations.",
       link: "/assistant",
-      accent: "border-cyan-500/40 text-cyan-400",
+      accent: "border-cyan-500/50 text-cyan-400 shadow-cyan-950/20",
       cta: "Launch Assistant",
       previewType: "rag"
     },
@@ -27,7 +27,7 @@ export const FeatureStack = () => {
       tag: "SEMANTIC SEARCH & QCO RESOLUTION",
       desc: "Search by commercial product name, material composition, or capacity. Maps items directly to mandatory IS Codes and highlights DPIIT enforcement deadlines.",
       link: "/matcher",
-      accent: "border-purple-500/40 text-purple-400",
+      accent: "border-purple-500/50 text-purple-400 shadow-purple-950/20",
       cta: "Find My Standard",
       previewType: "matcher"
     },
@@ -37,7 +37,7 @@ export const FeatureStack = () => {
       tag: "7-DIGIT CM/L & 6-DIGIT HUID",
       desc: "Protect citizens against counterfeit items. Check genuine 7-digit ISI certification licences and decode 6-character laser-engraved Gold HUID hallmarking codes.",
       link: "/verify-isi",
-      accent: "border-amber-500/40 text-amber-400",
+      accent: "border-amber-500/50 text-amber-400 shadow-amber-950/20",
       cta: "Verify Authenticity",
       previewType: "verify"
     },
@@ -47,7 +47,7 @@ export const FeatureStack = () => {
       tag: "10-STEP SCHEME-I ISI ROADMAP",
       desc: "Interactive manufacturer workflow covering application filings, factory testing checklists, laboratory sample evaluations, and audit readiness reports.",
       link: "/certification",
-      accent: "border-emerald-500/40 text-emerald-400",
+      accent: "border-emerald-500/50 text-emerald-400 shadow-emerald-950/20",
       cta: "Start 10-Step Wizard",
       previewType: "wizard"
     }
@@ -58,27 +58,35 @@ export const FeatureStack = () => {
 
     cardElements.forEach((card, index) => {
       if (index < cardElements.length - 1) {
-        gsap.to(card, {
-          scale: 0.92 - (cardElements.length - 1 - index) * 0.02,
-          opacity: 0.45,
-          filter: 'blur(2px)',
+        const nextCard = cardElements[index + 1];
+        const inner = card.querySelector('.feature-card-inner');
+
+        gsap.to(inner, {
+          scale: 0.91 - (cardElements.length - 1 - index) * 0.02,
+          opacity: 0.4,
+          filter: 'blur(3px)',
+          yPercent: -4,
           transformOrigin: 'center top',
+          ease: 'none',
           scrollTrigger: {
-            trigger: cardElements[index + 1],
-            start: 'top 70%',
-            end: 'top 22%',
-            scrub: 0.5,
+            trigger: nextCard,
+            start: 'top 80%',
+            end: 'top 20%',
+            scrub: true,
           }
         });
       }
     });
+
+    // Refresh triggers to ensure exact measurement with sticky positioning
+    ScrollTrigger.refresh();
   }, { scope: containerRef });
 
   return (
     <section
       ref={containerRef}
       data-theme="dark"
-      className="bg-black text-white py-28 sm:py-36 px-4 sm:px-8 lg:px-12 border-b border-zinc-900 relative"
+      className="bg-black text-white pt-24 pb-44 px-4 sm:px-8 lg:px-12 border-b border-zinc-900 relative"
     >
       <div className="max-w-6xl mx-auto w-full mb-16 sm:mb-24 text-center sm:text-left">
         <div className="font-mono text-xs sm:text-sm tracking-widest text-zinc-500 uppercase mb-3">
@@ -93,15 +101,21 @@ export const FeatureStack = () => {
         </p>
       </div>
 
-      {/* Cards Stack */}
-      <div className="max-w-5xl mx-auto space-y-16">
+      {/* Cards Stack with Staggered Sticky Offset and Scroll Runway */}
+      <div className="max-w-5xl mx-auto relative">
         {cards.map((c, idx) => (
           <div
             key={c.num}
-            className="feature-stack-card sticky top-24 sm:top-28 will-change-transform"
-            style={{ zIndex: 10 + idx }}
+            className="feature-stack-card sticky will-change-transform"
+            style={{
+              top: `${90 + idx * 36}px`,
+              zIndex: 10 + idx,
+              marginBottom: idx === cards.length - 1 ? '60px' : '45vh',
+            }}
           >
-            <div className={`bg-zinc-950 rounded-[32px] p-6 sm:p-10 border ${c.accent} shadow-2xl transition-all duration-300`}>
+            <div
+              className={`feature-card-inner bg-zinc-950 rounded-[32px] p-6 sm:p-10 border ${c.accent} shadow-[0_-15px_35px_rgba(0,0,0,0.85),0_30px_70px_rgba(0,0,0,0.95)] transition-all duration-300 will-change-transform`}
+            >
               {/* Card Top Row */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-zinc-800 gap-4">
                 <div className="flex items-baseline space-x-6">
@@ -130,7 +144,7 @@ export const FeatureStack = () => {
               {/* Card Body Grid */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-8 items-center">
                 {/* Visual Preview Left */}
-                <div className="lg:col-span-5 bg-black/80 rounded-2xl p-6 border border-zinc-800 min-h-[190px] flex flex-col justify-between font-mono text-xs">
+                <div className="lg:col-span-5 bg-black/90 rounded-2xl p-6 border border-zinc-800 min-h-[190px] flex flex-col justify-between font-mono text-xs">
                   <div className="flex items-center justify-between text-[11px] text-zinc-500 pb-2 border-b border-zinc-900">
                     <span>LIVE MODULE ENGINE</span>
                     <span className="text-emerald-400 font-bold">OPERATIONAL</span>
