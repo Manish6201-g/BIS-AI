@@ -24,7 +24,7 @@ export const LandingPage = () => {
   }, []);
 
   return (
-    <div className="landing-page-root w-full overflow-x-hidden selection:bg-black selection:text-white">
+    <div className="landing-page-root w-full overflow-x-clip selection:bg-black selection:text-white">
       {/* 01. White Hero Section */}
       <HeroSection />
 
