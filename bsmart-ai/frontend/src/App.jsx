@@ -4,6 +4,7 @@ import { LanguageProvider } from './context/LanguageContext';
 import { AuthProvider } from './context/AuthContext';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
+import { LandingNavbar } from './components/landing/LandingNavbar';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
 // Pages
@@ -18,13 +19,15 @@ import { DashboardPage } from './pages/DashboardPage';
 import { AdminPortalPage } from './pages/AdminPortalPage';
 import { AuthPage } from './pages/AuthPage';
 
-function AppContent() {
+function AppLayout() {
   const location = useLocation();
   const isLanding = location.pathname === '/';
 
   return (
-    <div className={`flex flex-col min-h-screen ${isLanding ? 'bg-black text-white' : 'bg-gov-bg'}`}>
-      <Navbar />
+    <div className={`flex flex-col min-h-screen ${isLanding ? 'bg-white text-black' : 'bg-gov-bg'}`}>
+      {/* Editorial Minimal Navbar on Landing, Standard Portal Navbar on Functional Subpages */}
+      {isLanding ? <LandingNavbar /> : <Navbar />}
+
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<LandingPage />} />
@@ -53,6 +56,8 @@ function AppContent() {
           <Route path="/auth" element={<AuthPage />} />
         </Routes>
       </main>
+
+      {/* Global Footer on Functional Subpages, Integrated Kinetic Footer on Landing */}
       {!isLanding && <Footer />}
     </div>
   );
@@ -63,7 +68,7 @@ function App() {
     <AuthProvider>
       <LanguageProvider>
         <Router>
-          <AppContent />
+          <AppLayout />
         </Router>
       </LanguageProvider>
     </AuthProvider>
