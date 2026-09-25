@@ -7,6 +7,9 @@ import {
   useSpring, 
   useTransform 
 } from 'framer-motion';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 import { 
   Shield, 
   Search, 
@@ -18,6 +21,53 @@ import {
   Check 
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+
+// Register GSAP plugins
+gsap.registerPlugin(ScrollTrigger);
+
+// GSAP Magnetic Button Component
+const MagneticButton = ({ children, className, to, onClick }) => {
+  const btnRef = useRef(null);
+
+  const handleMouseMove = (e) => {
+    if (!btnRef.current) return;
+    const { left, top, width, height } = btnRef.current.getBoundingClientRect();
+    const x = (e.clientX - (left + width / 2)) * 0.35;
+    const y = (e.clientY - (top + height / 2)) * 0.35;
+    gsap.to(btnRef.current, { x, y, duration: 0.3, ease: 'power2.out' });
+  };
+
+  const handleMouseLeave = () => {
+    if (!btnRef.current) return;
+    gsap.to(btnRef.current, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.3)' });
+  };
+
+  if (to) {
+    return (
+      <Link
+        ref={btnRef}
+        to={to}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        className={className}
+      >
+        {children}
+      </Link>
+    );
+  }
+
+  return (
+    <button
+      ref={btnRef}
+      onClick={onClick}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className={className}
+    >
+      {children}
+    </button>
+  );
+};
 
 // Background Cyber Particles for Hero Depth
 const CyberParticles = () => {
@@ -66,7 +116,7 @@ const CyberParticles = () => {
   );
 };
 
-// 3D Parallax Drone/Radar HUD Centerpiece
+// 3D Parallax Drone/Radar HUD Centerpiece with GSAP Magnetic Interaction
 const HeroCenterpiece = () => {
   const cardRef = useRef(null);
   const x = useMotionValue(0);
@@ -102,7 +152,7 @@ const HeroCenterpiece = () => {
         rotateY,
         transformStyle: 'preserve-3d',
       }}
-      className="relative w-72 h-72 sm:w-88 sm:h-88 lg:w-96 lg:h-96 flex items-center justify-center cursor-pointer select-none"
+      className="gsap-hero-hud relative w-72 h-72 sm:w-88 sm:h-88 lg:w-96 lg:h-96 flex items-center justify-center cursor-pointer select-none"
     >
       {/* Outer Rotating Dashed Orbital Ring */}
       <motion.div
@@ -170,12 +220,11 @@ const HeroCenterpiece = () => {
       </motion.div>
 
       {/* Centerpiece Radar Enter Button */}
-      <Link to="/assistant" className="relative group z-20">
-        <motion.div
-          whileHover={{ scale: 1.12 }}
-          whileTap={{ scale: 0.95 }}
-          className="radar-enter-btn bg-black/90 border border-emerald-500/60 shadow-[0_0_40px_rgba(16,185,129,0.35)]"
-        >
+      <MagneticButton
+        to="/assistant"
+        className="relative group z-20"
+      >
+        <div className="radar-enter-btn bg-black/90 border border-emerald-500/60 shadow-[0_0_40px_rgba(16,185,129,0.35)]">
           {/* Radar Sweep Rotating Conic Beam */}
           <div className="radar-sweep-beam" />
           <div className="radar-ring" />
@@ -186,8 +235,8 @@ const HeroCenterpiece = () => {
             <span className="font-mono text-xs font-black text-white tracking-widest">ENTER</span>
             <span className="text-[8px] font-mono text-emerald-400 tracking-wider">AI SYSTEM</span>
           </div>
-        </motion.div>
-      </Link>
+        </div>
+      </MagneticButton>
     </motion.div>
   );
 };
@@ -229,7 +278,7 @@ const InfiniteMarquee = () => {
   );
 };
 
-// Interactive 3D Stacking Card Item with Dynamic Spotlight & Perspective
+// Interactive 3D Stacking Card Item with GSAP Stacking Class & Cursor Spotlight
 const StackCardItem = ({ card, idx }) => {
   const cardRef = useRef(null);
   const [rotateX, setRotateX] = useState(0);
@@ -263,12 +312,8 @@ const StackCardItem = ({ card, idx }) => {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.65, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
-      className="stack-card-wrapper card-perspective-container"
+    <div
+      className="gsap-stack-card stack-card-wrapper card-perspective-container"
       style={{
         top: `calc(90px + ${idx * 26}px)`,
         zIndex: 10 + idx,
@@ -314,10 +359,10 @@ const StackCardItem = ({ card, idx }) => {
               </div>
             </div>
 
-            <Link to={card.link} className="cz-pill-btn self-start sm:self-auto group">
+            <MagneticButton to={card.link} className="cz-pill-btn self-start sm:self-auto group">
               <span>{card.cta}</span>
               <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-            </Link>
+            </MagneticButton>
           </div>
 
           {/* Card Body Grid */}
@@ -403,12 +448,13 @@ const StackCardItem = ({ card, idx }) => {
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
 export const LandingPage = () => {
   const { t } = useLanguage();
+  const pageContainerRef = useRef(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [activeAccordion, setActiveAccordion] = useState(0);
 
@@ -509,8 +555,92 @@ export const LandingPage = () => {
     }
   ];
 
+  // GSAP ScrollTrigger & Timelines Setup
+  useGSAP(() => {
+    // 1. Hero Intro Sequence
+    const heroTl = gsap.timeline({ defaults: { ease: 'power4.out' } });
+
+    heroTl
+      .from('.gsap-hero-badge', {
+        y: -25,
+        opacity: 0,
+        duration: 0.7,
+        delay: 0.1,
+      })
+      .from('.gsap-hero-title', {
+        y: 45,
+        opacity: 0,
+        duration: 0.9,
+      }, '-=0.4')
+      .from('.gsap-hero-desc', {
+        y: 25,
+        opacity: 0,
+        duration: 0.7,
+      }, '-=0.5')
+      .from('.gsap-hero-cta', {
+        scale: 0.9,
+        opacity: 0,
+        duration: 0.5,
+        stagger: 0.1,
+      }, '-=0.4')
+      .from('.gsap-hero-hud', {
+        scale: 0.85,
+        opacity: 0,
+        duration: 1.1,
+        ease: 'back.out(1.2)',
+      }, '-=0.8');
+
+    // 2. Section 2 Animated Numerical Counters
+    const counters = [
+      { target: 20000, suffix: '+', selector: '#stat-0' },
+      { target: 150, suffix: '+', selector: '#stat-1' },
+      { target: 100, suffix: '%', selector: '#stat-2' },
+      { target: 11, suffix: '', selector: '#stat-3' },
+    ];
+
+    counters.forEach((item) => {
+      const obj = { val: 0 };
+      const el = document.querySelector(item.selector);
+      if (el) {
+        gsap.to(obj, {
+          val: item.target,
+          duration: 2.2,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: item.selector,
+            start: 'top 85%',
+            once: true,
+          },
+          onUpdate: () => {
+            el.innerText = Math.floor(obj.val).toLocaleString() + item.suffix;
+          },
+        });
+      }
+    });
+
+    // 3. GSAP ScrollTrigger 3D Stacking Cards Scrub
+    const cards = gsap.utils.toArray('.gsap-stack-card');
+    cards.forEach((card, i) => {
+      if (i < cards.length - 1) {
+        gsap.to(card, {
+          scale: 0.93 - (cards.length - 1 - i) * 0.02,
+          opacity: 0.45,
+          filter: 'blur(2px)',
+          transformOrigin: 'center top',
+          scrollTrigger: {
+            trigger: cards[i + 1],
+            start: 'top 65%',
+            end: 'top 25%',
+            scrub: 0.5,
+          },
+        });
+      }
+    });
+
+  }, { scope: pageContainerRef });
+
   return (
-    <div className="bg-black text-white min-h-screen overflow-x-hidden">
+    <div ref={pageContainerRef} className="bg-black text-white min-h-screen overflow-x-hidden">
       {/* ========================================================
           SECTION 1: DARK CYBERNETIC HERO (CODEZEN AESTHETIC)
           ======================================================== */}
@@ -557,12 +687,7 @@ export const LandingPage = () => {
 
         <div className="max-w-6xl w-full mx-auto relative z-10">
           {/* Top Emerald Badge */}
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="flex justify-center sm:justify-start mb-6"
-          >
+          <div className="gsap-hero-badge flex justify-center sm:justify-start mb-6">
             <div className="inline-flex items-center space-x-2.5 px-3.5 py-1.5 rounded-full bg-zinc-900/90 border border-emerald-500/30 text-emerald-400 text-xs font-mono tracking-wide shadow-xs">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <span>SIH26107 • STANDARDS INTELLIGENCE</span>
@@ -572,61 +697,51 @@ export const LandingPage = () => {
                 <ArrowUpRight className="w-3 h-3" />
               </Link>
             </div>
-          </motion.div>
+          </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             {/* Left Headline Area */}
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="lg:col-span-7 text-center sm:text-left space-y-5"
-            >
+            <div className="lg:col-span-7 text-center sm:text-left space-y-5">
               <div className="text-[11px] font-mono uppercase tracking-[0.25em] text-zinc-400">
                 BUREAU OF INDIAN STANDARDS • AI ASSISTANT
               </div>
-              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black uppercase tracking-tight text-white leading-[0.92]">
+              <h1 className="gsap-hero-title text-4xl sm:text-6xl lg:text-7xl font-black uppercase tracking-tight text-white leading-[0.92]">
                 STANDARDS <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400">
                   INTELLIGENCE.
                 </span>
               </h1>
-              <p className="text-sm sm:text-base text-zinc-400 max-w-xl font-normal leading-relaxed">
+              <p className="gsap-hero-desc text-sm sm:text-base text-zinc-400 max-w-xl font-normal leading-relaxed">
                 National regulatory platform for Indian Standards (IS), mandatory Quality Control Orders (QCOs), 10-step ISI licensing, and product authenticity verification.
               </p>
 
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 pt-2">
-                <Link
+                <MagneticButton
                   to="/assistant"
-                  className="px-6 py-3.5 rounded-full bg-emerald-400 hover:bg-emerald-300 text-black font-extrabold text-xs uppercase tracking-wider transition-all transform hover:scale-105 shadow-lg shadow-emerald-500/20 flex items-center space-x-2"
+                  className="gsap-hero-cta px-6 py-3.5 rounded-full bg-emerald-400 hover:bg-emerald-300 text-black font-extrabold text-xs uppercase tracking-wider transition-all shadow-lg shadow-emerald-500/20 flex items-center space-x-2"
                 >
                   <MessageSquare className="w-4 h-4" />
                   <span>Ask BIS Assistant</span>
-                </Link>
+                </MagneticButton>
 
-                <Link
+                <MagneticButton
                   to="/matcher"
-                  className="px-6 py-3.5 rounded-full bg-zinc-900 hover:bg-zinc-800 text-white border border-zinc-800 hover:border-zinc-700 font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2"
+                  className="gsap-hero-cta px-6 py-3.5 rounded-full bg-zinc-900 hover:bg-zinc-800 text-white border border-zinc-800 hover:border-zinc-700 font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2"
                 >
                   <Search className="w-4 h-4 text-emerald-400" />
                   <span>Find My Standard</span>
-                </Link>
+                </MagneticButton>
               </div>
-            </motion.div>
+            </div>
 
             {/* Right Centerpiece: Glowing 4-Ring HUD & Radar Enter */}
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="lg:col-span-5 flex flex-col items-center justify-center relative py-6"
-            >
+            <div className="lg:col-span-5 flex flex-col items-center justify-center relative py-6">
               <HeroCenterpiece />
               <div className="text-[11px] font-mono text-zinc-500 mt-4 tracking-widest text-center uppercase">
                 4 PILLARS OF COMPLIANCE • REAL-TIME
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -661,7 +776,7 @@ export const LandingPage = () => {
             </div>
           </motion.div>
 
-          {/* Right Column: 02 By The Numbers Grid */}
+          {/* Right Column: 02 By The Numbers Grid with GSAP Counters */}
           <motion.div 
             initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -674,18 +789,18 @@ export const LandingPage = () => {
             </span>
             <div className="grid grid-cols-2 gap-8 pt-2">
               {[
-                { num: "20,000+", label: "Standards Indexed" },
-                { num: "150+", label: "Mandatory QCOs" },
-                { num: "100%", label: "Clause Accuracy" },
-                { num: "11", label: "Bhashini Languages" }
+                { id: "stat-0", init: "20,000+", label: "Standards Indexed" },
+                { id: "stat-1", init: "150+", label: "Mandatory QCOs" },
+                { id: "stat-2", init: "100%", label: "Clause Accuracy" },
+                { id: "stat-3", init: "11", label: "Bhashini Languages" }
               ].map((stat, i) => (
                 <motion.div
                   key={i}
                   whileHover={{ y: -4 }}
                   className="border-b border-zinc-200 pb-6 transition-transform"
                 >
-                  <div className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-black">
-                    {stat.num}
+                  <div id={stat.id} className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-black font-mono">
+                    {stat.init}
                   </div>
                   <div className="text-xs font-mono text-zinc-500 tracking-wider uppercase mt-1">
                     {stat.label}
@@ -703,7 +818,7 @@ export const LandingPage = () => {
       <InfiniteMarquee />
 
       {/* ========================================================
-          SECTION 4: STICKY STACKING 3D CARDS (001 TO 004)
+          SECTION 4: STICKY STACKING 3D CARDS (GSAP SCROLLTRIGGER PHYSICS)
           ======================================================== */}
       <section className="bg-black py-24 px-4 sm:px-6 lg:px-8 relative">
         <div className="max-w-6xl mx-auto mb-16 text-center">
@@ -725,11 +840,11 @@ export const LandingPage = () => {
             CORE PLATFORM MODULES
           </motion.h2>
           <p className="text-xs font-mono text-zinc-500 mt-2 uppercase tracking-wider">
-            Scroll to reveal stacked milestone cards
+            Scroll to experience GSAP-powered card stacking physics
           </p>
         </div>
 
-        {/* The 4 Stacking Cards with 3D Physics */}
+        {/* The 4 Stacking Cards with GSAP Physics */}
         <div className="space-y-12">
           {stackCards.map((card, idx) => (
             <StackCardItem key={card.id} card={card} idx={idx} />
