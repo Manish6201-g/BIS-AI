@@ -135,12 +135,12 @@ export const FeatureStack = () => {
         tl.to(card, {
           yPercent: 0,
           ease: 'power1.inOut',
-          duration: 1,
+          duration: 1.0,
         })
         .to(prevInner, {
-          scale: 0.94 - (index - 1) * 0.02,
-          opacity: 0.35,
-          filter: 'blur(3px)',
+          scale: 0.95 - (index - 1) * 0.02,
+          opacity: 0.45,
+          filter: 'blur(2px)',
           transformOrigin: 'center top',
           ease: 'power1.inOut',
           duration: 0.8,
@@ -148,85 +148,32 @@ export const FeatureStack = () => {
       }
     });
 
-    // 2. PHASE A — STACK HOLD (Complete stacked composition held while user continues scrolling)
-    tl.to({}, { duration: 1.0 });
+    // 2. MOMENTARY STACK HOLD (All 4 cards stacked at 100% full overlap)
+    tl.to({}, { duration: 0.35 });
 
-    // 3. PHASE B — POST-OVERLAP FAN-OUT & REVEAL
-    // Fan out so tabs and huge numbers peek through
-    cardElements.forEach((card, idx) => {
-      const inner = card.querySelector('.card-surface');
-      const yOffset = (idx - 3) * 16;
-      const xOffset = (idx - 1.5) * 8;
-      if (inner) {
-        tl.to(inner, {
-          y: yOffset,
-          x: xOffset,
-          filter: 'blur(0px)',
-          opacity: idx === cardElements.length - 1 ? 1 : 0.8,
-          duration: 0.9,
-          ease: 'power2.inOut',
-        }, '<');
-      }
-    });
-
-    // Slide front card 004 sideways to reveal 003
-    const card004 = cardElements[3];
-    const card003 = cardElements[2];
-    const inner004 = card004?.querySelector('.card-surface');
-    const inner003 = card003?.querySelector('.card-surface');
-
-    if (inner004) {
-      tl.to(inner004, {
-        xPercent: -42,
-        scale: 0.93,
-        opacity: 0.85,
-        duration: 1.1,
-        ease: 'power2.inOut',
-      });
-    }
-
-    if (inner003) {
-      tl.to(inner003, {
-        opacity: 1,
-        scale: 0.98,
-        duration: 0.8,
-        ease: 'power2.out',
-      }, '<+=0.2');
-    }
-
-    // 3.3 Stack Shrink into 3D Void & Exact CodeZen Kinetic Arc Wheel rising from bottom
-    tl.to(cardElements.map(c => c.querySelector('.card-surface')), {
-      xPercent: 0,
-      x: 0,
-      y: 0,
-      scale: 0.92,
-      opacity: 0.7,
-      duration: 0.8,
+    // 3. IMMEDIATE TRANSITION: ALL CARDS SHRINK AS CIRCLE RING ROTATES (EXACT REFERENCE VIDEO)
+    // As shown in video (f_006 -> f_009):
+    // Directly after overlapping is done, all cards shrink into the center depth
+    // while the circular kinetic ring begins rotating up from the bottom!
+    tl.to(stageRef.current, {
+      scale: 0.07,
+      z: -2800,
+      y: -25,
+      opacity: 0,
+      duration: 2.0,
       ease: 'power2.inOut',
     })
-    .to(stageRef.current, {
-      z: -2600,
-      scale: 0.16,
-      opacity: 0,
-      y: -30,
-      duration: 1.6,
-      ease: 'power2.in',
-    })
-    // Kinetic Arc Wheel rotates across bottom from 180deg to 0deg
+    // Simultaneously, the kinetic circle ring starts rotating and rising from the bottom:
     .fromTo('.kinetic-wheel-container', {
-      rotation: 180,
+      rotation: 68,
       opacity: 0,
     }, {
-      rotation: 0,
+      rotation: -48,
       opacity: 1,
-      duration: 1.8,
+      duration: 2.2,
       ease: 'power1.out',
-    }, '<+=0.1')
-    .to('.kinetic-wheel-container', {
-      opacity: 0.15,
-      duration: 0.8,
-      ease: 'power2.in',
-    }, '>-0.4')
+    }, '<')
+    // Next Section Prompt fades in smoothly as the cards vanish and ring completes rotation
     .fromTo('.stack-next-prompt', {
       opacity: 0,
       y: 20,
@@ -235,10 +182,8 @@ export const FeatureStack = () => {
       y: 0,
       duration: 0.8,
       ease: 'power2.out',
-    }, '<');
-
-    // 4. Release Hold Buffer
-    tl.to({}, { duration: 0.6 });
+    }, '>-0.5')
+    .to({}, { duration: 0.4 }); // Gentle buffer before next section unpin
 
     const timer = setTimeout(() => {
       ScrollTrigger.refresh();
