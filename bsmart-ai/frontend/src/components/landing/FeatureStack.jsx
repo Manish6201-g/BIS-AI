@@ -53,9 +53,11 @@ export const FeatureStack = () => {
     }
   ];
 
+  const stageRef = useRef(null);
+
   useGSAP(() => {
     const cardElements = gsap.utils.toArray('.pinned-card-item');
-    if (cardElements.length <= 1) return;
+    if (cardElements.length <= 1 || !stageRef.current) return;
 
     // Initially: Card 001 is docked at yPercent: 0.
     // Cards 002, 003, 004 start below the viewport:
@@ -66,20 +68,21 @@ export const FeatureStack = () => {
     });
 
     // Pinned Timeline: Pin the entire section so cards sequentially slide over each other
+    // and continue the choreography AFTER the cards overlap
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
         start: 'top top',
-        end: () => `+=${window.innerHeight * 2.5}`,
+        end: () => `+=${window.innerHeight * 4.2}`,
         pin: true,
         pinSpacing: true,
-        scrub: 0.8,
+        scrub: 0.9,
         anticipatePin: 1,
         invalidateOnRefresh: true,
       }
     });
 
-    // Animate each subsequent card sliding up to overlap 100%
+    // 1. CARDS SEQUENTIAL OVERLAP (001 -> 002 -> 003 -> 004)
     cardElements.forEach((card, index) => {
       if (index > 0) {
         const prevCard = cardElements[index - 1];
@@ -91,8 +94,8 @@ export const FeatureStack = () => {
           duration: 1,
         })
         .to(prevInner, {
-          scale: 0.94 - (index - 1) * 0.02,
-          opacity: 0.35,
+          scale: 0.94 - (index - 1) * 0.025,
+          opacity: 0.4,
           filter: 'blur(3px)',
           transformOrigin: 'center top',
           ease: 'power1.inOut',
@@ -101,13 +104,105 @@ export const FeatureStack = () => {
       }
     });
 
-    // Short pause when Card 004 is 100% overlapped before releasing pin
-    tl.to({}, { duration: 0.25 });
+    // 2. PHASE A — STACK HOLD (Hold the complete stacked composition while user continues scrolling)
+    tl.to({}, { duration: 1.0 });
+
+    // 3. PHASE B — POST-OVERLAP TRANSFORMATION (CRITICAL REQUIREMENT)
+    // 3.1 Depth Separation / Fan: All 4 cards gently fan out revealing previous card numbers and tabs
+    cardElements.forEach((card, idx) => {
+      const inner = card.querySelector('.card-surface');
+      const yOffset = (idx - 3) * 14; // reveals headers/tabs of previous cards
+      const xOffset = (idx - 1.5) * 8;
+      if (inner) {
+        tl.to(inner, {
+          y: yOffset,
+          x: xOffset,
+          filter: 'blur(0px)',
+          opacity: idx === cardElements.length - 1 ? 1 : 0.78,
+          duration: 0.9,
+          ease: 'power2.inOut',
+        }, '<');
+      }
+    });
+
+    // 3.2 Front Card Movement & Card-by-Card Reveal:
+    // Card 004 slides to the left, revealing Card 003 and internal live module details underneath
+    const card004 = cardElements[3];
+    const card003 = cardElements[2];
+    const inner004 = card004?.querySelector('.card-surface');
+    const inner003 = card003?.querySelector('.card-surface');
+
+    if (inner004) {
+      tl.to(inner004, {
+        xPercent: -42,
+        scale: 0.92,
+        opacity: 0.85,
+        duration: 1.1,
+        ease: 'power2.inOut',
+      });
+    }
+
+    if (inner003) {
+      tl.to(inner003, {
+        opacity: 1,
+        scale: 0.98,
+        duration: 0.8,
+        ease: 'power2.out',
+      }, '<+=0.2');
+    }
+
+    // 3.3 Stack Shrink into Center & Circular Kinetic Halo Animation:
+    // The deck clusters and scales down into the center while kinetic halo spins into view
+    tl.to(cardElements.map(c => c.querySelector('.card-surface')), {
+      xPercent: 0,
+      x: 0,
+      y: 0,
+      scale: 0.92,
+      opacity: 0.7,
+      duration: 0.8,
+      ease: 'power2.inOut',
+    })
+    .to(stageRef.current, {
+      scale: 0.32,
+      opacity: 0,
+      y: -40,
+      duration: 1.4,
+      ease: 'power3.inOut',
+    })
+    .fromTo('.kinetic-halo', {
+      scale: 0.6,
+      opacity: 0,
+      rotation: 0,
+    }, {
+      scale: 1.25,
+      opacity: 1,
+      rotation: 180,
+      duration: 1.4,
+      ease: 'power2.inOut',
+    }, '<')
+    .to('.kinetic-halo', {
+      opacity: 0,
+      scale: 1.5,
+      duration: 0.6,
+      ease: 'power2.in',
+    }, '-=0.4')
+    .fromTo('.stack-next-prompt', {
+      opacity: 0,
+      y: 20,
+    }, {
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      ease: 'power2.out',
+    }, '<');
+
+    // 4. Release Hold Buffer before unpinning to Timeline Section
+    tl.to({}, { duration: 0.6 });
 
     // Recalibrate on resize / load
     const timer = setTimeout(() => {
       ScrollTrigger.refresh();
-    }, 120);
+    }, 150);
     return () => clearTimeout(timer);
   }, { scope: containerRef });
 
@@ -129,8 +224,38 @@ export const FeatureStack = () => {
         </p>
       </div>
 
+      {/* Kinetic Halo / Circular Path shown in reference video during post-overlap shrink */}
+      <div className="kinetic-halo absolute inset-0 flex items-center justify-center pointer-events-none opacity-0 will-change-transform">
+        <div className="relative w-80 h-80 sm:w-96 sm:h-96 flex items-center justify-center">
+          <div className="absolute inset-0 rounded-full border border-dashed border-zinc-700/60" />
+          <svg className="w-full h-full" viewBox="0 0 300 300">
+            <defs>
+              <path id="circlePath" d="M 150, 150 m -100, 0 a 100,100 0 1,1 200,0 a 100,100 0 1,1 -200,0" />
+            </defs>
+            <text fill="rgba(255,255,255,0.7)" fontSize="10.5" fontFamily="monospace" letterSpacing="4.5">
+              <textPath href="#circlePath" startOffset="0%">
+                STANDARDS • COMPLIANCE • CERTIFICATION • BISmart AI •
+              </textPath>
+            </text>
+          </svg>
+          <div className="w-16 h-16 rounded-full bg-white/5 border border-zinc-700 backdrop-blur-sm flex items-center justify-center">
+            <div className="w-3 h-3 rounded-full bg-emerald-400 animate-ping" />
+          </div>
+        </div>
+      </div>
+
+      {/* Next Section Transition indicator that appears as stack shrinks */}
+      <div className="stack-next-prompt absolute bottom-8 left-1/2 -translate-x-1/2 text-center pointer-events-none opacity-0 will-change-transform">
+        <span className="font-mono text-xs text-zinc-500 uppercase tracking-widest block mb-1">
+          CONTINUING TO NEXT SECTION
+        </span>
+        <span className="text-sm font-bold text-white tracking-wider uppercase">
+          03 — WORKFLOW TIMELINE ↓
+        </span>
+      </div>
+
       {/* Pinned Stage: All 4 cards occupy the exact stage container */}
-      <div className="relative max-w-5xl mx-auto w-full h-[530px] sm:h-[460px]">
+      <div ref={stageRef} className="relative max-w-5xl mx-auto w-full h-[530px] sm:h-[460px] will-change-transform">
         {cards.map((c, idx) => (
           <div
             key={c.num}
