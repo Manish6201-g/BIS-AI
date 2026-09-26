@@ -151,8 +151,8 @@ export const FeatureStack = () => {
       }, '<+=0.2');
     }
 
-    // 3.3 Stack Shrink into Center & Giant Circular Wheel rising from the BOTTOM:
-    // The deck clusters and scales down into the center
+    // 3.3 Stack Shrink into 3D Void & Exact CodeZen Kinetic Arc Wheel rising across the bottom:
+    // The deck clusters and sucks backwards into 3D depth (Void Container physics)
     tl.to(cardElements.map(c => c.querySelector('.card-surface')), {
       xPercent: 0,
       x: 0,
@@ -163,32 +163,28 @@ export const FeatureStack = () => {
       ease: 'power2.inOut',
     })
     .to(stageRef.current, {
-      scale: 0.28,
+      z: -2500,
+      scale: 0.18,
       opacity: 0,
-      y: -35,
-      duration: 1.4,
-      ease: 'power3.inOut',
-    })
-    // The giant circular wheel rises from the bottom of the viewport
-    .fromTo('.kinetic-bottom-wheel', {
-      y: 450,
-      opacity: 0,
-      rotation: -35,
-    }, {
-      y: 0,
-      opacity: 1,
-      rotation: 65,
-      duration: 1.5,
-      ease: 'power2.out',
-    }, '<+=0.1')
-    // Continue rotation across the bottom as next section transition approaches
-    .to('.kinetic-bottom-wheel', {
-      y: -120,
-      rotation: 125,
-      opacity: 0.2,
-      duration: 1.0,
+      y: -20,
+      duration: 1.6,
       ease: 'power2.in',
     })
+    // The exact CodeZen Kinetic Arc Wheel rotates across the bottom from 180deg to 0deg
+    .fromTo('.kinetic-wheel-container', {
+      rotation: 180,
+      opacity: 0,
+    }, {
+      rotation: 0,
+      opacity: 1,
+      duration: 1.8,
+      ease: 'power1.out',
+    }, '<+=0.1')
+    .to('.kinetic-wheel-container', {
+      opacity: 0.2,
+      duration: 0.8,
+      ease: 'power2.in',
+    }, '>-0.4')
     .fromTo('.stack-next-prompt', {
       opacity: 0,
       y: 20,
@@ -197,7 +193,7 @@ export const FeatureStack = () => {
       y: 0,
       duration: 0.8,
       ease: 'power2.out',
-    }, '<-=0.3');
+    }, '<');
 
     // 4. Release Hold Buffer before unpinning to Timeline Section
     tl.to({}, { duration: 0.6 });
@@ -214,8 +210,9 @@ export const FeatureStack = () => {
       ref={containerRef}
       data-theme="dark"
       className="bg-black text-white relative border-b border-zinc-900 min-h-screen flex flex-col justify-center py-16 px-4 sm:px-8 lg:px-12 overflow-hidden"
+      style={{ perspective: "1500px" }}
     >
-      <div className="max-w-5xl mx-auto w-full mb-6 sm:mb-8 text-center sm:text-left">
+      <div className="max-w-5xl mx-auto w-full mb-6 sm:mb-8 text-center sm:text-left relative z-10">
         <div className="font-mono text-xs sm:text-sm tracking-widest text-zinc-500 uppercase mb-2">
           02 — CORE CAPABILITIES
         </div>
@@ -227,38 +224,53 @@ export const FeatureStack = () => {
         </p>
       </div>
 
-      {/* Giant Bottom Circular Wheel shown in reference video — rising from the bottom */}
+      {/* CodeZen Exact Kinetic Arc Wheel — Positioned at bottom with 50% 100% origin */}
       <div 
-        className="kinetic-bottom-wheel absolute -bottom-[420px] sm:-bottom-[540px] lg:-bottom-[680px] left-1/2 -translate-x-1/2 w-[950px] h-[950px] sm:w-[1300px] sm:h-[1300px] lg:w-[1600px] lg:h-[1600px] pointer-events-none opacity-0 will-change-transform z-20 flex items-center justify-center"
+        className="kinetic-wheel-container pointer-events-none absolute -bottom-[18vh] left-0 w-full z-10 opacity-0 will-change-transform"
+        style={{
+          transformOrigin: '50% 100%',
+        }}
       >
-        <svg className="w-full h-full select-none" viewBox="0 0 1600 1600">
+        <svg viewBox="0 0 3000 1500" className="w-full h-auto" style={{ overflow: 'visible' }}>
           <defs>
-            {/* Circle path for text: center 800, 800 with radius 660 */}
             <path 
-              id="giantArcCircle" 
-              d="M 800, 800 m -660, 0 a 660,660 0 1,1 1320,0 a 660,660 0 1,1 -1320,0" 
+              id="arc-path" 
+              d="M 400,1500 A 1100,1100 0 0,1 2600,1500" 
               fill="none" 
+              stroke="none" 
             />
           </defs>
-          {/* Outer dashed tech tracks */}
-          <circle cx="800" cy="800" r="750" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1.5" strokeDasharray="12 16" />
-          <circle cx="800" cy="800" r="700" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1.5" />
-
-          {/* Giant Bold Monospace / Editorial Text along the circle */}
-          <text fill="#ffffff" fontSize="42" fontWeight="900" letterSpacing="18" className="uppercase font-mono tracking-widest drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
-            <textPath href="#giantArcCircle" startOffset="0%">
-              • STANDARDS • COMPLIANCE • CERTIFICATION • BISmart AI • STANDARDS • COMPLIANCE • CERTIFICATION • BISmart AI •
-            </textPath>
-          </text>
-
-          {/* Inner dashed orbital lines */}
-          <circle cx="800" cy="800" r="620" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1" strokeDasharray="8 10" />
-          <circle cx="800" cy="800" r="540" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+          {[
+            { text: "STANDARDS", offset: "14%" },
+            { text: "•", offset: "26%" },
+            { text: "COMPLIANCE", offset: "38%" },
+            { text: "•", offset: "50%" },
+            { text: "CERTIFY", offset: "62%" },
+            { text: "•", offset: "73%" },
+            { text: "VERIFY", offset: "85%" }
+          ].map((item, idx) => (
+            <text 
+              key={idx}
+              fill="#ffffff" 
+              style={{
+                fontFamily: "Inter, sans-serif",
+                fontWeight: 800,
+                fontSize: item.text === "•" ? "55px" : "110px",
+                textTransform: "uppercase",
+                letterSpacing: "4px"
+              }} 
+              dy={item.text === "•" ? "-18" : "0"}
+            >
+              <textPath href="#arc-path" startOffset={item.offset} textAnchor="middle">
+                {item.text}
+              </textPath>
+            </text>
+          ))}
         </svg>
       </div>
 
       {/* Next Section Transition indicator that appears as stack shrinks */}
-      <div className="stack-next-prompt absolute bottom-8 left-1/2 -translate-x-1/2 text-center pointer-events-none opacity-0 will-change-transform">
+      <div className="stack-next-prompt absolute bottom-8 left-1/2 -translate-x-1/2 text-center pointer-events-none opacity-0 will-change-transform z-20">
         <span className="font-mono text-xs text-zinc-500 uppercase tracking-widest block mb-1">
           CONTINUING TO NEXT SECTION
         </span>
@@ -268,7 +280,11 @@ export const FeatureStack = () => {
       </div>
 
       {/* Pinned Stage: All 4 cards occupy the exact stage container */}
-      <div ref={stageRef} className="relative max-w-5xl mx-auto w-full h-[530px] sm:h-[460px] will-change-transform">
+      <div 
+        ref={stageRef} 
+        className="relative max-w-5xl mx-auto w-full h-[530px] sm:h-[460px] will-change-transform z-10"
+        style={{ transformStyle: 'preserve-3d' }}
+      >
         {cards.map((c, idx) => (
           <div
             key={c.num}
