@@ -356,18 +356,18 @@ export const FeatureStack = () => {
 
   return (
     <section className="min-h-screen bg-black text-white font-sans relative select-none">
-      {/* Top Section Intro */}
-      <div className="pt-24 pb-12 px-6 sm:px-12 max-w-7xl mx-auto w-full text-center sm:text-left relative z-10">
-        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-950 font-mono text-[11px] tracking-widest text-zinc-400 uppercase mb-3">
-          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-          <span>02 — CODEZEN KINETIC CARDS • CORE CAPABILITIES</span>
+      {/* CodeZen Exact Milestones Header Marquee (Matches both desktop & mobile videos) */}
+      <div className="w-full h-[20vh] md:h-[25vh] lg:h-[45vh] border-b border-white/20 overflow-hidden flex items-center relative z-10 bg-black select-none">
+        <div className="marquee-selected-works">
+          <div className="marquee-selected-works__track">
+            {[0, 1, 2, 3].map(N => (
+              <div key={N} className="marquee-selected-works__segment" aria-hidden={N > 0 ? "true" : undefined}>
+                <span className="marquee-selected-works__text">BISmart Milestones</span>
+                <span className="marquee-selected-works__dash">-</span>
+              </div>
+            ))}
+          </div>
         </div>
-        <h2 className="editorial-headline text-3xl sm:text-5xl md:text-6xl text-white">
-          PINNED <span className="text-zinc-500">FEATURE STACK.</span>
-        </h2>
-        <p className="font-mono text-xs text-zinc-500 uppercase tracking-widest mt-2">
-          Scroll to experience CodeZen 3D Void shrink & kinetic wheel rotation
-        </p>
       </div>
 
       {/* CodeZen Exact Scroll Stack Inner with 3D perspective */}

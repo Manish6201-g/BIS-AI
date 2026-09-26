@@ -422,9 +422,61 @@ body {
   opacity: 0.08;
 }
 
-@media (hover: hover) {
-  .menu__item:hover .menu__item-link {
-    opacity: 0.08;
+/* ==========================================================================
+   Codezen Selected Works / Milestones Giant Marquee
+   ========================================================================== */
+.marquee-selected-works {
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.marquee-selected-works__track {
+  display: flex;
+  white-space: nowrap;
+  align-items: center;
+  animation: marquee-scroll 25s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.marquee-selected-works__segment {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.marquee-selected-works__text {
+  font-size: clamp(3.5rem, 12vw, 11rem);
+  font-weight: 900;
+  line-height: 0.85;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.marquee-selected-works__dash {
+  font-size: clamp(3.5rem, 12vw, 11rem);
+  font-weight: 300;
+  margin: 0 3vw;
+  color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 1023px) {
+  .marquee-selected-works__track {
+    animation-duration: 12s;
   }
 }
 

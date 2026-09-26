@@ -27,22 +27,19 @@ export const LandingPage = () => {
 
   return (
     <div className="landing-page-root w-full overflow-x-clip selection:bg-black selection:text-white">
-      {/* 01. White Hero Section */}
+      {/* 01. Hero Section */}
       <HeroSection />
 
-      {/* 02. Black Scroll Scrub Marquee */}
-      <MarqueeSection />
-
-      {/* 03. Black Statistics Section */}
+      {/* 02. Split Editorial Section (01 - What We Are & 02 - By The Numbers) */}
       <StatsSection />
 
-      {/* 04. Black Pinned Feature Cards Stack & Kinetic Arc Wheel */}
+      {/* 03. Pinned Feature Cards Stack with Milestones Marquee Header & Responsive Kinetic Animations */}
       <FeatureStack />
 
-      {/* 05. Codezen Philosophy Portal Expansion (Connecting Curved Arc + Inverse 3D Zoom Aperture + Drawer Marquee) */}
+      {/* 04. Codezen Philosophy Portal Expansion (Connecting Curved Arc + Inverse 3D Zoom Aperture + Drawer Marquee) */}
       <PhilosophyPortal />
 
-      {/* 06. Codezen National Regulatory Impact (Animated 4-Number Metrics) */}
+      {/* 05. Codezen National Regulatory Impact (Animated 4-Number Metrics) */}
       <ImpactSection />
 
       {/* 07. White Workflow Vertical Timeline */}
