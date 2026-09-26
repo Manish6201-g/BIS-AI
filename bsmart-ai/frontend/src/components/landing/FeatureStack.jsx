@@ -300,17 +300,17 @@ export const FeatureStack = () => {
                 color={c.color}
                 speed="8s"
               >
-                {/* Top Row: CodeZen Brand Group & Huge Number */}
-                <div className="card-top-row">
-                  <div className="id-brand-group">
-                    <span className="huge-number">
+                {/* Top Row: Brand Group & Number */}
+                <div className="card-top-row flex items-center justify-between pb-4 border-b border-zinc-800/80 gap-4">
+                  <div className="id-brand-group flex items-baseline gap-4 sm:gap-5 min-w-0 flex-1">
+                    <span className="huge-number font-mono text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tighter leading-none flex-shrink-0 select-none">
                       {c.id}
                     </span>
-                    <div className="client-info">
-                      <span className="label">
+                    <div className="client-info min-w-0 flex-1 flex flex-col justify-center gap-0.5">
+                      <span className="label font-bold text-base sm:text-xl lg:text-2xl text-white uppercase tracking-tight truncate">
                         {c.title}
                       </span>
-                      <span className="client-name">
+                      <span className="client-name font-mono text-[10px] sm:text-xs text-zinc-400 uppercase tracking-wider truncate">
                         {c.stack}
                       </span>
                     </div>
@@ -318,10 +318,10 @@ export const FeatureStack = () => {
 
                   <Link
                     to={c.link}
-                    className="live-btn-star cursor-pointer"
+                    className="live-btn-star cursor-pointer flex-shrink-0"
                   >
                     <StarBorder color={c.ctaColor} speed="3s">
-                      <span className="flex items-center space-x-1.5">
+                      <span className="flex items-center space-x-1.5 px-1">
                         <span>{c.cta}</span>
                         <ArrowUpRight className="w-3.5 h-3.5" />
                       </span>
@@ -330,9 +330,9 @@ export const FeatureStack = () => {
                 </div>
 
                 {/* Content Grid: Visual Showcase & Description */}
-                <div className="content-grid">
-                  {/* Left Column: Authentic High-Fidelity UI Showcase */}
-                  <div className="main-image bg-zinc-950/90 border border-zinc-900 p-5 flex flex-col justify-between font-mono text-xs overflow-hidden">
+                <div className="content-grid grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch pt-4 flex-1">
+                  {/* Left Column: UI Engine Preview */}
+                  <div className="lg:col-span-6 bg-zinc-950/95 border border-zinc-900 rounded-2xl p-4 sm:p-5 flex flex-col justify-between font-mono text-xs overflow-hidden shadow-inner">
                     <div className="flex items-center justify-between text-[11px] text-zinc-400 pb-3 border-b border-zinc-900">
                       <div className="flex items-center space-x-2">
                         <c.icon className="w-4 h-4 text-white" />
@@ -344,10 +344,10 @@ export const FeatureStack = () => {
                     </div>
 
                     {c.previewType === 'rag' && (
-                      <div className="space-y-3 py-3">
+                      <div className="space-y-2.5 py-3">
                         <div className="p-3 rounded-xl bg-zinc-900/80 border border-zinc-800 text-xs">
-                          <span className="text-zinc-500 block text-[10px] uppercase">User Prompt</span>
-                          <span className="text-white font-semibold">"What is the safety pressure relief limit for domestic pressure cookers?"</span>
+                          <span className="text-zinc-500 block text-[10px] uppercase font-semibold">User Query</span>
+                          <span className="text-white font-medium">"What is the safety pressure relief limit for domestic pressure cookers?"</span>
                         </div>
                         <div className="p-3 rounded-xl bg-cyan-950/20 border border-cyan-800/40 text-xs space-y-1">
                           <div className="flex items-center justify-between text-cyan-400 text-[10px] font-bold">
@@ -362,10 +362,10 @@ export const FeatureStack = () => {
                     )}
 
                     {c.previewType === 'matcher' && (
-                      <div className="space-y-3 py-3">
+                      <div className="space-y-2.5 py-3">
                         <div className="p-3 rounded-xl bg-zinc-900/80 border border-zinc-800 text-xs">
-                          <span className="text-zinc-500 block text-[10px] uppercase">Input Product</span>
-                          <span className="text-white font-semibold">"Packaged Drinking Water (Other than Natural Mineral Water)"</span>
+                          <span className="text-zinc-500 block text-[10px] uppercase font-semibold">Input Product</span>
+                          <span className="text-white font-medium">"Packaged Drinking Water (Other than Natural Mineral Water)"</span>
                         </div>
                         <div className="p-3 rounded-xl bg-purple-950/20 border border-purple-800/40 text-xs space-y-1.5">
                           <div className="flex items-center justify-between text-purple-300 text-[10px] font-bold">
@@ -382,7 +382,7 @@ export const FeatureStack = () => {
                     )}
 
                     {c.previewType === 'verify' && (
-                      <div className="space-y-3 py-3">
+                      <div className="space-y-2.5 py-3">
                         <div className="grid grid-cols-2 gap-2 text-xs">
                           <div className="p-2.5 rounded-xl bg-zinc-900/80 border border-zinc-800">
                             <span className="text-zinc-500 block text-[10px]">ISI LICENCE</span>
@@ -395,7 +395,7 @@ export const FeatureStack = () => {
                             <span className="text-emerald-400 text-[10px] block mt-0.5">● 22K 916 AUTHENTIC</span>
                           </div>
                         </div>
-                        <div className="p-2.5 rounded-xl bg-amber-950/20 border border-amber-800/30 text-[11px] text-zinc-300">
+                        <div className="p-2.5 rounded-xl bg-amber-950/20 border border-amber-800/30 text-[11px] text-zinc-300 truncate">
                           Manufacturer: Hawkins Cookers Limited • Factory: Thane West
                         </div>
                       </div>
@@ -434,17 +434,19 @@ export const FeatureStack = () => {
                   </div>
 
                   {/* Right Column: Editorial Description & Capability Chips */}
-                  <div className="project-description flex-col justify-between items-start space-y-4">
-                    <p>
-                      {c.description}
-                    </p>
+                  <div className="lg:col-span-6 flex flex-col justify-between py-1 space-y-4">
+                    <div>
+                      <p className="text-sm sm:text-base lg:text-lg text-zinc-200 leading-relaxed font-normal">
+                        {c.description}
+                      </p>
+                    </div>
 
                     <div className="space-y-3 pt-2 w-full">
                       <div className="flex flex-wrap gap-2">
                         {c.chips.map((chip, i) => (
                           <span
                             key={i}
-                            className="font-mono text-[10px] sm:text-[11px] px-2.5 py-1 rounded-md bg-zinc-900 border border-zinc-800 text-zinc-400 uppercase tracking-wider"
+                            className="font-mono text-[10px] sm:text-[11px] px-2.5 py-1 rounded-md bg-zinc-900/90 border border-zinc-800 text-zinc-400 uppercase tracking-wider shadow-2xs"
                           >
                             {chip}
                           </span>
