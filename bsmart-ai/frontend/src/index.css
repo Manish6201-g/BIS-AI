@@ -135,6 +135,74 @@ body {
   transform: translateZ(0);
 }
 
+/* =========================================================
+   CodeZen Star Border Animated Conic-Gradient
+   ========================================================= */
+.star-border-container {
+  display: block;
+  position: relative;
+  border-radius: 36px;
+  overflow: hidden;
+  padding: 2px;
+}
+
+.border-gradient-full {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  z-index: 0;
+  animation: star-rotate linear infinite;
+  filter: blur(8px);
+  pointer-events: none;
+}
+
+.inner-content {
+  position: relative;
+  background: #000000;
+  border-radius: 34px;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+@keyframes star-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.btn-star-border {
+  display: inline-flex;
+  position: relative;
+  border-radius: 9999px;
+  overflow: hidden;
+  padding: 1.5px;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-star-border:hover {
+  transform: scale(1.05);
+}
+
+.btn-star-border > .btn-inner-content {
+  position: relative;
+  background: #000000;
+  border-radius: 9999px;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.6rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
 /* Accessibility: prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
@@ -145,3 +213,4 @@ body {
     transition-duration: 0s !important;
   }
 }
+
