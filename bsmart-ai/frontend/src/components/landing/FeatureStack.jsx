@@ -151,8 +151,8 @@ export const FeatureStack = () => {
       }, '<+=0.2');
     }
 
-    // 3.3 Stack Shrink into Center & Circular Kinetic Halo Animation:
-    // The deck clusters and scales down into the center while kinetic halo spins into view
+    // 3.3 Stack Shrink into Center & Giant Circular Wheel rising from the BOTTOM:
+    // The deck clusters and scales down into the center
     tl.to(cardElements.map(c => c.querySelector('.card-surface')), {
       xPercent: 0,
       x: 0,
@@ -163,29 +163,32 @@ export const FeatureStack = () => {
       ease: 'power2.inOut',
     })
     .to(stageRef.current, {
-      scale: 0.32,
+      scale: 0.28,
       opacity: 0,
-      y: -40,
+      y: -35,
       duration: 1.4,
       ease: 'power3.inOut',
     })
-    .fromTo('.kinetic-halo', {
-      scale: 0.6,
+    // The giant circular wheel rises from the bottom of the viewport
+    .fromTo('.kinetic-bottom-wheel', {
+      y: 450,
       opacity: 0,
-      rotation: 0,
+      rotation: -35,
     }, {
-      scale: 1.25,
+      y: 0,
       opacity: 1,
-      rotation: 180,
-      duration: 1.4,
-      ease: 'power2.inOut',
-    }, '<')
-    .to('.kinetic-halo', {
-      opacity: 0,
-      scale: 1.5,
-      duration: 0.6,
+      rotation: 65,
+      duration: 1.5,
+      ease: 'power2.out',
+    }, '<+=0.1')
+    // Continue rotation across the bottom as next section transition approaches
+    .to('.kinetic-bottom-wheel', {
+      y: -120,
+      rotation: 125,
+      opacity: 0.2,
+      duration: 1.0,
       ease: 'power2.in',
-    }, '-=0.4')
+    })
     .fromTo('.stack-next-prompt', {
       opacity: 0,
       y: 20,
@@ -194,7 +197,7 @@ export const FeatureStack = () => {
       y: 0,
       duration: 0.8,
       ease: 'power2.out',
-    }, '<');
+    }, '<-=0.3');
 
     // 4. Release Hold Buffer before unpinning to Timeline Section
     tl.to({}, { duration: 0.6 });
@@ -224,24 +227,34 @@ export const FeatureStack = () => {
         </p>
       </div>
 
-      {/* Kinetic Halo / Circular Path shown in reference video during post-overlap shrink */}
-      <div className="kinetic-halo absolute inset-0 flex items-center justify-center pointer-events-none opacity-0 will-change-transform">
-        <div className="relative w-80 h-80 sm:w-96 sm:h-96 flex items-center justify-center">
-          <div className="absolute inset-0 rounded-full border border-dashed border-zinc-700/60" />
-          <svg className="w-full h-full" viewBox="0 0 300 300">
-            <defs>
-              <path id="circlePath" d="M 150, 150 m -100, 0 a 100,100 0 1,1 200,0 a 100,100 0 1,1 -200,0" />
-            </defs>
-            <text fill="rgba(255,255,255,0.7)" fontSize="10.5" fontFamily="monospace" letterSpacing="4.5">
-              <textPath href="#circlePath" startOffset="0%">
-                STANDARDS • COMPLIANCE • CERTIFICATION • BISmart AI •
-              </textPath>
-            </text>
-          </svg>
-          <div className="w-16 h-16 rounded-full bg-white/5 border border-zinc-700 backdrop-blur-sm flex items-center justify-center">
-            <div className="w-3 h-3 rounded-full bg-emerald-400 animate-ping" />
-          </div>
-        </div>
+      {/* Giant Bottom Circular Wheel shown in reference video — rising from the bottom */}
+      <div 
+        className="kinetic-bottom-wheel absolute -bottom-[420px] sm:-bottom-[540px] lg:-bottom-[680px] left-1/2 -translate-x-1/2 w-[950px] h-[950px] sm:w-[1300px] sm:h-[1300px] lg:w-[1600px] lg:h-[1600px] pointer-events-none opacity-0 will-change-transform z-20 flex items-center justify-center"
+      >
+        <svg className="w-full h-full select-none" viewBox="0 0 1600 1600">
+          <defs>
+            {/* Circle path for text: center 800, 800 with radius 660 */}
+            <path 
+              id="giantArcCircle" 
+              d="M 800, 800 m -660, 0 a 660,660 0 1,1 1320,0 a 660,660 0 1,1 -1320,0" 
+              fill="none" 
+            />
+          </defs>
+          {/* Outer dashed tech tracks */}
+          <circle cx="800" cy="800" r="750" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1.5" strokeDasharray="12 16" />
+          <circle cx="800" cy="800" r="700" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1.5" />
+
+          {/* Giant Bold Monospace / Editorial Text along the circle */}
+          <text fill="#ffffff" fontSize="42" fontWeight="900" letterSpacing="18" className="uppercase font-mono tracking-widest drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
+            <textPath href="#giantArcCircle" startOffset="0%">
+              • STANDARDS • COMPLIANCE • CERTIFICATION • BISmart AI • STANDARDS • COMPLIANCE • CERTIFICATION • BISmart AI •
+            </textPath>
+          </text>
+
+          {/* Inner dashed orbital lines */}
+          <circle cx="800" cy="800" r="620" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1" strokeDasharray="8 10" />
+          <circle cx="800" cy="800" r="540" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+        </svg>
       </div>
 
       {/* Next Section Transition indicator that appears as stack shrinks */}
