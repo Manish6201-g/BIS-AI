@@ -189,32 +189,39 @@ export const PhilosophyPortal = () => {
   const [isReady, setIsReady] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  const BOX_WIDTH = 340;
-  const BOX_HEIGHT = 220;
+  const getBoxDimensions = useCallback((vw) => {
+    const mobile = vw < 1024;
+    return {
+      w: mobile ? Math.min(300, Math.floor(vw * 0.82)) : 340,
+      h: mobile ? 180 : 220,
+    };
+  }, []);
 
   const calculateGeometry = useCallback(() => {
-    const mobile = window.innerWidth < 1024;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const mobile = vw < 1024;
     setIsMobile(mobile);
 
     if (sectionRef.current) {
       sectionTopRef.current = sectionRef.current.getBoundingClientRect().top + window.scrollY;
     }
 
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
+    const { w: boxW, h: boxH } = getBoxDimensions(vw);
     let pathString = '';
 
     if (mobile) {
+      // Mobile straight vertical connection from center (Matches mobile video)
       const startX = vw / 2;
       const startY = -10;
       const endX = vw / 2;
-      const endY = vh / 2 - BOX_HEIGHT / 2;
+      const endY = vh / 2 - boxH / 2;
       pathString = `M ${startX},${startY} L ${endX},${endY}`;
     } else {
-      // Exact Codezen connection math from the 3000x1500 kinetic wheel
+      // Desktop curved arc connection from kinetic arc wheel (Matches desktop video)
       const scale = vw / 3000;
       const startX = (1500 + 1100 * Math.cos((196 * Math.PI) / 180)) * scale;
-      const endX = vw / 2 - BOX_WIDTH / 2;
+      const endX = vw / 2 - boxW / 2;
       const endY = vh / 2;
       const radius = 1100 * scale;
       pathString = `M ${startX},0 A ${radius},${radius} 0 0,0 ${endX},${endY}`;
@@ -229,9 +236,7 @@ export const PhilosophyPortal = () => {
           pathRef.current.style.strokeDasharray = `${len}`;
           pathRef.current.style.strokeDashoffset = `${len}`;
         }
-      } catch (err) {
-        // SVG length fallback
-      }
+      } catch (err) {}
     }
 
     if (contentRef.current && sectionRef.current) {
@@ -242,7 +247,7 @@ export const PhilosophyPortal = () => {
     }
 
     setIsReady(true);
-  }, []);
+  }, [getBoxDimensions]);
 
   useEffect(() => {
     const onResize = () => calculateGeometry();
@@ -327,9 +332,10 @@ export const PhilosophyPortal = () => {
           }
 
           // Cubic-bezier smooth expansion
+          const { w: boxW, h: boxH } = getBoxDimensions(vw);
           const eased = solveCubicBezier(H);
-          const scaleX = 1 + eased * (vw / BOX_WIDTH - 1);
-          const scaleY = 1 + eased * (vh / BOX_HEIGHT - 1);
+          const scaleX = 1 + eased * (vw / boxW - 1);
+          const scaleY = 1 + eased * (vh / boxH - 1);
 
           boxEl.style.transform = `translate3d(0, 0, 0) scale(${scaleX.toFixed(4)}, ${scaleY.toFixed(4)})`;
           contentEl.style.transform = `scale(${(1 / scaleX).toFixed(4)}, ${(1 / scaleY).toFixed(4)})`;
@@ -349,7 +355,9 @@ export const PhilosophyPortal = () => {
       window.removeEventListener('scroll', handleScroll);
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
     };
-  }, [isReady]);
+  }, [isReady, getBoxDimensions]);
+
+  const { w: currentBoxW, h: currentBoxH } = getBoxDimensions(typeof window !== 'undefined' ? window.innerWidth : 1200);
 
   return (
     <section
@@ -395,10 +403,10 @@ export const PhilosophyPortal = () => {
           position: 'absolute',
           top: '50vh',
           left: '50%',
-          width: `${BOX_WIDTH}px`,
-          height: `${BOX_HEIGHT}px`,
-          marginLeft: `-${BOX_WIDTH / 2}px`,
-          marginTop: `-${BOX_HEIGHT / 2}px`,
+          width: `${currentBoxW}px`,
+          height: `${currentBoxH}px`,
+          marginLeft: `-${currentBoxW / 2}px`,
+          marginTop: `-${currentBoxH / 2}px`,
           background: 'white',
           border: '2px solid black',
           visibility: 'hidden',

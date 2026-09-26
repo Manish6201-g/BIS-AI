@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Check, Shield, Cpu, Compass, FileCheck } from 'lucide-react';
 
@@ -31,6 +31,7 @@ const StarBorder = ({ as: Component = 'div', className = '', color = '#00f2fe, #
 };
 
 export const FeatureStack = () => {
+  const [isMobile, setIsMobile] = useState(false);
   const cardsRef = useRef([]);
   const cardTops = useRef([]);
   const innerTop = useRef(0);
@@ -39,6 +40,22 @@ export const FeatureStack = () => {
   const voidRef = useRef(null);
   const wheelRef = useRef(null);
   const endRef = useRef(null);
+
+  // Mobile Winding Snake Path Refs
+  const snakePathRef = useRef(null);
+  const snakeGroupRef = useRef(null);
+  const snakeLengthRef = useRef(0);
+  const node1Ref = useRef(null);
+  const node2Ref = useRef(null);
+  const node3Ref = useRef(null);
+  const node4Ref = useRef(null);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    handleResize();
+    window.addEventListener('resize', handleResize, { passive: true });
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const cards = [
     {
@@ -119,16 +136,27 @@ export const FeatureStack = () => {
       voidRef.current.style.visibility = 'visible';
     }
     if (wheelRef.current) {
-      wheelRef.current.style.transform = 'rotate(180deg)';
+      wheelRef.current.style.transform = isMobile ? 'translate3d(0, 0, 0)' : 'rotate(180deg)';
       wheelRef.current.style.opacity = '0';
       wheelRef.current.style.visibility = 'hidden';
+    }
+
+    if (snakePathRef.current && isMobile) {
+      try {
+        const len = snakePathRef.current.getTotalLength();
+        if (len > 0) {
+          snakeLengthRef.current = len;
+          snakePathRef.current.style.strokeDasharray = `${len}`;
+          snakePathRef.current.style.strokeDashoffset = `${len}`;
+        }
+      } catch (err) {}
     }
 
     const scrollY = window.scrollY;
     cardTops.current = cardsElements.map(c => c.getBoundingClientRect().top + scrollY);
     if (endRef.current) endTop.current = endRef.current.getBoundingClientRect().top + scrollY;
     if (innerRef.current) innerTop.current = innerRef.current.getBoundingClientRect().top + scrollY;
-  }, []);
+  }, [isMobile]);
 
   // Exact CodeZen Scroll physics loop
   const update = useCallback(() => {
@@ -182,7 +210,7 @@ export const FeatureStack = () => {
       ge.style.transform = `translate3d(0, ${Math.round(xt * 10) / 10}px, 0) scale(${Gt})`;
     }
 
-    // 2. Exact CodeZen Void Container 3D Shrink
+    // 2. Exact CodeZen Void Container Shrink (Mobile: clean fade, Desktop: 3D perspective shrink)
     const he = voidRef.current;
     const ie = innerRef.current;
     if (he && ie) {
@@ -191,15 +219,25 @@ export const FeatureStack = () => {
       ie.style.perspective = "1500px";
 
       if (Q > 0) {
-        const ge = Math.pow(Q, 1.5);
-        const Te = -ge * 3000;
-        const Ie = 1 - ge;
-        const We = 1 - Math.pow(Q, 2.5);
-        he.style.transformOrigin = `50% ${se}px`;
-        he.style.transform = `translate3d(0, 0, ${Te}px) scale(${Math.max(0, Ie).toFixed(4)})`;
-        he.style.opacity = Math.max(0, We).toFixed(3);
-        if (Q >= 1) he.style.visibility = "hidden";
-        else he.style.visibility = "visible";
+        if (isMobile) {
+          const ge = Math.min(Q / 0.25, 1);
+          const Te = 1 - ge;
+          he.style.transformOrigin = `50% ${se}px`;
+          he.style.transform = "translate3d(0, 0, 0) scale(1)";
+          he.style.opacity = Math.max(0, Te).toFixed(3);
+          if (ge >= 1) he.style.visibility = "hidden";
+          else he.style.visibility = "visible";
+        } else {
+          const ge = Math.pow(Q, 1.5);
+          const Te = -ge * 3000;
+          const Ie = 1 - ge;
+          const We = 1 - Math.pow(Q, 2.5);
+          he.style.transformOrigin = `50% ${se}px`;
+          he.style.transform = `translate3d(0, 0, ${Te}px) scale(${Math.max(0, Ie).toFixed(4)})`;
+          he.style.opacity = Math.max(0, We).toFixed(3);
+          if (Q >= 1) he.style.visibility = "hidden";
+          else he.style.visibility = "visible";
+        }
       } else {
         he.style.transformOrigin = "";
         he.style.transform = "";
@@ -208,7 +246,36 @@ export const FeatureStack = () => {
       }
     }
 
-    // 3. Exact CodeZen Kinetic Arc Wheel (Revealing from bottom right to left)
+    // 3. Mobile Snake Stroke & Nodes Animation
+    const L = snakePathRef.current;
+    const Y = snakeLengthRef.current;
+    if (L && Y > 0 && isMobile) {
+      let strokeProgress = 0;
+      if (Q > 0.2) strokeProgress = (Q - 0.2) / 0.8;
+      strokeProgress = Math.min(Math.max(strokeProgress, 0), 1);
+      L.style.strokeDasharray = `${Y}`;
+      L.style.strokeDashoffset = `${(Y * (1 - strokeProgress)).toFixed(2)}`;
+
+      const animateNode = (nodeRef, targetProgress) => {
+        if (!nodeRef.current) return;
+        const windowRange = 0.15;
+        const diff = Math.abs(strokeProgress - targetProgress);
+        let intensity = 0;
+        if (diff < windowRange) intensity = 1 - diff / windowRange;
+        const opacity = 0.3 + 0.7 * intensity;
+        const scale = 1 + 0.05 * intensity;
+        nodeRef.current.style.opacity = opacity.toFixed(2);
+        nodeRef.current.style.transform = `scale(${scale})`;
+        nodeRef.current.style.transformOrigin = "center";
+        nodeRef.current.style.transformBox = "fill-box";
+      };
+      animateNode(node1Ref, 0.04);
+      animateNode(node2Ref, 0.20);
+      animateNode(node3Ref, 0.40);
+      animateNode(node4Ref, 0.60);
+    }
+
+    // 4. Kinetic Wheel / Snake Container Visibility & Rotation
     const ce = wheelRef.current;
     if (ce) {
       if (N > D + X * 1.2 + X * 0.2) {
@@ -217,18 +284,42 @@ export const FeatureStack = () => {
       } else if (Q > 0) {
         ce.style.display = "block";
         ce.style.visibility = "visible";
-        ce.style.opacity = Math.min(Q * 4, 1).toFixed(3);
-        const se = 180 * (1 - Q);
-        ce.style.transformOrigin = "50% 100%";
-        ce.style.transform = `rotate(${se}deg)`;
+        if (isMobile) {
+          let opacityVal = 0;
+          if (Q <= 0.25) opacityVal = 0.5 * (Q / 0.25);
+          else if (Q <= 0.5) opacityVal = 0.5 + 0.5 * ((Q - 0.25) / 0.25);
+          else opacityVal = 1;
+
+          ce.style.opacity = opacityVal.toFixed(3);
+          ce.style.transform = "translate3d(0, 0, 0)";
+
+          if (snakeGroupRef.current) {
+            if (Q >= 0.8) {
+              const fadeOut = 1 - (Q - 0.8) / 0.2;
+              snakeGroupRef.current.style.opacity = Math.max(0, fadeOut).toFixed(3);
+            } else {
+              snakeGroupRef.current.style.opacity = "1";
+            }
+          }
+        } else {
+          ce.style.opacity = Math.min(Q * 4, 1).toFixed(3);
+          const se = 180 * (1 - Q);
+          ce.style.transformOrigin = "50% 100%";
+          ce.style.transform = `rotate(${se}deg)`;
+        }
       } else {
         ce.style.display = "block";
         ce.style.opacity = "0";
         ce.style.visibility = "hidden";
-        ce.style.transform = "rotate(180deg)";
+        if (isMobile) {
+          ce.style.transform = "translate3d(0, 0, 0)";
+          if (snakeGroupRef.current) snakeGroupRef.current.style.opacity = "1";
+        } else {
+          ce.style.transform = "rotate(180deg)";
+        }
       }
     }
-  }, []);
+  }, [isMobile]);
 
   useEffect(() => {
     const cardsElements = Array.from(document.querySelectorAll('.scroll-stack-card'));
@@ -469,58 +560,94 @@ export const FeatureStack = () => {
         <div ref={endRef} className="scroll-stack-end pointer-events-none h-[120vh]" />
       </div>
 
-      {/* CodeZen Exact Fixed Kinetic Arc Wheel */}
+      {/* CodeZen Exact Kinetic Animation Layer (Mobile: S-Curve Snake Path, Desktop: Rotating Arc Wheel) */}
       <div
         ref={wheelRef}
         className="kinetic-wheel pointer-events-none"
         style={{
           position: 'fixed',
-          bottom: '-18vh',
+          top: isMobile ? '50%' : 'auto',
+          bottom: isMobile ? 'auto' : '-18vh',
           left: '0',
           width: '100vw',
-          height: 'auto',
+          height: isMobile ? '100vw' : 'auto',
+          marginTop: isMobile ? 'calc(-50vw)' : '0',
           zIndex: 0,
           visibility: 'hidden',
           opacity: 0,
           willChange: 'transform, opacity',
-          transformOrigin: '50% 100%',
+          transformOrigin: isMobile ? 'center center' : '50% 100%',
         }}
       >
-        <svg viewBox="0 0 3000 1500" className="w-full h-auto" style={{ overflow: 'visible' }}>
-          <defs>
+        {isMobile ? (
+          // Mobile Winding Snake Path with 4 Glowing Nodes (Matches mobile video)
+          <svg viewBox="0 0 1500 2000" className="w-full h-full" style={{ overflow: 'visible' }}>
+            <defs>
+              <linearGradient id="snake-line-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="rgba(255,255,255,0)" />
+                <stop offset="15%" stopColor="rgba(255,255,255,0.7)" />
+                <stop offset="85%" stopColor="rgba(255,255,255,0.7)" />
+                <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+              </linearGradient>
+            </defs>
             <path
-              id="arc-path"
+              ref={snakePathRef}
+              d="M 750,0 L 750,250 C 750,550 250,500 250,800 C 250,1100 1250,1050 1250,1350 C 1250,1650 750,1600 750,1900 L 750,3000"
+              fill="none"
+              stroke="url(#snake-line-gradient)"
+              strokeWidth="12"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <g ref={snakeGroupRef}>
+              <text ref={node1Ref} x="750" y="150" fill="#ffffff" style={{ fontFamily: "Inter, sans-serif", fontWeight: 900, fontSize: "100px", opacity: 0.3 }} textAnchor="middle" dy=".3em">VERIFY</text>
+              <circle cx="750" cy="250" r="16" fill="#ffffff" />
+              <text ref={node2Ref} x="250" y="700" fill="#ffffff" style={{ fontFamily: "Inter, sans-serif", fontWeight: 900, fontSize: "100px", opacity: 0.3 }} textAnchor="middle" dy=".3em">COMPLY</text>
+              <circle cx="250" cy="800" r="16" fill="#ffffff" />
+              <text ref={node3Ref} x="1250" y="1250" fill="#ffffff" style={{ fontFamily: "Inter, sans-serif", fontWeight: 900, fontSize: "100px", opacity: 0.3 }} textAnchor="middle" dy=".3em">STANDARDS</text>
+              <circle cx="1250" cy="1350" r="16" fill="#ffffff" />
+              <text ref={node4Ref} x="750" y="1800" fill="#ffffff" style={{ fontFamily: "Inter, sans-serif", fontWeight: 900, fontSize: "100px", opacity: 0.3 }} textAnchor="middle" dy=".3em">CERTIFY</text>
+              <circle cx="750" cy="1900" r="22" fill="#ffffff" />
+            </g>
+          </svg>
+        ) : (
+          // Desktop Rotating Kinetic Arc Wheel (Matches desktop video)
+          <svg viewBox="0 0 3000 1500" className="w-full h-auto" style={{ overflow: 'visible' }}>
+            <defs>
+              <path
+                id="arc-path"
+                d="M 400,1500 A 1100,1100 0 0,1 2600,1500"
+                fill="none"
+                stroke="none"
+              />
+            </defs>
+            <path
               d="M 400,1500 A 1100,1100 0 0,1 2600,1500"
               fill="none"
-              stroke="none"
+              stroke="rgba(255, 255, 255, 0.15)"
+              strokeWidth="3"
+              strokeDasharray="6 16"
             />
-          </defs>
-          <path
-            d="M 400,1500 A 1100,1100 0 0,1 2600,1500"
-            fill="none"
-            stroke="rgba(255, 255, 255, 0.15)"
-            strokeWidth="3"
-            strokeDasharray="6 16"
-          />
-          {words.map((item, idx) => (
-            <text
-              key={idx}
-              fill="#ffffff"
-              style={{
-                fontFamily: 'Inter, sans-serif',
-                fontWeight: 800,
-                fontSize: item.text === '•' ? '50px' : '100px',
-                textTransform: 'uppercase',
-                letterSpacing: '4px',
-              }}
-              dy={item.text === '•' ? '-18' : '0'}
-            >
-              <textPath href="#arc-path" startOffset={item.offset} textAnchor="middle">
-                {item.text}
-              </textPath>
-            </text>
-          ))}
-        </svg>
+            {words.map((item, idx) => (
+              <text
+                key={idx}
+                fill="#ffffff"
+                style={{
+                  fontFamily: 'Inter, sans-serif',
+                  fontWeight: 800,
+                  fontSize: item.text === '•' ? '50px' : '100px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '4px',
+                }}
+                dy={item.text === '•' ? '-18' : '0'}
+              >
+                <textPath href="#arc-path" startOffset={item.offset} textAnchor="middle">
+                  {item.text}
+                </textPath>
+              </text>
+            ))}
+          </svg>
+        )}
       </div>
     </section>
   );
