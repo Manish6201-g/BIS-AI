@@ -62,15 +62,15 @@ export const FeatureStack = () => {
         const inner = card.querySelector('.feature-card-inner');
 
         gsap.to(inner, {
-          scale: 0.91 - (cardElements.length - 1 - index) * 0.02,
-          opacity: 0.4,
+          scale: 0.92 - (cardElements.length - 1 - index) * 0.02,
+          opacity: 0.35,
           filter: 'blur(3px)',
-          yPercent: -4,
+          yPercent: -3,
           transformOrigin: 'center top',
           ease: 'none',
           scrollTrigger: {
             trigger: nextCard,
-            start: 'top 80%',
+            start: 'top 90%',
             end: 'top 20%',
             scrub: true,
           }
@@ -78,15 +78,18 @@ export const FeatureStack = () => {
       }
     });
 
-    // Refresh triggers to ensure exact measurement with sticky positioning
-    ScrollTrigger.refresh();
+    // Ensure ScrollTrigger recalibrates accurately after layout
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 150);
+    return () => clearTimeout(timer);
   }, { scope: containerRef });
 
   return (
     <section
       ref={containerRef}
       data-theme="dark"
-      className="bg-black text-white pt-24 pb-[45vh] px-4 sm:px-8 lg:px-12 border-b border-zinc-900 relative"
+      className="bg-black text-white pt-24 pb-32 px-4 sm:px-8 lg:px-12 border-b border-zinc-900 relative"
     >
       <div className="max-w-6xl mx-auto w-full mb-16 sm:mb-24 text-center sm:text-left">
         <div className="font-mono text-xs sm:text-sm tracking-widest text-zinc-500 uppercase mb-3">
@@ -101,20 +104,20 @@ export const FeatureStack = () => {
         </p>
       </div>
 
-      {/* Cards Stack with Staggered Sticky Offset and Scroll Runway */}
+      {/* Cards Stack with Staggered Sticky Offset and Full Scroll Runway */}
       <div className="max-w-5xl mx-auto relative">
         {cards.map((c, idx) => (
           <div
             key={c.num}
             className="feature-stack-card sticky will-change-transform"
             style={{
-              top: `calc(85px + ${idx * 32}px)`,
+              top: `calc(80px + ${idx * 24}px)`,
               zIndex: 10 + idx,
-              marginBottom: idx === cards.length - 1 ? '40vh' : '45vh',
+              marginBottom: idx === cards.length - 1 ? '100vh' : '65vh',
             }}
           >
             <div
-              className={`feature-card-inner bg-zinc-950 rounded-[32px] p-6 sm:p-10 border ${c.accent} shadow-[0_-20px_40px_rgba(0,0,0,0.92),0_35px_80px_rgba(0,0,0,0.98)] transition-all duration-300 will-change-transform`}
+              className={`feature-card-inner bg-zinc-950 rounded-[32px] p-6 sm:p-10 border ${c.accent} shadow-[0_-25px_50px_rgba(0,0,0,0.95),0_35px_80px_rgba(0,0,0,0.98)] transition-all duration-300 will-change-transform`}
             >
               {/* Card Top Row */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-zinc-800 gap-4">
