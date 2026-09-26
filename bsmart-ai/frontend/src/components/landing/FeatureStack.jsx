@@ -152,38 +152,38 @@ export const FeatureStack = () => {
     tl.to({}, { duration: 0.35 });
 
     // 3. CARDS START SHRINKING FIRST:
-    // Phase 3A: Cards shrink from full size (1.0) down to half size (0.50)
+    // Phase 3A: Cards shrink 30% (from 1.0 down to 0.70 scale)
     tl.to(stageRef.current, {
-      scale: 0.50,
-      z: -1200,
-      y: -15,
-      opacity: 0.9,
-      duration: 1.1,
+      scale: 0.70,
+      z: -650,
+      y: -10,
+      opacity: 0.95,
+      duration: 0.7,
       ease: 'power1.in',
     })
-    .addLabel('cardsHalf')
+    .addLabel('cards30Percent')
 
-    // Phase 3B: As soon as cards shrink half ('cardsHalf'), continue shrinking to vanishing point:
+    // Phase 3B: Directly when cards have shrunk 30% ('cards30Percent'), continue shrinking to vanishing point:
     .to(stageRef.current, {
       scale: 0.05,
       z: -3200,
       y: -35,
       opacity: 0,
-      duration: 1.5,
+      duration: 1.8,
       ease: 'power2.in',
-    }, 'cardsHalf')
+    }, 'cards30Percent')
 
-    // EXACT USER REQUIREMENT: WHEN CARDS SHRINK HALF, THEN THE CIRCULAR RING STARTS!
-    // Directly at 'cardsHalf', circular ring becomes visible and begins revealing
+    // EXACT USER REQUIREMENT: WHEN CARDS SHRINK 30%, THEN THE CIRCULAR RING STARTS!
+    // Directly at 'cards30Percent', circular ring becomes visible and begins revealing
     // from the BOTTOM RIGHT, rotating counter-clockwise up, crowning the apex, and sweeping across to the LEFT!
-    .set('.kinetic-wheel-container', { opacity: 1 }, 'cardsHalf')
+    .set('.kinetic-wheel-container', { opacity: 1 }, 'cards30Percent')
     .fromTo('.kinetic-wheel-container', {
       rotation: 180,
     }, {
       rotation: -22,
       duration: 2.2,
       ease: 'power1.out',
-    }, 'cardsHalf')
+    }, 'cards30Percent')
 
     // Next Section Prompt fades in smoothly as cards vanish and ring completes rotation
     .fromTo('.stack-next-prompt', {
