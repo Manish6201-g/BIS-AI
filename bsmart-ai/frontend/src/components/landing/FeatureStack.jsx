@@ -86,7 +86,7 @@ export const FeatureStack = () => {
     <section
       ref={containerRef}
       data-theme="dark"
-      className="bg-black text-white pt-24 pb-44 px-4 sm:px-8 lg:px-12 border-b border-zinc-900 relative"
+      className="bg-black text-white pt-24 pb-[45vh] px-4 sm:px-8 lg:px-12 border-b border-zinc-900 relative"
     >
       <div className="max-w-6xl mx-auto w-full mb-16 sm:mb-24 text-center sm:text-left">
         <div className="font-mono text-xs sm:text-sm tracking-widest text-zinc-500 uppercase mb-3">
@@ -108,13 +108,13 @@ export const FeatureStack = () => {
             key={c.num}
             className="feature-stack-card sticky will-change-transform"
             style={{
-              top: `${90 + idx * 36}px`,
+              top: `calc(85px + ${idx * 32}px)`,
               zIndex: 10 + idx,
-              marginBottom: idx === cards.length - 1 ? '60px' : '45vh',
+              marginBottom: idx === cards.length - 1 ? '40vh' : '45vh',
             }}
           >
             <div
-              className={`feature-card-inner bg-zinc-950 rounded-[32px] p-6 sm:p-10 border ${c.accent} shadow-[0_-15px_35px_rgba(0,0,0,0.85),0_30px_70px_rgba(0,0,0,0.95)] transition-all duration-300 will-change-transform`}
+              className={`feature-card-inner bg-zinc-950 rounded-[32px] p-6 sm:p-10 border ${c.accent} shadow-[0_-20px_40px_rgba(0,0,0,0.92),0_35px_80px_rgba(0,0,0,0.98)] transition-all duration-300 will-change-transform`}
             >
               {/* Card Top Row */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-zinc-800 gap-4">
