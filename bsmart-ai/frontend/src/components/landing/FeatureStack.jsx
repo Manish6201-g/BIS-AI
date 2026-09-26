@@ -151,33 +151,41 @@ export const FeatureStack = () => {
     // 2. MOMENTARY STACK HOLD (All 4 cards stacked at 100% full overlap)
     tl.to({}, { duration: 0.35 });
 
-    // 3. IMMEDIATE TRANSITION: ALL CARDS SHRINK AS CIRCLE RING REVEALS FROM BOTTOM RIGHT TO LEFT
-    // As shown in video (f_006 -> f_009):
-    // Directly after overlapping is complete, cards start shrinking into the 3D center
-    // and at the exact same moment, the circular ring begins revealing from the bottom right
-    // and rotating up and across to the left!
+    // 3. CARDS START SHRINKING FIRST:
+    // Phase 3A: Cards shrink from full size (1.0) down to half size (0.50)
     tl.to(stageRef.current, {
-      scale: 0.05,
-      z: -3000,
-      y: -30,
-      opacity: 0,
-      duration: 2.2,
-      ease: 'power2.in',
+      scale: 0.50,
+      z: -1200,
+      y: -15,
+      opacity: 0.9,
+      duration: 1.1,
+      ease: 'power1.in',
     })
-    // Immediately make kinetic wheel visible as rotation starts from 180deg (fully below horizon)
-    .set('.kinetic-wheel-container', { opacity: 1 }, '<')
-    // Simultaneously rotate from 180deg down to -20deg:
-    // At 180deg, the arc is inverted. As rotation decreases counter-clockwise,
-    // the arc and words physically sweep up out of the BOTTOM RIGHT,
-    // crown the center apex, and travel across to the LEFT!
+    .addLabel('cardsHalf')
+
+    // Phase 3B: As soon as cards shrink half ('cardsHalf'), continue shrinking to vanishing point:
+    .to(stageRef.current, {
+      scale: 0.05,
+      z: -3200,
+      y: -35,
+      opacity: 0,
+      duration: 1.5,
+      ease: 'power2.in',
+    }, 'cardsHalf')
+
+    // EXACT USER REQUIREMENT: WHEN CARDS SHRINK HALF, THEN THE CIRCULAR RING STARTS!
+    // Directly at 'cardsHalf', circular ring becomes visible and begins revealing
+    // from the BOTTOM RIGHT, rotating counter-clockwise up, crowning the apex, and sweeping across to the LEFT!
+    .set('.kinetic-wheel-container', { opacity: 1 }, 'cardsHalf')
     .fromTo('.kinetic-wheel-container', {
       rotation: 180,
     }, {
       rotation: -22,
       duration: 2.2,
       ease: 'power1.out',
-    }, '<')
-    // Next Section Prompt fades in smoothly as the cards vanish and ring completes rotation
+    }, 'cardsHalf')
+
+    // Next Section Prompt fades in smoothly as cards vanish and ring completes rotation
     .fromTo('.stack-next-prompt', {
       opacity: 0,
       y: 20,
