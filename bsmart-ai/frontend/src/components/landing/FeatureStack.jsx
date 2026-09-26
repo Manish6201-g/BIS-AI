@@ -151,25 +151,29 @@ export const FeatureStack = () => {
     // 2. MOMENTARY STACK HOLD (All 4 cards stacked at 100% full overlap)
     tl.to({}, { duration: 0.35 });
 
-    // 3. IMMEDIATE TRANSITION: ALL CARDS SHRINK AS CIRCLE RING ROTATES (EXACT REFERENCE VIDEO)
+    // 3. IMMEDIATE TRANSITION: ALL CARDS SHRINK AS CIRCLE RING REVEALS FROM BOTTOM RIGHT TO LEFT
     // As shown in video (f_006 -> f_009):
-    // Directly after overlapping is done, all cards shrink into the center depth
-    // while the circular kinetic ring begins rotating up from the bottom!
+    // Directly after overlapping is complete, cards start shrinking into the 3D center
+    // and at the exact same moment, the circular ring begins revealing from the bottom right
+    // and rotating up and across to the left!
     tl.to(stageRef.current, {
-      scale: 0.07,
-      z: -2800,
-      y: -25,
+      scale: 0.05,
+      z: -3000,
+      y: -30,
       opacity: 0,
-      duration: 2.0,
-      ease: 'power2.inOut',
+      duration: 2.2,
+      ease: 'power2.in',
     })
-    // Simultaneously, the kinetic circle ring starts rotating and rising from the bottom:
+    // Immediately make kinetic wheel visible as rotation starts from 180deg (fully below horizon)
+    .set('.kinetic-wheel-container', { opacity: 1 }, '<')
+    // Simultaneously rotate from 180deg down to -20deg:
+    // At 180deg, the arc is inverted. As rotation decreases counter-clockwise,
+    // the arc and words physically sweep up out of the BOTTOM RIGHT,
+    // crown the center apex, and travel across to the LEFT!
     .fromTo('.kinetic-wheel-container', {
-      rotation: 68,
-      opacity: 0,
+      rotation: 180,
     }, {
-      rotation: -48,
-      opacity: 1,
+      rotation: -22,
       duration: 2.2,
       ease: 'power1.out',
     }, '<')
@@ -182,8 +186,8 @@ export const FeatureStack = () => {
       y: 0,
       duration: 0.8,
       ease: 'power2.out',
-    }, '>-0.5')
-    .to({}, { duration: 0.4 }); // Gentle buffer before next section unpin
+    }, '>-0.4')
+    .to({}, { duration: 0.5 }); // Gentle buffer before next section unpin
 
     const timer = setTimeout(() => {
       ScrollTrigger.refresh();
@@ -229,6 +233,14 @@ export const FeatureStack = () => {
               stroke="none" 
             />
           </defs>
+          {/* Subtle glowing circular ring track */}
+          <path 
+            d="M 400,1500 A 1100,1100 0 0,1 2600,1500" 
+            fill="none" 
+            stroke="rgba(255, 255, 255, 0.15)" 
+            strokeWidth="3"
+            strokeDasharray="6 16"
+          />
           {[
             { text: "STANDARDS", offset: "14%" },
             { text: "•", offset: "26%" },
