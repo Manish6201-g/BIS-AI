@@ -1,7 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { X, ExternalLink, ShieldCheck, FileText, BookOpen, AlertCircle } from 'lucide-react';
 
 export const ClauseDrawer = ({ isOpen, onClose, citation }) => {
+  useEffect(() => {
+    if (isOpen && citation) {
+      const originalBodyOverflow = document.body.style.overflow;
+      const originalDocOverflow = document.documentElement.style.overflow;
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+
+      const handleKeyDown = (e) => {
+        if (e.key === 'Escape') onClose();
+      };
+      window.addEventListener('keydown', handleKeyDown);
+
+      return () => {
+        document.body.style.overflow = originalBodyOverflow;
+        document.documentElement.style.overflow = originalDocOverflow;
+        window.removeEventListener('keydown', handleKeyDown);
+      };
+    }
+  }, [isOpen, citation, onClose]);
+
   if (!isOpen || !citation) return null;
 
   return (
