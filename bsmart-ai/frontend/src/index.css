@@ -156,16 +156,32 @@ body {
   border-radius: 44px;
   display: block;
   position: relative;
+  box-sizing: border-box;
 }
 
-.scroll-stack-card > .inner-content {
+.scroll-stack-card .star-border-container {
+  display: block;
+  position: relative;
+  border-radius: 44px;
+  overflow: hidden;
+  padding: 2px;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.scroll-stack-card .inner-content {
   background-color: #000 !important;
   border-radius: 42px !important;
-  padding: 2.25rem 2.5rem !important;
+  padding: 2.25rem 2.75rem !important;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   text-align: left;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
 .star-border-container {
@@ -195,6 +211,7 @@ body {
   width: 100%;
   height: 100%;
   z-index: 1;
+  box-sizing: border-box;
 }
 
 @keyframes star-rotate {
@@ -287,13 +304,16 @@ body {
   gap: 0.4rem;
 }
 
-.content-grid {
+.card-content-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2.25rem;
   align-items: stretch;
   flex: 1;
   min-height: 310px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .main-image {
@@ -311,6 +331,7 @@ body {
   align-items: flex-start;
   padding: 0.5rem 0;
   gap: 1.5rem;
+  min-width: 0;
 }
 
 .project-description p {
@@ -335,16 +356,27 @@ body {
     font-size: 1rem;
     line-height: 1.6;
   }
+  .card-content-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .scroll-stack-card .inner-content {
+    padding: 2rem 2rem !important;
+  }
 }
 
 @media (max-width: 768px) {
   .scroll-stack-card {
+    width: 94%;
     border-radius: 32px;
     min-height: auto;
   }
-  .scroll-stack-card > .inner-content {
+  .scroll-stack-card .star-border-container {
+    border-radius: 32px;
+  }
+  .scroll-stack-card .inner-content {
     border-radius: 30px !important;
-    padding: 1.5rem !important;
+    padding: 1.5rem 1.25rem !important;
     gap: 1.25rem;
   }
   .card-top-row {
@@ -354,11 +386,12 @@ body {
     padding-bottom: 1rem;
   }
   .id-brand-group {
+    width: 100%;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: 0.75rem;
   }
   .huge-number {
-    font-size: 2.75rem;
+    font-size: 2.5rem;
   }
   .label {
     font-size: 1.1rem;
@@ -366,9 +399,9 @@ body {
   .live-btn-star {
     align-self: flex-start;
   }
-  .content-grid {
+  .card-content-grid {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 1.25rem;
     min-height: auto;
   }
   .project-description {

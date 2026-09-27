@@ -421,15 +421,15 @@ export const FeatureStack = () => {
                 </div>
 
                 {/* Content Grid: Visual Showcase & Description */}
-                <div className="content-grid grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch pt-4 flex-1">
+                <div className="card-content-grid pt-4 flex-1">
                   {/* Left Column: UI Engine Preview */}
-                  <div className="lg:col-span-6 bg-zinc-950/95 border border-zinc-900 rounded-2xl p-4 sm:p-5 flex flex-col justify-between font-mono text-xs overflow-hidden shadow-inner">
-                    <div className="flex items-center justify-between text-[11px] text-zinc-400 pb-3 border-b border-zinc-900">
-                      <div className="flex items-center space-x-2">
-                        <c.icon className="w-4 h-4 text-white" />
-                        <span className="font-bold text-white tracking-wider">LIVE MODULE ENGINE</span>
+                  <div className="card-preview-col bg-zinc-950/95 border border-zinc-900 rounded-2xl p-4 sm:p-5 flex flex-col justify-between font-mono text-xs overflow-hidden shadow-inner min-w-0">
+                    <div className="flex items-center justify-between text-[11px] text-zinc-400 pb-3 border-b border-zinc-900 gap-2">
+                      <div className="flex items-center space-x-2 min-w-0">
+                        <c.icon className="w-4 h-4 text-white flex-shrink-0" />
+                        <span className="font-bold text-white tracking-wider truncate">LIVE MODULE ENGINE</span>
                       </div>
-                      <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-bold border border-emerald-500/20">
+                      <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-bold border border-emerald-500/20 flex-shrink-0">
                         ONLINE
                       </span>
                     </div>
@@ -438,14 +438,14 @@ export const FeatureStack = () => {
                       <div className="space-y-2.5 py-3">
                         <div className="p-3 rounded-xl bg-zinc-900/80 border border-zinc-800 text-xs">
                           <span className="text-zinc-500 block text-[10px] uppercase font-semibold">User Query</span>
-                          <span className="text-white font-medium">"What is the safety pressure relief limit for domestic pressure cookers?"</span>
+                          <span className="text-white font-medium break-words">"What is the safety pressure relief limit for domestic pressure cookers?"</span>
                         </div>
                         <div className="p-3 rounded-xl bg-cyan-950/20 border border-cyan-800/40 text-xs space-y-1">
-                          <div className="flex items-center justify-between text-cyan-400 text-[10px] font-bold">
-                            <span>GROUNDED CITATION: IS 2347:2017 [CLAUSE 5.1]</span>
-                            <span className="text-emerald-400">99.8% CONFIDENCE</span>
+                          <div className="flex flex-wrap items-center justify-between text-cyan-400 text-[10px] font-bold gap-1">
+                            <span className="truncate">GROUNDED CITATION: IS 2347:2017 [CLAUSE 5.1]</span>
+                            <span className="text-emerald-400 whitespace-nowrap">99.8% CONFIDENCE</span>
                           </div>
-                          <p className="text-zinc-300 text-[11px] leading-relaxed">
+                          <p className="text-zinc-300 text-[11px] leading-relaxed break-words">
                             "Operating pressure must release at 1.0 kgf/cm² with a secondary safety fuse plug complying with Schedule IV."
                           </p>
                         </div>
@@ -456,14 +456,14 @@ export const FeatureStack = () => {
                       <div className="space-y-2.5 py-3">
                         <div className="p-3 rounded-xl bg-zinc-900/80 border border-zinc-800 text-xs">
                           <span className="text-zinc-500 block text-[10px] uppercase font-semibold">Input Product</span>
-                          <span className="text-white font-medium">"Packaged Drinking Water (Other than Natural Mineral Water)"</span>
+                          <span className="text-white font-medium break-words">"Packaged Drinking Water (Other than Natural Mineral Water)"</span>
                         </div>
                         <div className="p-3 rounded-xl bg-purple-950/20 border border-purple-800/40 text-xs space-y-1.5">
-                          <div className="flex items-center justify-between text-purple-300 text-[10px] font-bold">
-                            <span>RESOLVED STANDARD: IS 14543:2016</span>
-                            <span className="text-amber-400">MANDATORY QCO</span>
+                          <div className="flex flex-wrap items-center justify-between text-purple-300 text-[10px] font-bold gap-1">
+                            <span className="truncate">RESOLVED STANDARD: IS 14543:2016</span>
+                            <span className="text-amber-400 whitespace-nowrap">MANDATORY QCO</span>
                           </div>
-                          <div className="flex items-center space-x-2 text-[10px] text-zinc-400">
+                          <div className="flex items-center space-x-2 text-[10px] text-zinc-400 truncate">
                             <span>SCHEME-I COMPULSORY</span>
                             <span>•</span>
                             <span>DPIIT GAZETTE ENFORCED</span>
@@ -475,15 +475,15 @@ export const FeatureStack = () => {
                     {c.previewType === 'verify' && (
                       <div className="space-y-2.5 py-3">
                         <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div className="p-2.5 rounded-xl bg-zinc-900/80 border border-zinc-800">
+                          <div className="p-2.5 rounded-xl bg-zinc-900/80 border border-zinc-800 min-w-0">
                             <span className="text-zinc-500 block text-[10px]">ISI LICENCE</span>
-                            <span className="text-amber-400 font-bold">CM/L-8400123</span>
-                            <span className="text-emerald-400 text-[10px] block mt-0.5">● OPERATIVE</span>
+                            <span className="text-amber-400 font-bold block truncate">CM/L-8400123</span>
+                            <span className="text-emerald-400 text-[10px] block mt-0.5 truncate">● OPERATIVE</span>
                           </div>
-                          <div className="p-2.5 rounded-xl bg-zinc-900/80 border border-zinc-800">
+                          <div className="p-2.5 rounded-xl bg-zinc-900/80 border border-zinc-800 min-w-0">
                             <span className="text-zinc-500 block text-[10px]">GOLD HALLMARK</span>
-                            <span className="text-amber-400 font-bold">HUID: AB89K2</span>
-                            <span className="text-emerald-400 text-[10px] block mt-0.5">● 22K 916 AUTHENTIC</span>
+                            <span className="text-amber-400 font-bold block truncate">HUID: AB89K2</span>
+                            <span className="text-emerald-400 text-[10px] block mt-0.5 truncate">● 22K 916 AUTHENTIC</span>
                           </div>
                         </div>
                         <div className="p-2.5 rounded-xl bg-amber-950/20 border border-amber-800/30 text-[11px] text-zinc-300 truncate">
@@ -494,26 +494,26 @@ export const FeatureStack = () => {
 
                     {c.previewType === 'wizard' && (
                       <div className="space-y-2 py-2 text-xs">
-                        <div className="flex items-center justify-between p-2 rounded-lg bg-emerald-950/30 border border-emerald-800/40 text-emerald-400 text-[11px]">
-                          <div className="flex items-center space-x-2">
-                            <Check className="w-3.5 h-3.5" />
-                            <span>Step 01: Application Form-V Filing</span>
+                        <div className="flex items-center justify-between p-2 rounded-lg bg-emerald-950/30 border border-emerald-800/40 text-emerald-400 text-[11px] gap-2">
+                          <div className="flex items-center space-x-2 min-w-0">
+                            <Check className="w-3.5 h-3.5 flex-shrink-0" />
+                            <span className="truncate">Step 01: Application Form-V Filing</span>
                           </div>
-                          <span className="text-[10px] font-bold">COMPLETED</span>
+                          <span className="text-[10px] font-bold flex-shrink-0">COMPLETED</span>
                         </div>
-                        <div className="flex items-center justify-between p-2 rounded-lg bg-emerald-950/30 border border-emerald-800/40 text-emerald-400 text-[11px]">
-                          <div className="flex items-center space-x-2">
-                            <Check className="w-3.5 h-3.5" />
-                            <span>Step 02: In-House QC Lab & STI</span>
+                        <div className="flex items-center justify-between p-2 rounded-lg bg-emerald-950/30 border border-emerald-800/40 text-emerald-400 text-[11px] gap-2">
+                          <div className="flex items-center space-x-2 min-w-0">
+                            <Check className="w-3.5 h-3.5 flex-shrink-0" />
+                            <span className="truncate">Step 02: In-House QC Lab & STI</span>
                           </div>
-                          <span className="text-[10px] font-bold">VERIFIED</span>
+                          <span className="text-[10px] font-bold flex-shrink-0">VERIFIED</span>
                         </div>
-                        <div className="flex items-center justify-between p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-400 text-[11px]">
-                          <div className="flex items-center space-x-2">
-                            <span className="w-3.5 h-3.5 rounded-full border border-zinc-600 flex items-center justify-center text-[9px]">3</span>
-                            <span>Step 03: BIS Factory Audit Readiness</span>
+                        <div className="flex items-center justify-between p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-400 text-[11px] gap-2">
+                          <div className="flex items-center space-x-2 min-w-0">
+                            <span className="w-3.5 h-3.5 rounded-full border border-zinc-600 flex items-center justify-center text-[9px] flex-shrink-0">3</span>
+                            <span className="truncate">Step 03: BIS Factory Audit Readiness</span>
                           </div>
-                          <span className="text-[10px] text-cyan-400">IN PROGRESS</span>
+                          <span className="text-[10px] text-cyan-400 flex-shrink-0">IN PROGRESS</span>
                         </div>
                       </div>
                     )}
@@ -525,28 +525,28 @@ export const FeatureStack = () => {
                   </div>
 
                   {/* Right Column: Editorial Description & Capability Chips */}
-                  <div className="lg:col-span-6 flex flex-col justify-between py-1 space-y-4">
+                  <div className="card-desc-col flex flex-col justify-between py-1 space-y-4 min-w-0 overflow-hidden">
                     <div>
-                      <p className="text-sm sm:text-base lg:text-lg text-zinc-200 leading-relaxed font-normal">
+                      <p className="text-sm sm:text-base lg:text-lg text-zinc-200 leading-relaxed font-normal break-words">
                         {c.description}
                       </p>
                     </div>
 
-                    <div className="space-y-3 pt-2 w-full">
+                    <div className="space-y-3 pt-2 w-full min-w-0">
                       <div className="flex flex-wrap gap-2">
                         {c.chips.map((chip, i) => (
                           <span
                             key={i}
-                            className="font-mono text-[10px] sm:text-[11px] px-2.5 py-1 rounded-md bg-zinc-900/90 border border-zinc-800 text-zinc-400 uppercase tracking-wider shadow-2xs"
+                            className="font-mono text-[10px] sm:text-[11px] px-2.5 py-1 rounded-md bg-zinc-900/90 border border-zinc-800 text-zinc-400 uppercase tracking-wider shadow-2xs whitespace-nowrap"
                           >
                             {chip}
                           </span>
                         ))}
                       </div>
 
-                      <div className="flex items-center space-x-2 text-[11px] font-mono text-zinc-500 pt-1">
-                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                        <span>Statutory Gazette Grounded • Updated for 2026 Regulations</span>
+                      <div className="flex items-center space-x-2 text-[11px] font-mono text-zinc-500 pt-1 truncate">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
+                        <span className="truncate">Statutory Gazette Grounded • Updated for 2026 Regulations</span>
                       </div>
                     </div>
                   </div>
