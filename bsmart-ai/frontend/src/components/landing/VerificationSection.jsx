@@ -306,27 +306,55 @@ const MANDATORY_SAFETY_CATEGORIES = [
 const VERIFICATION_STEPS = [
   {
     step: "01",
+    phase: "PHASE 01 // OPTICAL",
     title: "INSPECT THE MONOGRAM",
     desc: "Examine product body, label, or jewellery surface for the official BIS triangle or ISI monogram.",
-    detail: "Never accept faint stickers or unverified logos without alphanumeric identifiers."
+    detail: "Never accept faint stickers or unverified logos without alphanumeric identifiers.",
+    icon: Search,
+    beaconColor: "bg-blue-500",
+    stat: "Optical Monogram",
+    badge: "VISUAL INSPECTION",
+    actionPrompt: "Inspect Mark Anatomy",
+    statutoryRef: "BIS Act §14(1) Regs"
   },
   {
     step: "02",
+    phase: "PHASE 02 // TELEMETRY",
     title: "LOCATE THE IDENTIFIER",
     desc: "Identify the 7-digit CM/L license code (under ISI logo) or the 6-character laser-etched HUID code.",
-    detail: "Every authentic manufacturer or assaying centre is assigned an immutable registry number."
+    detail: "Every authentic manufacturer or assaying centre is assigned an immutable registry number.",
+    icon: QrCode,
+    beaconColor: "bg-amber-500",
+    stat: "7-Digit / 6-Char",
+    badge: "IDENTIFIER PARSING",
+    actionPrompt: "Sample Licence Code",
+    statutoryRef: "IS 15820 & BIS Rules"
   },
   {
     step: "03",
+    phase: "PHASE 03 // GAZETTE",
     title: "QUERY GAZETTE REGISTRY",
     desc: "Run instant verification via BISmart AI or official BIS Care to verify license validity and factory origin.",
-    detail: "Confirm that manufacturer brand and factory address match the physical packaging."
+    detail: "Confirm that manufacturer brand and factory address match the physical packaging.",
+    icon: FileCheck2,
+    beaconColor: "bg-emerald-500",
+    stat: "< 150ms Cloud API",
+    badge: "REGISTRY MIRROR",
+    actionPrompt: "Run Live Query",
+    statutoryRef: "Gazette Scheme-I & IV"
   },
   {
     step: "04",
+    phase: "PHASE 04 // STATUTORY",
     title: "REPORT COUNTERFEITS",
     desc: "If invalid, expired, or counterfeit, submit an instant complaint to initiate immediate BIS enforcement action.",
-    detail: "Violators face up to 2 years imprisonment and asset seizure under BIS Act 2016."
+    detail: "Violators face up to 2 years imprisonment and asset seizure under BIS Act 2016.",
+    icon: ShieldAlert,
+    beaconColor: "bg-rose-500",
+    stat: "§29 Cognizable",
+    badge: "LEGAL ENFORCEMENT",
+    actionPrompt: "Report Violation",
+    statutoryRef: "Section 29 Prosecution"
   }
 ];
 
@@ -490,6 +518,47 @@ export const VerificationSection = () => {
     }
   };
 
+  // Section 05.B Interactive Protocol State & Auto-Stepper
+  const [activeStepIdx, setActiveStepIdx] = useState(0);
+  const [isStepAutoPlaying, setIsStepAutoPlaying] = useState(false);
+
+  useEffect(() => {
+    if (!isStepAutoPlaying) return;
+    const interval = setInterval(() => {
+      setActiveStepIdx((prev) => (prev + 1) % VERIFICATION_STEPS.length);
+    }, 4200);
+    return () => clearInterval(interval);
+  }, [isStepAutoPlaying]);
+
+  const executeStepAction = (idx) => {
+    setActiveStepIdx(idx);
+    if (idx === 0) {
+      const el = document.getElementById('verif-quick-tool');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else if (idx === 1) {
+      setQuickMode('isi');
+      setQuickQuery('8400123');
+      const el = document.getElementById('verif-quick-tool');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else if (idx === 2) {
+      setQuickMode('huid');
+      setQuickQuery('AB89K2');
+      setQuickStatus({
+        checked: true,
+        valid: true,
+        code: 'HUID: AB89K2',
+        title: 'Tanishq Jewellers (Titan Co)',
+        subtitle: '22K Gold Handcrafted Bangle • 916 Fineness Assayed',
+        tag: 'AUTHENTIC HALLMARK'
+      });
+      const el = document.getElementById('verif-quick-tool');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else if (idx === 3) {
+      const el = document.getElementById('verif-enforcement-hotline');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
+
   useGSAP(() => {
     gsap.from('.verif-header-content', {
       y: 35,
@@ -556,6 +625,32 @@ export const VerificationSection = () => {
         }
       });
     }
+
+    gsap.from('.verif-05b-header', {
+      y: 30,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: '.verif-05b-section',
+        start: 'top 82%',
+        once: true,
+      }
+    });
+
+    gsap.from('.verif-step-card', {
+      y: 40,
+      opacity: 0,
+      scale: 0.96,
+      duration: 0.65,
+      stagger: 0.1,
+      ease: 'back.out(1.2)',
+      scrollTrigger: {
+        trigger: '.verif-steps-grid',
+        start: 'top 85%',
+        once: true,
+      }
+    });
   }, { scope: sectionRef, dependencies: [scannerViewMode] });
 
   const activeIsi = ISI_SAMPLES[isiIdx];
@@ -1551,64 +1646,259 @@ export const VerificationSection = () => {
         </div>
 
         {/* ========================================================
-            05. 4-Step Citizen Verification & Counterfeit Reporting Protocol
+            05. 4-Step Citizen Verification & Counterfeit Reporting Protocol (Section 05.B)
             ======================================================== */}
-        <div className="space-y-6 pt-4 border-t border-zinc-200">
+        <div className="verif-05b-section space-y-6 pt-4 border-t border-zinc-200">
           
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+          {/* Section 05.B Header & Interactive Auto-Stepper Controls */}
+          <div className="verif-05b-header flex flex-col lg:flex-row lg:items-end justify-between gap-4">
             <div>
               <div className="inline-flex items-center space-x-2 font-mono text-[10px] tracking-widest text-zinc-500 uppercase mb-1">
-                <span className="w-3 h-px bg-zinc-400"></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 <span>05.B — STEP-BY-STEP VERIFICATION PROTOCOL</span>
               </div>
-              <h3 className="text-xl sm:text-3xl font-black uppercase tracking-tight text-black">
+              <h3 className="editorial-headline text-2xl sm:text-4xl font-black uppercase tracking-tight text-black">
                 HOW CONSUMERS VERIFY PRODUCTS IN 4 STEPS
               </h3>
+              <p className="text-xs sm:text-sm text-zinc-600 max-w-xl font-normal leading-relaxed mt-1">
+                A rapid statutory inspection flow engineered for citizens to verify statutory ISI marks and gold HUID hallmarking in under 30 seconds before purchase.
+              </p>
             </div>
-            <p className="text-xs text-zinc-600 max-w-md font-normal leading-relaxed">
-              Verify statutory compliance in under 30 seconds before completing any purchase online or at retail stores.
-            </p>
+
+            {/* Stepper Cycler Controls */}
+            <div className="flex items-center gap-2 font-mono text-xs shrink-0">
+              <div className="flex items-center bg-zinc-100 p-1 rounded-xl border border-zinc-200 text-xs">
+                {VERIFICATION_STEPS.map((s, idx) => (
+                  <button
+                    key={s.step}
+                    type="button"
+                    onClick={() => {
+                      setActiveStepIdx(idx);
+                      setIsStepAutoPlaying(false);
+                    }}
+                    className={`px-2.5 py-1 rounded-lg font-bold text-[11px] transition-all cursor-pointer ${
+                      activeStepIdx === idx
+                        ? 'bg-black text-white shadow-xs'
+                        : 'text-zinc-600 hover:text-black'
+                    }`}
+                  >
+                    <span>{s.step}</span>
+                  </button>
+                ))}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsStepAutoPlaying(!isStepAutoPlaying)}
+                className={`px-3 py-1.5 rounded-xl border font-bold text-[11px] flex items-center gap-1.5 transition-all cursor-pointer ${
+                  isStepAutoPlaying
+                    ? 'bg-emerald-50 text-emerald-800 border-emerald-300 shadow-2xs'
+                    : 'bg-white text-zinc-700 border-zinc-200 hover:border-black shadow-2xs'
+                }`}
+                title={isStepAutoPlaying ? "Pause auto sequence" : "Play auto sequence"}
+              >
+                {isStepAutoPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+                <span>{isStepAutoPlaying ? "PAUSE" : "AUTO PLAY"}</span>
+              </button>
+            </div>
           </div>
 
-          <div className="verif-steps-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-            {VERIFICATION_STEPS.map((s, idx) => (
+          {/* Kinetic Connecting Pipeline Progress Bar */}
+          <div className="relative pt-2 pb-1">
+            <div className="w-full bg-zinc-200 h-1.5 rounded-full overflow-hidden relative">
               <div
-                key={s.step}
-                className="verif-step-card bg-white border border-zinc-300 rounded-2xl p-5 flex flex-col justify-between hover:border-black transition-all shadow-2xs relative"
-              >
-                <div>
-                  <div className="flex items-center justify-between pb-2.5 border-b border-zinc-200">
-                    <span className="font-mono text-xl sm:text-2xl font-black text-black">
-                      {s.step}
+                className="bg-black h-full transition-all duration-500 ease-out"
+                style={{ width: `${((activeStepIdx + 1) / 4) * 100}%` }}
+              />
+            </div>
+            
+            {/* 4 Interactive Progress Markers */}
+            <div className="grid grid-cols-4 pt-2 font-mono text-[9px]">
+              {VERIFICATION_STEPS.map((s, idx) => {
+                const isActive = activeStepIdx === idx;
+                const isPassed = activeStepIdx >= idx;
+                return (
+                  <div
+                    key={s.step}
+                    onClick={() => {
+                      setActiveStepIdx(idx);
+                      setIsStepAutoPlaying(false);
+                    }}
+                    className={`cursor-pointer transition-colors flex items-center gap-1.5 ${
+                      isActive ? 'text-black font-black' : isPassed ? 'text-zinc-700' : 'text-zinc-400'
+                    }`}
+                  >
+                    <span className={`w-1.5 h-1.5 rounded-full transition-all ${
+                      isActive ? 'bg-black scale-125' : isPassed ? 'bg-zinc-600' : 'bg-zinc-300'
+                    }`} />
+                    <span className="truncate hidden sm:inline">{s.step} {s.title}</span>
+                    <span className="sm:hidden">{s.step}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 4 Kinetic Interactive Step Cards */}
+          <div className="verif-steps-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {VERIFICATION_STEPS.map((s, idx) => {
+              const isActive = activeStepIdx === idx;
+              const StepIcon = s.icon;
+
+              return (
+                <div
+                  key={s.step}
+                  onMouseMove={handleCardMouseMove}
+                  onClick={() => {
+                    setActiveStepIdx(idx);
+                    setIsStepAutoPlaying(false);
+                  }}
+                  className={`verif-step-card relative rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 group cursor-pointer overflow-hidden ${
+                    isActive
+                      ? 'bg-white border-2 border-black shadow-xl -translate-y-2 ring-1 ring-black/10'
+                      : 'bg-white border border-zinc-300 hover:border-black shadow-2xs hover:shadow-lg hover:-translate-y-1'
+                  }`}
+                >
+                  {/* Interactive Cursor Spotlight Specular Sheen */}
+                  <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl bg-[radial-gradient(350px_circle_at_var(--mouse-x,150px)_var(--mouse-y,100px),rgba(0,0,0,0.04),transparent_70%)]" />
+
+                  {/* Top Laser Sweep Hairline */}
+                  <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-black to-transparent pointer-events-none transition-all duration-700 ${
+                    isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 -translate-x-full group-hover:translate-x-full'
+                  }`} />
+
+                  {/* Card Header */}
+                  <div className="relative z-10 space-y-3">
+                    <div className="flex items-center justify-between pb-2.5 border-b border-zinc-200">
+                      <div className="flex items-center space-x-2">
+                        <span className={`font-mono text-2xl font-black transition-transform duration-300 ${
+                          isActive ? 'text-black scale-110' : 'text-zinc-800 group-hover:scale-105'
+                        }`}>
+                          {s.step}
+                        </span>
+                        <span className="font-mono text-[9px] font-bold text-zinc-400 bg-zinc-100 px-1.5 py-0.5 rounded">
+                          {s.stat}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center space-x-2">
+                        <span className="relative flex h-2 w-2">
+                          <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${s.beaconColor}`} />
+                          <span className={`relative inline-flex rounded-full h-2 w-2 ${s.beaconColor}`} />
+                        </span>
+                        <StepIcon className={`w-4 h-4 transition-all duration-300 ${
+                          isActive ? 'text-black scale-125 rotate-6' : 'text-zinc-500 group-hover:text-black group-hover:scale-110'
+                        }`} />
+                      </div>
+                    </div>
+
+                    <span className="font-mono text-[9px] font-black uppercase tracking-widest text-zinc-400 block">
+                      {s.phase}
                     </span>
-                    {idx < 3 && (
-                      <ChevronRight className="w-4 h-4 text-zinc-400 hidden lg:block" />
-                    )}
+
+                    <h4 className="font-black text-sm sm:text-base text-black uppercase tracking-tight group-hover:text-zinc-900 transition-colors">
+                      {s.title}
+                    </h4>
+
+                    <p className="text-[11px] sm:text-xs text-zinc-600 font-normal leading-relaxed">
+                      {s.desc}
+                    </p>
                   </div>
 
-                  <h4 className="font-black text-xs sm:text-sm text-black uppercase tracking-wide mt-2.5">
-                    {s.title}
-                  </h4>
+                  {/* Card Footer: Detail & Direct Simulation Trigger */}
+                  <div className="relative z-10 pt-3 mt-3 border-t border-zinc-100 space-y-2.5">
+                    <p className="font-mono text-[10px] text-zinc-500 leading-tight">
+                      {s.detail}
+                    </p>
 
-                  <p className="text-[11px] sm:text-xs text-zinc-600 font-normal leading-relaxed mt-1.5">
-                    {s.desc}
-                  </p>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        executeStepAction(idx);
+                      }}
+                      className={`w-full py-1.5 px-2.5 rounded-xl font-mono text-[10px] font-bold uppercase tracking-wider flex items-center justify-between transition-all cursor-pointer ${
+                        isActive
+                          ? 'bg-black text-white hover:bg-zinc-800 shadow-xs'
+                          : 'bg-zinc-100 text-zinc-700 hover:bg-black hover:text-white'
+                      }`}
+                    >
+                      <span>{s.actionPrompt}</span>
+                      <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Active Step Deep Telemetry Focus Panel */}
+          {(() => {
+            const currentStep = VERIFICATION_STEPS[activeStepIdx] || VERIFICATION_STEPS[0];
+            const StepIcon = currentStep.icon;
+
+            return (
+              <div className="bg-white border border-zinc-300 rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
+                <div className="flex items-center space-x-3.5">
+                  <div className="w-10 h-10 rounded-xl bg-black text-white flex items-center justify-center shrink-0 shadow-xs">
+                    <StepIcon className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="space-y-0.5">
+                    <div className="flex items-center space-x-2">
+                      <span className="font-mono text-[10px] font-bold text-zinc-400 uppercase">
+                        ACTIVE PROTOCOL // {currentStep.phase}
+                      </span>
+                      <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-mono text-[9px] font-bold">
+                        {currentStep.statutoryRef}
+                      </span>
+                    </div>
+                    <h5 className="font-black text-sm sm:text-base text-black uppercase tracking-tight">
+                      {currentStep.step}. {currentStep.title} — {currentStep.badge}
+                    </h5>
+                    <p className="text-xs text-zinc-600 font-normal">
+                      {currentStep.detail}
+                    </p>
+                  </div>
                 </div>
 
-                <div className="pt-3 mt-3 border-t border-zinc-100">
-                  <p className="font-mono text-[10px] text-zinc-500 leading-tight">
-                    {s.detail}
-                  </p>
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setActiveStepIdx((prev) => (prev > 0 ? prev - 1 : VERIFICATION_STEPS.length - 1))}
+                    className="p-2 rounded-xl border border-zinc-200 text-zinc-700 hover:border-black bg-white cursor-pointer"
+                    title="Previous step"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => executeStepAction(activeStepIdx)}
+                    className="px-4 py-2 rounded-xl bg-black text-white hover:bg-zinc-800 text-xs font-mono font-bold uppercase tracking-wider transition-colors flex items-center gap-1.5 shadow-xs cursor-pointer"
+                  >
+                    <span>Execute {currentStep.actionPrompt}</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setActiveStepIdx((prev) => (prev + 1) % VERIFICATION_STEPS.length)}
+                    className="p-2 rounded-xl border border-zinc-200 text-zinc-700 hover:border-black bg-white cursor-pointer"
+                    title="Next step"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
-            ))}
-          </div>
+            );
+          })()}
+
         </div>
 
         {/* ========================================================
             06. Statutory Warnings, Grievance Hotline & Citizen Rights Banner
             ======================================================== */}
-        <div className="bg-black text-white rounded-[24px] p-6 sm:p-10 relative overflow-hidden border border-zinc-800 shadow-xl">
+        <div id="verif-enforcement-hotline" className="bg-black text-white rounded-[24px] p-6 sm:p-10 relative overflow-hidden border border-zinc-800 shadow-xl">
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
             
             {/* Left Warning Text */}
