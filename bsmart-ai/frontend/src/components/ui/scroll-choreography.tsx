@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { 
   ShieldCheck, 
@@ -9,20 +9,15 @@ import {
   ExternalLink, 
   Search, 
   ArrowRight,
-  Maximize2,
-  ChevronRight,
   Play,
   Pause,
-  RotateCcw,
-  Layers,
-  Activity,
-  Flame,
-  Scale
+  ChevronRight,
+  ChevronLeft
 } from "lucide-react";
 
 export interface ScrollChoreographyImages {
   topLeft: string;
-  topRight: string; // The Hero quadrant image that expands to fill the viewport
+  topRight: string;
   bottomLeft: string;
   bottomRight: string;
 }
@@ -43,7 +38,6 @@ export interface ScrollChoreographyProps {
   subtitle?: string;
 }
 
-// Numerical interpolation helper
 function interpolateNum(
   t: number,
   inputRange: number[],
@@ -70,21 +64,30 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
   className,
   badge = "05.CHOREOGRAPHY — CITIZEN STATUTORY PROOF MATRIX",
   title = "CHOREOGRAPHED REGULATORY PROOFS",
-  subtitle = "Scroll down to witness the 4 statutory proof quadrants animate and converge into the national central authenticity emblem."
+  subtitle = "Scroll down as the 4 statutory verification quadrants animate and converge into the central national authenticity emblem."
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
   const [smoothProgress, setSmoothProgress] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [mobileActiveIdx, setMobileActiveIdx] = useState(0);
   const targetProgressRef = useRef(0);
 
-  // Smooth Spring Motion Physics
+  // Responsive mobile breakpoint check
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener("resize", check, { passive: true });
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  // Smooth Spring Loop
   useEffect(() => {
     let animationFrameId: number;
     let velocity = 0;
     let currentSmooth = 0;
-    const stiffness = 280;
-    const damping = 34;
+    const stiffness = 300;
+    const damping = 36;
     const mass = 1.0;
 
     const loop = () => {
@@ -98,7 +101,6 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
       velocity += acceleration * dt;
       currentSmooth += velocity * dt;
 
-      // Clamp within 0 and 1
       const clamped = Math.max(0, Math.min(1, currentSmooth));
       setSmoothProgress(clamped);
 
@@ -109,7 +111,7 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
     return () => cancelAnimationFrame(animationFrameId);
   }, []);
 
-  // Native Scroll-Driven Progress Tracker
+  // Native Scroll Listener
   useEffect(() => {
     const handleScroll = () => {
       if (isPlaying || !containerRef.current) return;
@@ -123,7 +125,6 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
         const scrolled = -rect.top;
         const p = Math.max(0, Math.min(1, scrolled / totalScrollable));
         targetProgressRef.current = p;
-        setScrollProgress(p);
       }
     };
 
@@ -132,12 +133,12 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isPlaying]);
 
-  // Automated Cinematic Playback Mode
+  // Automated Animation Playback
   useEffect(() => {
     if (!isPlaying) return;
     let direction = 1;
     const interval = setInterval(() => {
-      let next = targetProgressRef.current + direction * 0.008;
+      let next = targetProgressRef.current + direction * 0.009;
       if (next >= 1) {
         next = 1;
         direction = -1;
@@ -146,8 +147,7 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
         direction = 1;
       }
       targetProgressRef.current = next;
-      setScrollProgress(next);
-    }, 30);
+    }, 32);
 
     return () => clearInterval(interval);
   }, [isPlaying]);
@@ -155,85 +155,70 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
   const jumpToPhase = (phaseVal: number) => {
     setIsPlaying(false);
     targetProgressRef.current = phaseVal;
-    setScrollProgress(phaseVal);
   };
 
   const p = smoothProgress;
 
   // ========================================================
-  // ANIMATION CHOREOGRAPHY INTERPOLATION (0.0 -> 1.0)
+  // DESKTOP INTERPOLATION (Strictly Bounded Inside Canvas)
+  // Cards are sized 44% width x 42% height.
+  // Center is at (0, 0).
+  // Standard offsets are -54% and +54% of card size.
+  // At -54%, card left edge is at (50% - 0.54*44% - 22%) = 4.2% margin.
+  // Cards NEVER touch the canvas boundary!
   // ========================================================
-  
-  // Quadrant 1 (Top-Left): Factory Mechanical & Burst Testing
-  // Starts top-left -> arcs downward -> converges to center -> fades
-  const tlX = interpolateNum(p, [0, 0.25, 0.55, 0.75, 1], [-25, -28, -12, 0, 0]);
-  const tlY = interpolateNum(p, [0, 0.25, 0.55, 0.75, 1], [-25, 15, 0, 0, 0]);
-  const tlScale = interpolateNum(p, [0, 0.45, 0.65, 0.75], [1, 1.02, 0.85, 0.5]);
+
+  // Card 1: Top-Left (Mechanical Safety & Pressure Proofing)
+  const tlX = interpolateNum(p, [0, 0.25, 0.55, 0.75, 1], [-54, -48, -15, 0, 0]);
+  const tlY = interpolateNum(p, [0, 0.25, 0.55, 0.75, 1], [-54, 25, 0, 0, 0]);
+  const tlScale = interpolateNum(p, [0, 0.40, 0.65, 0.75], [1, 1.02, 0.85, 0.4]);
   const tlOpacity = interpolateNum(p, [0.55, 0.72], [1, 0]);
   const tlRotate = interpolateNum(p, [0, 0.35, 0.65], [-1, 2, 0]);
 
-  // Quadrant 2 (Bottom-Right): 6-Char Laser HUID Assaying
-  // Starts bottom-right -> arcs upward -> converges to center -> fades
-  const brX = interpolateNum(p, [0, 0.25, 0.55, 0.75, 1], [25, 28, 12, 0, 0]);
-  const brY = interpolateNum(p, [0, 0.25, 0.55, 0.75, 1], [25, -15, 0, 0, 0]);
-  const brScale = interpolateNum(p, [0, 0.45, 0.65, 0.75], [1, 1.02, 0.85, 0.5]);
+  // Card 2: Bottom-Right (Laser HUID Gold Hallmarking)
+  const brX = interpolateNum(p, [0, 0.25, 0.55, 0.75, 1], [54, 48, 15, 0, 0]);
+  const brY = interpolateNum(p, [0, 0.25, 0.55, 0.75, 1], [54, -25, 0, 0, 0]);
+  const brScale = interpolateNum(p, [0, 0.40, 0.65, 0.75], [1, 1.02, 0.85, 0.4]);
   const brOpacity = interpolateNum(p, [0.55, 0.72], [1, 0]);
   const brRotate = interpolateNum(p, [0, 0.35, 0.65], [1, -2, 0]);
 
-  // Quadrant 3 (Bottom-Left): Gazette Statutory Enforcement QCO
-  // Starts bottom-left -> slides rightward -> converges to center -> fades
-  const blX = interpolateNum(p, [0, 0.25, 0.55, 0.75, 1], [-25, -15, -6, 0, 0]);
-  const blY = interpolateNum(p, [0, 0.25, 0.55, 0.75, 1], [25, 20, 6, 0, 0]);
-  const blScale = interpolateNum(p, [0, 0.45, 0.65, 0.75], [1, 0.98, 0.85, 0.5]);
+  // Card 3: Bottom-Left (Statutory Gazette QCO Enforcement)
+  const blX = interpolateNum(p, [0, 0.25, 0.55, 0.75, 1], [-54, -30, -10, 0, 0]);
+  const blY = interpolateNum(p, [0, 0.25, 0.55, 0.75, 1], [54, 40, 10, 0, 0]);
+  const blScale = interpolateNum(p, [0, 0.40, 0.65, 0.75], [1, 0.98, 0.85, 0.4]);
   const blOpacity = interpolateNum(p, [0.55, 0.72], [1, 0]);
   const blRotate = interpolateNum(p, [0, 0.35, 0.65], [0, 1.5, 0]);
 
-  // Quadrant 4 (Top-Right HERO): Bureau of Indian Standards Authenticity Emblem
-  // Starts top-right -> moves to center -> EXPANDS to full stage
-  const trX = interpolateNum(p, [0, 0.25, 0.55, 0.75, 1], [25, 15, 0, 0, 0]);
-  const trY = interpolateNum(p, [0, 0.25, 0.55, 0.75, 1], [-25, -12, 0, 0, 0]);
+  // Card 4: Top-Right HERO (Expands to Full Stage)
+  const trX = interpolateNum(p, [0, 0.25, 0.55, 0.75, 1], [54, 25, 0, 0, 0]);
+  const trY = interpolateNum(p, [0, 0.25, 0.55, 0.75, 1], [-54, -20, 0, 0, 0]);
   const trRotate = interpolateNum(p, [0, 0.35, 0.60], [1, -1.5, 0]);
   
-  // Hero Expansion Dimensions (from 42% width & 38% height up to 96% width & 90% height)
-  const trWidth = interpolateNum(p, [0.55, 0.78, 1], [42, 85, 96]);
-  const trHeight = interpolateNum(p, [0.55, 0.78, 1], [38, 78, 90]);
-  const trBorderRadius = interpolateNum(p, [0.55, 0.78, 1], [24, 28, 32]);
+  // Hero Expansion from 44% width / 42% height up to 96% width / 92% height
+  const trWidth = interpolateNum(p, [0.55, 0.78, 1], [44, 86, 96]);
+  const trHeight = interpolateNum(p, [0.55, 0.78, 1], [42, 80, 92]);
+  const trBorderRadius = interpolateNum(p, [0.55, 0.78, 1], [20, 24, 28]);
 
-  // Expanded Hero Full Verification Content Overlay
   const heroContentOpacity = interpolateNum(p, [0.65, 0.85], [0, 1]);
-  const heroContentScale = interpolateNum(p, [0.65, 0.85], [0.94, 1]);
+  const heroContentScale = interpolateNum(p, [0.65, 0.85], [0.95, 1]);
 
   return (
     <div
       ref={containerRef}
-      className={cn(
-        "relative h-[220vh] sm:h-[250vh] w-full",
-        className
-      )}
+      className={cn("relative h-[160vh] sm:h-[180vh] w-full", className)}
     >
       {/* Sticky Choreography Cinema Viewport */}
-      <div className="sticky top-20 sm:top-24 h-[calc(100vh-5.5rem)] sm:h-[calc(100vh-6.5rem)] max-h-[880px] w-full overflow-hidden rounded-[28px] sm:rounded-[36px] border border-zinc-300 bg-zinc-950 text-white flex flex-col justify-between p-4 sm:p-6 lg:p-7 shadow-2xl">
+      <div className="sticky top-20 sm:top-24 h-[calc(100vh-5.5rem)] sm:h-[calc(100vh-6.5rem)] max-h-[800px] min-h-[540px] w-full overflow-hidden rounded-[24px] sm:rounded-[32px] border border-zinc-300 bg-zinc-950 text-white flex flex-col justify-between p-4 sm:p-6 shadow-2xl">
         
-        {/* Architectural Blueprint Matrix Background */}
+        {/* Subtle Architectural Grid Backdrop */}
         <div className="absolute inset-0 pointer-events-none opacity-30">
           <div className="absolute inset-0 bg-[radial-gradient(#52525b_1px,transparent_1px)] [background-size:24px_24px]" />
-          
-          {/* Subtle Coordinate Crosshair Rings in Center */}
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full border border-dashed border-zinc-600/40" />
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full border border-zinc-700/30" />
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-emerald-400 animate-ping opacity-60" />
-
-          {/* Technical Corner Markers */}
-          <div className="absolute top-4 left-6 font-mono text-[9px] text-zinc-500 uppercase tracking-widest hidden sm:block">
-            CHOREOGRAPHY // KINETIC MATRIX [0,0]
-          </div>
-          <div className="absolute top-4 right-6 font-mono text-[9px] text-zinc-500 uppercase tracking-widest hidden sm:block">
-            CENTRAL GAZETTE MIRROR // ACTIVE
-          </div>
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full border border-dashed border-zinc-700/50" />
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-emerald-400 animate-ping opacity-75" />
         </div>
 
         {/* ========================================================
-            Top Header & Interactive Phase Scrub Controller
+            01. Section Header & Choreography Controller Bar
             ======================================================== */}
         <div className="relative z-50 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-800 pb-3">
           <div className="space-y-0.5">
@@ -246,7 +231,7 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
             </h3>
           </div>
 
-          {/* Interactive Phase Buttons & Auto-Play Controller */}
+          {/* Controller Buttons: 4 Phases + Auto-Play */}
           <div className="flex flex-wrap items-center gap-1.5 font-mono text-[10px]">
             <button
               type="button"
@@ -279,7 +264,7 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
               onClick={() => jumpToPhase(0.65)}
               className={cn(
                 "px-2.5 py-1 rounded-lg border transition-all cursor-pointer",
-                p >= 0.55 && p < 0.8
+                p >= 0.55 && p < 0.80
                   ? "bg-white text-black border-white font-bold shadow-xs" 
                   : "bg-zinc-900 text-zinc-400 border-zinc-800 hover:text-white"
               )}
@@ -292,7 +277,7 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
               onClick={() => jumpToPhase(0.95)}
               className={cn(
                 "px-2.5 py-1 rounded-lg border transition-all cursor-pointer flex items-center gap-1",
-                p >= 0.8 
+                p >= 0.80 
                   ? "bg-white text-black border-white font-bold shadow-xs" 
                   : "bg-zinc-900 text-zinc-400 border-zinc-800 hover:text-white"
               )}
@@ -301,7 +286,7 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
               <span>04 HERO EXPAND</span>
             </button>
 
-            {/* Auto Play / Pause Toggle */}
+            {/* Auto Play Toggle */}
             <button
               type="button"
               onClick={() => setIsPlaying(!isPlaying)}
@@ -320,17 +305,19 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
         </div>
 
         {/* ========================================================
-            The Kinetic Choreography Stage (Cards Movement Area)
+            02. The Kinetic Animation Canvas (Cards Movement Area)
             ======================================================== */}
         <div className="relative flex-1 w-full my-2 overflow-hidden">
           
-          {/* Base Card 1: Top-Left (Factory Mechanical Proof Testing) */}
+          {/* Card 1: Top-Left (Scheme-I Mechanical & Burst Pressure Test) */}
           <div
-            className="absolute left-1/2 top-1/2 w-[82vw] sm:w-[38%] h-[24vh] sm:h-[36%] rounded-2xl sm:rounded-3xl border border-zinc-700 bg-zinc-900 overflow-hidden shadow-2xl transition-all duration-75 will-change-transform z-10"
+            className="absolute left-1/2 top-1/2 w-[88%] sm:w-[44%] h-[70%] sm:h-[42%] rounded-2xl border border-zinc-700 bg-zinc-900 overflow-hidden shadow-2xl transition-all duration-75 will-change-transform z-10"
             style={{
-              transform: `translate(-50%, -50%) translate(${tlX * 3.4}%, ${tlY * 2.2}%) rotate(${tlRotate}deg) scale(${tlScale})`,
-              opacity: tlOpacity,
-              pointerEvents: p > 0.65 ? "none" : "auto",
+              transform: isMobile 
+                ? `translate(-50%, -50%)`
+                : `translate(-50%, -50%) translate(${tlX}%, ${tlY}%) rotate(${tlRotate}deg) scale(${tlScale})`,
+              opacity: isMobile ? (p < 0.25 ? 1 : 0) : tlOpacity,
+              pointerEvents: (isMobile ? p < 0.25 : p < 0.65) ? "auto" : "none",
             }}
           >
             <img
@@ -360,13 +347,15 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
             </div>
           </div>
 
-          {/* Base Card 2: Bottom-Right (Laser HUID Gold Hallmarking) */}
+          {/* Card 2: Bottom-Right (Laser HUID Gold Hallmarking Assay) */}
           <div
-            className="absolute left-1/2 top-1/2 w-[82vw] sm:w-[38%] h-[24vh] sm:h-[36%] rounded-2xl sm:rounded-3xl border border-zinc-700 bg-zinc-900 overflow-hidden shadow-2xl transition-all duration-75 will-change-transform z-20"
+            className="absolute left-1/2 top-1/2 w-[88%] sm:w-[44%] h-[70%] sm:h-[42%] rounded-2xl border border-zinc-700 bg-zinc-900 overflow-hidden shadow-2xl transition-all duration-75 will-change-transform z-20"
             style={{
-              transform: `translate(-50%, -50%) translate(${brX * 3.4}%, ${brY * 2.2}%) rotate(${brRotate}deg) scale(${brScale})`,
-              opacity: brOpacity,
-              pointerEvents: p > 0.65 ? "none" : "auto",
+              transform: isMobile 
+                ? `translate(-50%, -50%)`
+                : `translate(-50%, -50%) translate(${brX}%, ${brY}%) rotate(${brRotate}deg) scale(${brScale})`,
+              opacity: isMobile ? (p >= 0.25 && p < 0.50 ? 1 : 0) : brOpacity,
+              pointerEvents: (isMobile ? p >= 0.25 && p < 0.50 : p < 0.65) ? "auto" : "none",
             }}
           >
             <img
@@ -396,13 +385,15 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
             </div>
           </div>
 
-          {/* Base Card 3: Bottom-Left (Statutory Gazette QCO Orders) */}
+          {/* Card 3: Bottom-Left (Statutory Gazette QCO Orders) */}
           <div
-            className="absolute left-1/2 top-1/2 w-[82vw] sm:w-[38%] h-[24vh] sm:h-[36%] rounded-2xl sm:rounded-3xl border border-zinc-700 bg-zinc-900 overflow-hidden shadow-2xl transition-all duration-75 will-change-transform z-20"
+            className="absolute left-1/2 top-1/2 w-[88%] sm:w-[44%] h-[70%] sm:h-[42%] rounded-2xl border border-zinc-700 bg-zinc-900 overflow-hidden shadow-2xl transition-all duration-75 will-change-transform z-20"
             style={{
-              transform: `translate(-50%, -50%) translate(${blX * 3.4}%, ${blY * 2.2}%) rotate(${blRotate}deg) scale(${blScale})`,
-              opacity: blOpacity,
-              pointerEvents: p > 0.65 ? "none" : "auto",
+              transform: isMobile 
+                ? `translate(-50%, -50%)`
+                : `translate(-50%, -50%) translate(${blX}%, ${blY}%) rotate(${blRotate}deg) scale(${blScale})`,
+              opacity: isMobile ? (p >= 0.50 && p < 0.72 ? 1 : 0) : blOpacity,
+              pointerEvents: (isMobile ? p >= 0.50 && p < 0.72 : p < 0.65) ? "auto" : "none",
             }}
           >
             <img
@@ -432,17 +423,20 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
             </div>
           </div>
 
-          {/* Hero Card 4: Top-Right (Choreographs to Center & Expands to Full Stage) */}
+          {/* Hero Card 4: Top-Right (Expands smoothly to Full Stage) */}
           <div
-            className="absolute left-1/2 top-1/2 rounded-2xl sm:rounded-3xl border-2 border-white/40 bg-zinc-950 overflow-hidden shadow-2xl transition-all duration-75 will-change-transform z-40 origin-center"
+            className="absolute left-1/2 top-1/2 rounded-2xl border-2 border-white/40 bg-zinc-950 overflow-hidden shadow-2xl transition-all duration-75 will-change-transform z-40 origin-center"
             style={{
-              transform: `translate(-50%, -50%) translate(${trX * 3.4}%, ${trY * 2.2}%) rotate(${trRotate}deg)`,
-              width: `${trWidth}%`,
-              height: `${trHeight}%`,
+              transform: isMobile
+                ? `translate(-50%, -50%)`
+                : `translate(-50%, -50%) translate(${trX}%, ${trY}%) rotate(${trRotate}deg)`,
+              width: isMobile ? (p >= 0.72 ? "96%" : "88%") : `${trWidth}%`,
+              height: isMobile ? (p >= 0.72 ? "92%" : "70%") : `${trHeight}%`,
               borderRadius: `${trBorderRadius}px`,
+              opacity: isMobile ? (p >= 0.72 ? 1 : 0) : 1,
             }}
           >
-            {/* Background Graphic */}
+            {/* Background Image */}
             <img
               src={images.topRight}
               alt="Hero Quadrant Specimen"
@@ -450,9 +444,9 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30 pointer-events-none" />
 
-            {/* Micro Caption on Hero Card when small (p < 0.65) */}
+            {/* Micro Caption when in small state (p < 0.65) */}
             <div 
-              className="absolute inset-0 p-4 sm:p-5 flex flex-col justify-between font-mono text-white transition-opacity duration-200"
+              className="absolute inset-0 p-4 flex flex-col justify-between font-mono text-white transition-opacity duration-200"
               style={{ opacity: 1 - heroContentOpacity }}
             >
               <div className="flex items-center justify-between">
@@ -477,7 +471,7 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
 
             {/* Fully Expanded Hero Verification Matrix (Revealed at p >= 0.65) */}
             <div
-              className="absolute inset-0 bg-black/85 backdrop-blur-md p-4 sm:p-6 lg:p-8 flex flex-col justify-between text-white font-mono pointer-events-auto"
+              className="absolute inset-0 bg-black/85 backdrop-blur-md p-4 sm:p-6 lg:p-7 flex flex-col justify-between text-white font-mono pointer-events-auto"
               style={{
                 opacity: heroContentOpacity,
                 transform: `scale(${heroContentScale})`,
@@ -487,28 +481,28 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
               {/* Expanded Banner Header */}
               <div className="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-800 pb-3">
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-xl bg-white text-black flex items-center justify-center font-black text-sm shadow-md">
+                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white text-black flex items-center justify-center font-black text-sm shadow-md">
                     BIS
                   </div>
                   <div>
                     <span className="text-xs font-bold text-white uppercase tracking-wider block">
                       BUREAU OF INDIAN STANDARDS // AUTHENTICITY NETWORK
                     </span>
-                    <span className="text-[10px] sm:text-[11px] text-emerald-400 font-mono">
+                    <span className="text-[10px] text-emerald-400 font-mono">
                       NATIONAL GAZETTE REGULATORY MIRROR • LIVE CITIZEN AUDIT SUITE
                     </span>
                   </div>
                 </div>
 
-                <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>100% OPERATIONAL TELEMETRY</span>
+                <span className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[11px] font-bold uppercase">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>100% OPERATIONAL</span>
                 </span>
               </div>
 
               {/* 3 Inspection Pillars inside Expanded Hero */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 my-auto py-2">
-                <div className="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-3.5 space-y-1.5 hover:border-zinc-700 transition-colors">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 my-auto py-2">
+                <div className="bg-zinc-900/90 border border-zinc-800 rounded-xl p-3 space-y-1 hover:border-zinc-700 transition-colors">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] text-zinc-400 uppercase tracking-widest block font-bold">
                       01 — ISI MONOGRAM
@@ -517,13 +511,13 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
                       SCHEME-I
                     </span>
                   </div>
-                  <p className="text-xs sm:text-sm font-black text-white">7-Digit CM/L Code Validation</p>
+                  <p className="text-xs font-black text-white">7-Digit CM/L Code Validation</p>
                   <p className="text-[11px] text-zinc-400 leading-snug">
                     Direct validation of factory premise, registered product category, and active expiry date in the Gazette.
                   </p>
                 </div>
 
-                <div className="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-3.5 space-y-1.5 hover:border-zinc-700 transition-colors">
+                <div className="bg-zinc-900/90 border border-zinc-800 rounded-xl p-3 space-y-1 hover:border-zinc-700 transition-colors">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] text-zinc-400 uppercase tracking-widest block font-bold">
                       02 — GOLD HUID TRACEABILITY
@@ -532,13 +526,13 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
                       IS 1417
                     </span>
                   </div>
-                  <p className="text-xs sm:text-sm font-black text-white">6-Character Micro Laser Etch</p>
+                  <p className="text-xs font-black text-white">6-Character Micro Laser Etch</p>
                   <p className="text-[11px] text-zinc-400 leading-snug">
                     Trace exact fineness (22K916, 18K750) and official AHC centre registration number to prevent karatage fraud.
                   </p>
                 </div>
 
-                <div className="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-3.5 space-y-1.5 hover:border-zinc-700 transition-colors">
+                <div className="bg-zinc-900/90 border border-zinc-800 rounded-xl p-3 space-y-1 hover:border-zinc-700 transition-colors">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] text-zinc-400 uppercase tracking-widest block font-bold">
                       03 — STATUTORY REMEDY
@@ -547,7 +541,7 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
                       §16 & §29
                     </span>
                   </div>
-                  <p className="text-xs sm:text-sm font-black text-white">Section 15 & 29 Enforcement</p>
+                  <p className="text-xs font-black text-white">Section 15 & 29 Enforcement</p>
                   <p className="text-[11px] text-zinc-400 leading-snug">
                     Instant counterfeit violation forwarding to central enforcement officers with 24/7 National Consumer Helpline 1915.
                   </p>
@@ -555,8 +549,8 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
               </div>
 
               {/* Bottom Quick Links in Expanded Hero */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-3 border-t border-zinc-800 text-xs">
-                <div className="text-zinc-400">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2.5 border-t border-zinc-800 text-xs">
+                <div className="text-zinc-400 text-[11px]">
                   <span className="text-white font-bold">Statutory Guarantee:</span> All citizen verification queries verified against official Gazette notifications.
                 </div>
                 <div className="flex items-center space-x-2">
@@ -575,7 +569,7 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
         </div>
 
         {/* ========================================================
-            Bottom Live Telemetry Ribbon & Progress Stepper
+            03. Bottom Live Telemetry Ribbon & Progress Stepper
             ======================================================== */}
         <div className="relative z-50 border-t border-zinc-800/80 pt-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 font-mono text-[10px]">
           
