@@ -428,7 +428,7 @@ export const VerificationSection = () => {
     <section
       ref={sectionRef}
       data-theme="light"
-      className="bg-tech-dotted-white text-black py-12 sm:py-16 px-4 sm:px-8 lg:px-12 border-b border-zinc-200 relative overflow-hidden"
+      className="bg-tech-dotted-white text-black py-12 sm:py-16 px-4 sm:px-8 lg:px-12 border-b border-zinc-200 relative overflow-visible"
     >
       <div className="max-w-7xl mx-auto w-full space-y-8 sm:space-y-10">
         
