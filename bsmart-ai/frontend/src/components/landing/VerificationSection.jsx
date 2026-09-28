@@ -2003,7 +2003,7 @@ export const VerificationSection = () => {
                     WebkitTransformStyle: 'preserve-3d',
                     transformStyle: 'preserve-3d',
                   }}
-                  className={`verif-step-card relative rounded-2xl min-h-[515px] sm:min-h-[490px] cursor-pointer group select-none touch-manipulation ${
+                  className={`verif-step-card relative rounded-2xl min-h-[380px] sm:min-h-[490px] cursor-pointer group select-none touch-manipulation ${
                     isActive && !tiltStyle[idx] && mobileTiltAngle.x === 0 && mobileTiltAngle.y === 0
                       ? 'animate-mobile-holo sm:animate-none'
                       : ''
