@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, ArrowUp, Activity } from 'lucide-react';
+import { TextHoverEffect, FooterBackgroundGradient } from '@/components/ui/hover-footer';
 
 export const FooterSection = () => {
   const [istTime, setIstTime] = useState('');
@@ -141,13 +142,14 @@ export const FooterSection = () => {
           </div>
         </div>
 
-        {/* Giant Clipped Outline Wordmark at Bottom */}
-        <div className="overflow-hidden pt-4 -mb-10 sm:-mb-16">
-          <div className="giant-bg-text text-outline-giant text-[24vw] leading-none text-center select-none pointer-events-none">
-            BISmart
-          </div>
+        {/* Giant Interactive Animated Wordmark at Bottom */}
+        <div className="overflow-hidden pt-4 -mb-8 sm:-mb-14 h-48 sm:h-72 md:h-88 lg:h-[26rem] flex items-center justify-center relative z-20">
+          <TextHoverEffect text="BISmart" className="w-full h-full" />
         </div>
       </div>
+
+      {/* Ambient Gradient Background */}
+      <FooterBackgroundGradient />
     </footer>
   );
 };
