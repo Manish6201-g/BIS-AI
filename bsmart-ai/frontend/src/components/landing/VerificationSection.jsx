@@ -1803,6 +1803,119 @@ export const VerificationSection = () => {
                     <p className="text-[11px] sm:text-xs text-zinc-600 font-normal leading-relaxed">
                       {s.desc}
                     </p>
+
+                    {/* Interactive Visual Specimen Viewports for Each Step */}
+                    {idx === 0 && (
+                      <div className="relative my-3 rounded-xl bg-zinc-950 border border-zinc-800 p-3 overflow-hidden text-white font-mono min-h-[115px] flex flex-col justify-between group/vp">
+                        <div className="absolute inset-0 bg-[radial-gradient(#3f3f46_1px,transparent_1px)] [background-size:12px_12px] opacity-40 pointer-events-none" />
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                          <div className={`w-16 h-16 rounded-full border border-dashed border-cyan-400/60 transition-transform duration-700 flex items-center justify-center ${isActive ? 'scale-110 animate-pulse' : 'group-hover/vp:scale-105'}`}>
+                            <div className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+                          </div>
+                        </div>
+                        <div className="relative z-10 flex items-center justify-between text-[10px]">
+                          <span className="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30 flex items-center gap-1">
+                            <span className="w-1 h-1 rounded-full bg-cyan-400 animate-ping" />
+                            <span>OPTICAL RETICLE</span>
+                          </span>
+                          <span className="text-[9px] text-zinc-400 font-bold">ALIGN: 99.8%</span>
+                        </div>
+                        <div className="relative z-10 text-center py-0.5">
+                          <span className="text-xs font-black tracking-widest text-white block">
+                            IS 2347 : 2017
+                          </span>
+                          <span className="text-[9px] text-cyan-400 font-bold block mt-0.5">
+                            [⬢ STANDARD MONOGRAM]
+                          </span>
+                        </div>
+                        <div className="relative z-10 flex items-center justify-between text-[8px] text-zinc-400 border-t border-zinc-800/80 pt-1">
+                          <span>MICRO-ETCH PATTERN</span>
+                          <span className="text-emerald-400 font-bold">AUTHENTIC</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {idx === 1 && (
+                      <div className="relative my-3 rounded-xl bg-zinc-950 border border-zinc-800 p-3 overflow-hidden text-white font-mono min-h-[115px] flex flex-col justify-between group/vp">
+                        <div className="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-amber-400 to-transparent shadow-[0_0_8px_#f59e0b] animate-scanner-laser pointer-events-none z-20" />
+                        <div className="relative z-10 flex items-center justify-between text-[10px]">
+                          <span className="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30 flex items-center gap-1">
+                            <span className="w-1 h-1 rounded-full bg-amber-400 animate-ping" />
+                            <span>LASER OCR</span>
+                          </span>
+                          <span className="text-[9px] text-amber-400 font-bold">12μm DEPTH</span>
+                        </div>
+                        <div className="relative z-10 flex items-center justify-center gap-1 py-0.5">
+                          {['A', 'B', '8', '9', 'K', '2'].map((char, cIdx) => (
+                            <div 
+                              key={cIdx} 
+                              className={`w-5 h-6 rounded border flex items-center justify-center text-[11px] font-black transition-all ${
+                                isActive 
+                                  ? 'bg-amber-400/20 border-amber-400 text-white shadow-2xs' 
+                                  : 'bg-zinc-900 border-zinc-700 text-zinc-300 group-hover/vp:border-amber-400/60'
+                              }`}
+                            >
+                              {char}
+                            </div>
+                          ))}
+                        </div>
+                        <div className="relative z-10 flex items-center justify-between text-[8px] text-zinc-400 border-t border-zinc-800/80 pt-1">
+                          <span>PARSE 6-CHAR HUID</span>
+                          <span className="text-amber-400 font-bold">CHECKSUM OK</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {idx === 2 && (
+                      <div className="relative my-3 rounded-xl bg-zinc-950 border border-zinc-800 p-3 overflow-hidden text-white font-mono min-h-[115px] flex flex-col justify-between group/vp">
+                        <div className="relative z-10 flex items-center justify-between text-[10px]">
+                          <span className="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30 flex items-center gap-1">
+                            <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+                            <span>CLOUD API</span>
+                          </span>
+                          <span className="text-[9px] text-emerald-400 font-bold">42ms PING</span>
+                        </div>
+                        <div className="relative z-10 py-0.5 space-y-0.5 text-left">
+                          <div className="text-[9px] text-zinc-400 flex items-center gap-1">
+                            <span className="text-emerald-400">&gt;</span>
+                            <span className="truncate">query(CML_8400123)</span>
+                          </div>
+                          <div className="text-[10px] font-black text-white flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
+                            <span className="truncate text-emerald-300">200 OK: OPERATIVE</span>
+                          </div>
+                        </div>
+                        <div className="relative z-10 flex items-center justify-between text-[8px] text-zinc-400 border-t border-zinc-800/80 pt-1">
+                          <span>GAZETTE SYNC</span>
+                          <span className="text-emerald-400 font-bold">100% MATCH</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {idx === 3 && (
+                      <div className="relative my-3 rounded-xl bg-zinc-950 border border-rose-900/60 p-3 overflow-hidden text-white font-mono min-h-[115px] flex flex-col justify-between group/vp">
+                        <div className="absolute inset-0 bg-rose-500/5 animate-pulse pointer-events-none" />
+                        <div className="relative z-10 flex items-center justify-between text-[10px]">
+                          <span className="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-bold border border-rose-500/30 flex items-center gap-1">
+                            <ShieldAlert className="w-2.5 h-2.5 text-rose-400" />
+                            <span>PENAL §29</span>
+                          </span>
+                          <span className="text-[9px] text-rose-400 font-bold">COGNIZABLE</span>
+                        </div>
+                        <div className="relative z-10 text-center py-0.5">
+                          <span className="text-[11px] font-black tracking-tight text-white block uppercase">
+                            2 YEARS PRISON + ₹2L
+                          </span>
+                          <span className="text-[8px] text-rose-400 font-bold block mt-0.5">
+                            MANDATORY FACTORY SEIZURE
+                          </span>
+                        </div>
+                        <div className="relative z-10 flex items-center justify-between text-[8px] text-zinc-400 border-t border-zinc-800/80 pt-1">
+                          <span>ENFORCEMENT SLA</span>
+                          <span className="text-rose-400 font-bold">IMMEDIATE RAID</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Card Footer: Detail & Direct Simulation Trigger */}
