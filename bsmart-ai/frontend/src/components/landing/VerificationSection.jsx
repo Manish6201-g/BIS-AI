@@ -164,82 +164,130 @@ const HUID_SAMPLES = [
 const MANDATORY_SAFETY_CATEGORIES = [
   {
     id: "cookers",
+    group: "pressure",
     standard: "IS 2347:2017",
     name: "Domestic Pressure Cookers",
     hazard: "Explosion & Thermal Burst Protection",
     tag: "MANDATORY QCO",
     metric: "Thermal Shock Tested",
     icon: Flame,
+    beaconColor: "bg-rose-500",
+    hazardLevel: "CRITICAL HAZARD",
+    penalty: "Under §16 & §29: ₹2 Lakhs Fine + 2 Yrs Imprisonment",
+    sampleCode: "8400123",
+    qcoDate: "Gazette Grounded 2020",
     desc: "Mandatory gasket release mechanisms & burst pressure safety valves prevent catastrophic kitchen explosions."
   },
   {
     id: "water",
+    group: "health",
     standard: "IS 14543:2016",
     name: "Packaged Drinking Water",
     hazard: "Waterborne Pathogens & Heavy Metals",
     tag: "STRICT BACTERIOLOGY",
     metric: "0% Tolerated E. Coli",
     icon: Droplet,
+    beaconColor: "bg-sky-500",
+    hazardLevel: "BIO-HAZARD RISK",
+    penalty: "Immediate Factory Closure & Production Seizure",
+    sampleCode: "1294820",
+    qcoDate: "Gazette Grounded 2019",
     desc: "Rigorous microbiological sterilization, zero pesticide residues, and strict mineral conductivity bounds."
   },
   {
     id: "helmets",
+    group: "lifestyle",
     standard: "IS 4151:2015",
     name: "Two-Wheeler Helmets",
     hazard: "Fatal Crash Traumatic Shock",
     tag: "LIFE-SAVING SPEC",
     metric: "High Velocity Impact",
     icon: ShieldAlert,
+    beaconColor: "bg-blue-500",
+    hazardLevel: "MORTAL RISK",
+    penalty: "Non-Certified Helmets Confiscated Under MV Act §129",
+    sampleCode: "7123456",
+    qcoDate: "Gazette Grounded 2021",
     desc: "Dynamic impact deceleration thresholds, chin strap retention load capacity, and shell penetration resistance."
   },
   {
     id: "infant-food",
+    group: "health",
     standard: "IS 14433:2020",
     name: "Infant Milk Substitutes",
     hazard: "Nutritional Deficiency & Toxins",
     tag: "ZERO AFLATOXIN",
     metric: "100% Laboratory Checked",
     icon: Baby,
+    beaconColor: "bg-emerald-500",
+    hazardLevel: "TOXICITY ALERT",
+    penalty: "Cognizable Non-Bailable Prosecution under Section 29",
+    sampleCode: "14433",
+    qcoDate: "Gazette Grounded 2020",
     desc: "Essential fatty acid ratios, vitamin bioavailability thresholds, and complete absence of chemical adulterants."
   },
   {
     id: "gold",
+    group: "precious",
     standard: "IS 1417:2016",
     name: "Gold & Precious Jewellery",
     hazard: "Caratage Fraud & Adulteration",
     tag: "HUID MANDATORY",
     metric: "Laser Assayed 6-Char",
     icon: Sparkles,
+    beaconColor: "bg-amber-500",
+    hazardLevel: "CONSUMER FRAUD",
+    penalty: "Seizure & Penalties of 5× Assayed Jewellery Value",
+    sampleCode: "AB89K2",
+    qcoDate: "Gazette Grounded 2023",
     desc: "Complete statutory elimination of under-karatage with microscopic 6-character laser HUID traceability."
   },
   {
     id: "cables",
+    group: "precious",
     standard: "IS 694:2010",
     name: "PVC Insulated Cables",
     hazard: "Short-Circuits & Fire Propagation",
     tag: "FLAME RETARDANT",
     metric: "FRLS Specification",
     icon: Zap,
+    beaconColor: "bg-orange-500",
+    hazardLevel: "ELECTRICAL FIRE",
+    penalty: "Commercial Stop-Work Orders & Site Inspection Seizure",
+    sampleCode: "694",
+    qcoDate: "Gazette Grounded 2023",
     desc: "Flame-retardant low-smoke insulation engineered to prevent rapid residential electrical fire spread."
   },
   {
     id: "toys",
+    group: "lifestyle",
     standard: "IS 9873:2019",
     name: "Children's Safety Toys",
     hazard: "Toxic Phthalates & Choke Hazards",
     tag: "CHILD SAFETY QCO",
     metric: "Zero Heavy Metals",
     icon: HeartPulse,
+    beaconColor: "bg-pink-500",
+    hazardLevel: "CHEMICAL HAZARD",
+    penalty: "Port Import Quarantine & Retail Shelf Seizure",
+    sampleCode: "9873",
+    qcoDate: "Gazette Grounded 2020",
     desc: "Enforced mechanical impact resistance, non-toxic lead-free coatings, and total ban on dangerous plasticizers."
   },
   {
     id: "lpg-valves",
+    group: "pressure",
     standard: "IS 9798:1995",
     name: "Domestic LPG Regulators",
     hazard: "Gas Leaks & Domestic Blasts",
     tag: "17-BAR TESTED",
     metric: "Positive Shut-Off",
     icon: Award,
+    beaconColor: "bg-red-500",
+    hazardLevel: "EXPLOSION HAZARD",
+    penalty: "Immediate Recall Order & Criminal Defect Liability",
+    sampleCode: "9798",
+    qcoDate: "Gazette Grounded 2021",
     desc: "Zero gas leakage tolerance, burst pressure safety margins, and automated excess-flow shut-off seals."
   }
 ];
@@ -381,6 +429,46 @@ export const VerificationSection = () => {
     }
   };
 
+  // Section 05.A Interactive State & Spotlight
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [expandedCatId, setExpandedCatId] = useState(null);
+
+  const handleCardMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+    e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+  };
+
+  const simulateCategoryVerification = (cat) => {
+    if (cat.id === 'gold') {
+      setQuickMode('huid');
+      setQuickQuery(cat.sampleCode || 'AB89K2');
+      setQuickStatus({
+        checked: true,
+        valid: true,
+        code: `HUID: ${cat.sampleCode || 'AB89K2'}`,
+        title: 'Tanishq Jewellers (Titan Co)',
+        subtitle: '22K Gold Handcrafted Bangle • 916 Fineness Assayed',
+        tag: 'AUTHENTIC HALLMARK'
+      });
+    } else {
+      setQuickMode('isi');
+      setQuickQuery(cat.sampleCode || '8400123');
+      setQuickStatus({
+        checked: true,
+        valid: true,
+        code: `CM/L-${cat.sampleCode || '8400123'}`,
+        title: cat.name,
+        subtitle: `${cat.standard} • Mandatory QCO Operative`,
+        tag: 'OPERATIVE & VALID'
+      });
+    }
+    const el = document.getElementById('verif-quick-tool');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
+
   useGSAP(() => {
     gsap.from('.verif-header-content', {
       y: 35,
@@ -416,6 +504,32 @@ export const VerificationSection = () => {
       scrollTrigger: {
         trigger: '.verif-grid',
         start: 'top 75%',
+        once: true,
+      }
+    });
+
+    gsap.from('.verif-05a-header', {
+      y: 30,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: '.verif-05a-section',
+        start: 'top 80%',
+        once: true,
+      }
+    });
+
+    gsap.from('.verif-category-card', {
+      y: 45,
+      opacity: 0,
+      scale: 0.95,
+      duration: 0.6,
+      stagger: 0.07,
+      ease: 'back.out(1.2)',
+      scrollTrigger: {
+        trigger: '.verif-categories-grid',
+        start: 'top 82%',
         once: true,
       }
     });
@@ -1053,64 +1167,192 @@ export const VerificationSection = () => {
         </div>
 
         {/* ========================================================
-            04. Essential Products Requiring Mandatory ISI Marking (8-Item Grid)
+            04. Essential Products Requiring Mandatory ISI Marking (8-Item Grid with Animations)
             ======================================================== */}
-        <div className="space-y-6 pt-4 border-t border-zinc-200">
+        <div className="verif-05a-section space-y-6 pt-4 border-t border-zinc-200">
           
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+          {/* Section 05.A Animated Header & Filter Controls */}
+          <div className="verif-05a-header flex flex-col lg:flex-row lg:items-end justify-between gap-4">
             <div>
               <div className="inline-flex items-center space-x-2 font-mono text-[10px] tracking-widest text-zinc-500 uppercase mb-1">
                 <span className="w-3 h-px bg-zinc-400"></span>
                 <span>05.A — STATUTORY MANDATE & CITIZEN PROTECTION</span>
               </div>
-              <h3 className="text-xl sm:text-3xl font-black uppercase tracking-tight text-black">
+              <h3 className="editorial-headline text-2xl sm:text-4xl font-black uppercase tracking-tight text-black leading-tight">
                 ESSENTIAL PRODUCTS REQUIRING MANDATORY ISI MARKING
               </h3>
+              <p className="text-xs sm:text-sm text-zinc-600 max-w-xl font-normal leading-relaxed mt-1">
+                Under Section 16 of the BIS Act 2016, selling uncertified products in these mandatory categories 
+                is a cognizable offence punishable with criminal imprisonment and factory closure.
+              </p>
             </div>
-            <p className="text-xs text-zinc-600 max-w-md font-normal leading-relaxed">
-              Under Section 16 of the BIS Act 2016, selling uncertified products in these mandatory categories 
-              is a cognizable offence punishable with imprisonment and factory closure.
-            </p>
+
+            {/* Interactive Category Filter Pills */}
+            <div className="flex flex-wrap items-center gap-1.5 font-mono text-[11px]">
+              <button
+                type="button"
+                onClick={() => setCategoryFilter('all')}
+                className={`px-3 py-1.5 rounded-xl border transition-all cursor-pointer font-bold ${
+                  categoryFilter === 'all'
+                    ? 'bg-black text-white border-black shadow-xs ring-1 ring-black'
+                    : 'bg-white text-zinc-600 border-zinc-200 hover:border-black hover:text-black'
+                }`}
+              >
+                ALL MANDATORY (8)
+              </button>
+              <button
+                type="button"
+                onClick={() => setCategoryFilter('pressure')}
+                className={`px-3 py-1.5 rounded-xl border transition-all cursor-pointer font-bold ${
+                  categoryFilter === 'pressure'
+                    ? 'bg-black text-white border-black shadow-xs ring-1 ring-black'
+                    : 'bg-white text-zinc-600 border-zinc-200 hover:border-black hover:text-black'
+                }`}
+              >
+                PRESSURE & GAS (2)
+              </button>
+              <button
+                type="button"
+                onClick={() => setCategoryFilter('health')}
+                className={`px-3 py-1.5 rounded-xl border transition-all cursor-pointer font-bold ${
+                  categoryFilter === 'health'
+                    ? 'bg-black text-white border-black shadow-xs ring-1 ring-black'
+                    : 'bg-white text-zinc-600 border-zinc-200 hover:border-black hover:text-black'
+                }`}
+              >
+                CHILD & HEALTH (2)
+              </button>
+              <button
+                type="button"
+                onClick={() => setCategoryFilter('lifestyle')}
+                className={`px-3 py-1.5 rounded-xl border transition-all cursor-pointer font-bold ${
+                  categoryFilter === 'lifestyle'
+                    ? 'bg-black text-white border-black shadow-xs ring-1 ring-black'
+                    : 'bg-white text-zinc-600 border-zinc-200 hover:border-black hover:text-black'
+                }`}
+              >
+                HELMETS & TOYS (2)
+              </button>
+              <button
+                type="button"
+                onClick={() => setCategoryFilter('precious')}
+                className={`px-3 py-1.5 rounded-xl border transition-all cursor-pointer font-bold ${
+                  categoryFilter === 'precious'
+                    ? 'bg-black text-white border-black shadow-xs ring-1 ring-black'
+                    : 'bg-white text-zinc-600 border-zinc-200 hover:border-black hover:text-black'
+                }`}
+              >
+                GOLD & INFRA (2)
+              </button>
+            </div>
           </div>
 
-          {/* 8 Category High-Density Cards Grid */}
-          <div className="verif-categories-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-            {MANDATORY_SAFETY_CATEGORIES.map((cat) => {
-              const IconComponent = cat.icon;
-              return (
-                <div 
-                  key={cat.id}
-                  className="verif-category-card bg-white border border-zinc-300 rounded-2xl p-4 sm:p-5 hover:border-black transition-all flex flex-col justify-between group shadow-2xs"
-                >
-                  <div className="space-y-2.5">
-                    <div className="flex items-center justify-between pb-2 border-b border-zinc-200">
-                      <div className="flex items-center space-x-1.5">
-                        <IconComponent className="w-3.5 h-3.5 text-black" />
-                        <span className="font-mono text-[11px] font-bold text-black bg-zinc-100 px-2 py-0.5 rounded">
-                          {cat.standard}
-                        </span>
+          {/* 8 Category High-Density Animated Cards Grid with Cursor Spotlight & 3D Hover */}
+          <div className="verif-categories-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {MANDATORY_SAFETY_CATEGORIES
+              .filter(cat => categoryFilter === 'all' || cat.group === categoryFilter)
+              .map((cat) => {
+                const IconComponent = cat.icon;
+                const isExpanded = expandedCatId === cat.id;
+
+                return (
+                  <div 
+                    key={cat.id}
+                    onMouseMove={handleCardMouseMove}
+                    onClick={() => setExpandedCatId(isExpanded ? null : cat.id)}
+                    className="verif-category-card relative bg-white border border-zinc-300 rounded-2xl p-5 hover:border-black transition-all duration-300 flex flex-col justify-between group shadow-2xs hover:shadow-xl hover:-translate-y-2 cursor-pointer overflow-hidden"
+                  >
+                    {/* Interactive Cursor Spotlight Specular Sheen */}
+                    <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl bg-[radial-gradient(350px_circle_at_var(--mouse-x,150px)_var(--mouse-y,100px),rgba(0,0,0,0.04),transparent_70%)]" />
+
+                    {/* Top Laser Sweep Hairline (Sweeps on Hover) */}
+                    <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-black to-transparent opacity-0 group-hover:opacity-100 -translate-x-full group-hover:translate-x-full transition-all duration-1000 ease-in-out pointer-events-none" />
+
+                    <div className="relative z-10 space-y-3">
+                      {/* Top Header: Standard Code + Live Pulsing Radar Beacon */}
+                      <div className="flex items-center justify-between pb-2 border-b border-zinc-200">
+                        <div className="flex items-center space-x-1.5">
+                          <IconComponent className="w-4 h-4 text-black group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300" />
+                          <span className="font-mono text-xs font-bold text-black bg-zinc-100 group-hover:bg-black group-hover:text-white transition-colors px-2 py-0.5 rounded">
+                            {cat.standard}
+                          </span>
+                        </div>
+
+                        {/* Live Radar Pulse Indicator */}
+                        <div className="flex items-center space-x-1.5 font-mono text-[9px] font-bold">
+                          <span className="relative flex h-2 w-2">
+                            <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${cat.beaconColor}`} />
+                            <span className={`relative inline-flex rounded-full h-2 w-2 ${cat.beaconColor}`} />
+                          </span>
+                          <span className="text-zinc-500 uppercase">{cat.tag}</span>
+                        </div>
                       </div>
-                      <span className="font-mono text-[9px] font-bold text-emerald-600 uppercase tracking-wider">
-                        {cat.tag}
-                      </span>
+
+                      {/* Hazard Severity Tag */}
+                      <div className="inline-flex items-center space-x-1 px-2 py-0.5 rounded bg-zinc-100 text-zinc-700 font-mono text-[9px] font-bold border border-zinc-200">
+                        <ShieldAlert className="w-3 h-3 text-black" />
+                        <span>{cat.hazardLevel}</span>
+                      </div>
+
+                      {/* Category Name */}
+                      <h4 className="font-black text-base text-black uppercase tracking-tight group-hover:text-zinc-900 transition-colors">
+                        {cat.name}
+                      </h4>
+
+                      {/* Statutory Hazard Description */}
+                      <p className="text-[11px] sm:text-xs text-zinc-600 font-normal leading-relaxed">
+                        {cat.desc}
+                      </p>
+
+                      {/* Expandable Technical Specification & Penalty Drawer */}
+                      {isExpanded && (
+                        <div className="pt-2 border-t border-zinc-200 space-y-2 animate-in fade-in duration-200">
+                          <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-2.5 space-y-1 font-mono text-[10px]">
+                            <span className="text-zinc-400 uppercase font-bold block">STATUTORY PENALTY CLAUSE:</span>
+                            <span className="font-bold text-red-600 block">{cat.penalty}</span>
+                            <div className="flex items-center justify-between text-zinc-500 pt-1 border-t border-zinc-200">
+                              <span>STATUS:</span>
+                              <span className="text-black font-bold">{cat.qcoDate}</span>
+                            </div>
+                          </div>
+
+                          {/* Instant Simulator Trigger Button */}
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              simulateCategoryVerification(cat);
+                            }}
+                            className="w-full py-2 px-3 rounded-xl bg-black text-white hover:bg-zinc-800 text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-xs font-mono"
+                          >
+                            <span>Test In Quick Console</span>
+                            <ArrowRight className="w-3 h-3" />
+                          </button>
+                        </div>
+                      )}
                     </div>
 
-                    <h4 className="font-black text-sm sm:text-base text-black uppercase tracking-tight group-hover:text-cyan-700 transition-colors">
-                      {cat.name}
-                    </h4>
+                    {/* Card Footer: Safety Shield Metric & Toggle Spec Trigger */}
+                    <div className="relative z-10 pt-3 mt-3 border-t border-zinc-100 flex items-center justify-between text-[11px] font-mono">
+                      <div>
+                        <span className="text-zinc-400 text-[9px] uppercase block">SAFETY SHIELD:</span>
+                        <span className="font-bold text-black text-[11px]">{cat.metric}</span>
+                      </div>
 
-                    <p className="text-[11px] sm:text-xs text-zinc-600 font-normal leading-relaxed">
-                      {cat.desc}
-                    </p>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setExpandedCatId(isExpanded ? null : cat.id);
+                        }}
+                        className="text-[10px] font-bold text-zinc-600 hover:text-black flex items-center gap-0.5 underline transition-colors cursor-pointer"
+                      >
+                        <span>{isExpanded ? "Hide Spec ▲" : "Inspect Spec ▼"}</span>
+                      </button>
+                    </div>
                   </div>
-
-                  <div className="pt-3 mt-3 border-t border-zinc-100 flex items-center justify-between text-[11px] font-mono">
-                    <span className="text-zinc-500 text-[10px] uppercase">SAFETY SHIELD:</span>
-                    <span className="font-bold text-black text-[10px] sm:text-[11px]">{cat.metric}</span>
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
           </div>
         </div>
 
