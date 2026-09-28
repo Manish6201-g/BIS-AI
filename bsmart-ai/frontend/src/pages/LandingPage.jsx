@@ -36,10 +36,10 @@ export const LandingPage = () => {
       {/* 03. Pinned Feature Cards Stack with Milestones Marquee Header & Responsive Kinetic Animations */}
       <FeatureStack />
 
-      {/* 04. kinetic Philosophy Portal Expansion (Connecting Curved Arc + Inverse 3D Zoom Aperture + Drawer Marquee) */}
+      {/* 04. Kinetic Philosophy Portal Expansion (Connecting Curved Arc + Inverse 3D Zoom Aperture + Drawer Marquee) */}
       <PhilosophyPortal />
 
-      {/* 05. kinetic National Regulatory Impact (Animated 4-Number Metrics) */}
+      {/* 05. Kinetic National Regulatory Impact (Animated 4-Number Metrics) */}
       <ImpactSection />
 
       {/* 07. White Workflow Vertical Timeline */}

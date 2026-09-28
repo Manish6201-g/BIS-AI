@@ -3,7 +3,7 @@ import { gsap } from 'gsap';
 import { ArrowUpRight } from 'lucide-react';
 
 /**
- * kinetic Cubic-Bezier Easing Solver: cubicBezier(0.76, 0, 0.24, 1)
+ * Kinetic Cubic-Bezier Easing Solver: cubicBezier(0.76, 0, 0.24, 1)
  */
 function solveCubicBezier(t) {
   const o = 2.28;
@@ -174,7 +174,7 @@ const MissionView = () => {
 
 /**
  * Main PhilosophyPortal Component
- * Replicates kinetic's exact connecting SVG arc line & inverse 3D camera zoom aperture
+ * Replicates statutory connecting SVG arc line & inverse 3D camera zoom aperture
  */
 export const PhilosophyPortal = () => {
   const sectionRef = useRef(null);
@@ -298,7 +298,7 @@ export const PhilosophyPortal = () => {
           boxEl.style.opacity = '1';
         }
 
-        // 3. Exact kinetic Aperture Zoom Math
+        // 3. Exact Kinetic Aperture Zoom Math
         if (P <= 0) {
           boxEl.style.position = 'absolute';
           boxEl.style.top = '50vh';

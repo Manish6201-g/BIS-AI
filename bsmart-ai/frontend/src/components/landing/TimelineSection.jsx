@@ -90,7 +90,7 @@ export const TimelineSection = () => {
           </h2>
         </div>
 
-        {/* kinetic Alternating Center-Line Timeline Container */}
+        {/* Kinetic Alternating Center-Line Timeline Container */}
         <div className="relative mx-auto max-w-5xl space-y-12 md:space-y-16 pt-8 pb-12 before:absolute before:inset-y-0 before:left-[15px] md:before:left-1/2 before:w-px before:bg-gradient-to-b before:from-transparent before:via-black/20 before:to-transparent">
           {/* Active Animated Connecting Line */}
           <div className="timeline-progress-line absolute left-[15px] md:left-1/2 top-4 bottom-4 w-px bg-black origin-top scale-y-0 will-change-transform z-0 -translate-x-1/2" />

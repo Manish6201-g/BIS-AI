@@ -116,7 +116,7 @@ export const HeroSection = () => {
           </div>
         </div>
 
-        {/* Right Column: kinetic-Inspired Interactive 3D Sonar Radar Widget (Desktop) */}
+        {/* Right Column: Interactive Interactive 3D Sonar Radar Widget (Desktop) */}
         <div className="hidden lg:flex lg:col-span-4 justify-center items-center">
           <div className="relative w-72 h-72 xl:w-80 xl:h-80 flex items-center justify-center">
             {/* Concentric Pulsing Radar Rings */}

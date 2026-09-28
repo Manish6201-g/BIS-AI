@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Check, Shield, Cpu, Compass, FileCheck } from 'lucide-react';
 
-// Exact kinetic Physics Constants
+// Exact Kinetic Physics Constants
 const ca = {
   itemDistance: 100,
   itemScale: 0.015,
@@ -12,7 +12,7 @@ const ca = {
   baseScale: 0.92,
 };
 
-// Exact kinetic StarBorder container (lT component)
+// Exact Kinetic StarBorder container (lT component)
 const StarBorder = ({ as: Component = 'div', className = '', color = '#00f2fe, #4facfe, #7000ff', speed = '8s', children, ...props }) => {
   return (
     <Component className={`star-border-container ${className}`} {...props}>
@@ -122,7 +122,7 @@ export const FeatureStack = () => {
     { text: "VERIFY", offset: "85%" }
   ];
 
-  // Exact kinetic Recalculation logic
+  // Exact Kinetic Recalculation logic
   const recalc = useCallback(() => {
     const cardsElements = Array.from(document.querySelectorAll('.scroll-stack-card'));
     cardsRef.current = cardsElements;
@@ -158,7 +158,7 @@ export const FeatureStack = () => {
     if (innerRef.current) innerTop.current = innerRef.current.getBoundingClientRect().top + scrollY;
   }, [isMobile]);
 
-  // Exact kinetic Scroll physics loop
+  // Exact Kinetic Scroll physics loop
   const update = useCallback(() => {
     const N = window.scrollY;
     const z = cardsRef.current;
@@ -180,7 +180,7 @@ export const FeatureStack = () => {
       Q = Math.min(Math.max(Q, 0), 1);
     }
 
-    // 1. Exact kinetic Card Overlapping
+    // 1. Exact Kinetic Card Overlapping
     for (let se = 0; se < z.length; se++) {
       const ge = z[se];
       const Te = P[se];
@@ -210,7 +210,7 @@ export const FeatureStack = () => {
       ge.style.transform = `translate3d(0, ${Math.round(xt * 10) / 10}px, 0) scale(${Gt})`;
     }
 
-    // 2. Exact kinetic Void Container Shrink (Mobile: clean fade, Desktop: 3D perspective shrink)
+    // 2. Exact Kinetic Void Container Shrink (Mobile: clean fade, Desktop: 3D perspective shrink)
     const he = voidRef.current;
     const ie = innerRef.current;
     if (he && ie) {
@@ -356,7 +356,7 @@ export const FeatureStack = () => {
 
   return (
     <section className="min-h-screen bg-black text-white font-sans relative select-none">
-      {/* kinetic Exact Milestones Header Marquee (Matches both desktop & mobile videos) */}
+      {/* Kinetic Exact Milestones Header Marquee (Matches both desktop & mobile videos) */}
       <div className="w-full h-[20vh] md:h-[25vh] lg:h-[45vh] border-b border-white/20 overflow-hidden flex items-center relative z-10 bg-black select-none">
         <div className="marquee-selected-works">
           <div className="marquee-selected-works__track">
@@ -370,7 +370,7 @@ export const FeatureStack = () => {
         </div>
       </div>
 
-      {/* kinetic Exact Scroll Stack Inner with 3D perspective */}
+      {/* Kinetic Exact Scroll Stack Inner with 3D perspective */}
       <div
         ref={innerRef}
         className="scroll-stack-inner px-6 md:px-12 lg:px-16"
@@ -556,11 +556,11 @@ export const FeatureStack = () => {
           ))}
         </div>
 
-        {/* kinetic Exact Scroll Stack End: 120vh spacer */}
+        {/* Kinetic Exact Scroll Stack End: 120vh spacer */}
         <div ref={endRef} className="scroll-stack-end pointer-events-none h-[120vh]" />
       </div>
 
-      {/* kinetic Exact Kinetic Animation Layer (Mobile: S-Curve Snake Path, Desktop: Rotating Arc Wheel) */}
+      {/* Kinetic Exact Kinetic Animation Layer (Mobile: S-Curve Snake Path, Desktop: Rotating Arc Wheel) */}
       <div
         ref={wheelRef}
         className="kinetic-wheel pointer-events-none"

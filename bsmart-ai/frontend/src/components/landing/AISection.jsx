@@ -98,7 +98,7 @@ export const AISection = () => {
           </p>
         </div>
 
-        {/* kinetic-Inspired Interactive Terminal Dialogue Shell */}
+        {/* Interactive Interactive Terminal Dialogue Shell */}
         <div className="ai-dialogue-box bg-zinc-950 border border-zinc-800 rounded-[32px] p-6 sm:p-10 space-y-6 shadow-2xl relative overflow-hidden">
           {/* Terminal Window Header */}
           <div className="flex items-center justify-between border-b border-zinc-800/80 pb-4 select-none">

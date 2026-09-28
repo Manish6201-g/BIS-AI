@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 /**
- * Animated Counter Metric matching kinetic's exact rf implementation
+ * Animated Counter Metric matching statutory rf implementation
  */
 const CounterMetric = ({ value, suffix = '+', label, description }) => {
   const [count, setCount] = useState(0);
@@ -52,7 +52,7 @@ const CounterMetric = ({ value, suffix = '+', label, description }) => {
 };
 
 /**
- * ImpactSection matching kinetic's exact MV / IV component layout
+ * ImpactSection matching statutory MV / IV component layout
  */
 export const ImpactSection = () => {
   return (
