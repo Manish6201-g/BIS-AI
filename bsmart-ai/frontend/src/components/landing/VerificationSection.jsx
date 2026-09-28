@@ -315,7 +315,18 @@ const VERIFICATION_STEPS = [
     stat: "Optical Monogram",
     badge: "VISUAL INSPECTION",
     actionPrompt: "Inspect Mark Anatomy",
-    statutoryRef: "BIS Act §14(1) Regs"
+    statutoryRef: "BIS Act §14(1) Regs",
+    blueprint: {
+      code: "SPEC-OPT-01",
+      clause: "BIS Act 2016 §14 & Rule 11",
+      checkpoints: [
+        { label: "Monogram Geometry", val: "Strict 1:1.618 Aspect", status: "PASS" },
+        { label: "Micro-Etch Line Weight", val: "0.15mm Laser Bound", status: "PASS" },
+        { label: "Surface Permanence", val: "15s Solvent Wipe Test", status: "PASS" }
+      ],
+      tolerance: "±0.02mm Optical Alignment",
+      authority: "National Standards Body of India"
+    }
   },
   {
     step: "02",
@@ -328,7 +339,18 @@ const VERIFICATION_STEPS = [
     stat: "7-Digit / 6-Char",
     badge: "IDENTIFIER PARSING",
     actionPrompt: "Sample Licence Code",
-    statutoryRef: "IS 15820 & BIS Rules"
+    statutoryRef: "IS 15820 & BIS Rules",
+    blueprint: {
+      code: "SPEC-OCR-02",
+      clause: "Hallmarking Regs §3(2)",
+      checkpoints: [
+        { label: "Laser Etch Depth", val: "10μm - 14μm Micro-Assayed", status: "PASS" },
+        { label: "Checksum Integrity", val: "Base32 ISO/IEC 7064", status: "PASS" },
+        { label: "6-Char Traceability", val: "Central AHC Ledger", status: "PASS" }
+      ],
+      tolerance: "Zero Alpha Ambiguity",
+      authority: "BIS Central Assaying Directorate"
+    }
   },
   {
     step: "03",
@@ -341,7 +363,18 @@ const VERIFICATION_STEPS = [
     stat: "< 150ms Cloud API",
     badge: "REGISTRY MIRROR",
     actionPrompt: "Run Live Query",
-    statutoryRef: "Gazette Scheme-I & IV"
+    statutoryRef: "Gazette Scheme-I & IV",
+    blueprint: {
+      code: "SPEC-API-03",
+      clause: "Scheme-I Gazette Mirror",
+      checkpoints: [
+        { label: "Cloud Response SLA", val: "< 150ms REST API Handshake", status: "PASS" },
+        { label: "License State", val: "Operative & Gazette Valid", status: "PASS" },
+        { label: "Factory Premise Match", val: "100% Geo-Coded Address", status: "PASS" }
+      ],
+      tolerance: "Zero Stale Mirror Margin",
+      authority: "BIS IT & Automation Hub"
+    }
   },
   {
     step: "04",
@@ -354,7 +387,18 @@ const VERIFICATION_STEPS = [
     stat: "§29 Cognizable",
     badge: "LEGAL ENFORCEMENT",
     actionPrompt: "Report Violation",
-    statutoryRef: "Section 29 Prosecution"
+    statutoryRef: "Section 29 Prosecution",
+    blueprint: {
+      code: "SPEC-PENAL-04",
+      clause: "BIS Act 2016 §§ 16, 29",
+      checkpoints: [
+        { label: "Statutory Sanction", val: "Imprisonment up to 2 Years", status: "ALERT" },
+        { label: "Financial Penalty", val: "Min ₹2L - 10× Seized Goods", status: "ALERT" },
+        { label: "Raid Enforcement SLA", val: "24-48h Search Warrant", status: "ALERT" }
+      ],
+      tolerance: "Cognizable Non-Bailable",
+      authority: "Judicial Magistrate / Enforcement Wing"
+    }
   }
 ];
 
@@ -556,6 +600,53 @@ export const VerificationSection = () => {
     } else if (idx === 3) {
       const el = document.getElementById('verif-enforcement-hotline');
       if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
+
+  // Section 05.B 3D Holographic Flip Cards State & Cursor Tilt Physics
+  const [flippedCards, setFlippedCards] = useState({});
+  const [tiltStyle, setTiltStyle] = useState({});
+
+  const handleCard3DMouseMove = (e, idx) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = -((y - centerY) / centerY) * 10;
+    const rotateY = ((x - centerX) / centerX) * 10;
+
+    card.style.setProperty('--mouse-x', `${x}px`);
+    card.style.setProperty('--mouse-y', `${y}px`);
+
+    setTiltStyle((prev) => ({
+      ...prev,
+      [idx]: `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`
+    }));
+  };
+
+  const handleCard3DMouseLeave = (idx) => {
+    setTiltStyle((prev) => ({
+      ...prev,
+      [idx]: `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`
+    }));
+  };
+
+  const toggleCardFlip = (idx, e) => {
+    if (e) e.stopPropagation();
+    setFlippedCards((prev) => ({
+      ...prev,
+      [idx]: !prev[idx]
+    }));
+  };
+
+  const toggleAllFlips = () => {
+    const anyFlipped = Object.values(flippedCards).some(Boolean);
+    if (anyFlipped) {
+      setFlippedCards({});
+    } else {
+      setFlippedCards({ 0: true, 1: true, 2: true, 3: true });
     }
   };
 
@@ -1666,7 +1757,8 @@ export const VerificationSection = () => {
             </div>
 
             {/* Stepper Cycler Controls */}
-            <div className="flex items-center gap-2 font-mono text-xs shrink-0">
+            {/* Stepper Cycler Controls & Blueprint Flip All Toggle */}
+            <div className="flex flex-wrap items-center gap-2 font-mono text-xs shrink-0">
               <div className="flex items-center bg-zinc-100 p-1 rounded-xl border border-zinc-200 text-xs">
                 {VERIFICATION_STEPS.map((s, idx) => (
                   <button
@@ -1686,6 +1778,20 @@ export const VerificationSection = () => {
                   </button>
                 ))}
               </div>
+
+              <button
+                type="button"
+                onClick={toggleAllFlips}
+                className={`px-3 py-1.5 rounded-xl border font-bold text-[11px] flex items-center gap-1.5 transition-all cursor-pointer ${
+                  Object.values(flippedCards).some(Boolean)
+                    ? 'bg-zinc-950 text-cyan-300 border-cyan-500/50 shadow-xs'
+                    : 'bg-white text-zinc-700 border-zinc-200 hover:border-black shadow-2xs'
+                }`}
+                title="Flip all cards to reveal technical blueprint inspection specs"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${Object.values(flippedCards).some(Boolean) ? 'text-cyan-400 rotate-180' : 'text-zinc-500'} transition-transform duration-500`} />
+                <span>{Object.values(flippedCards).some(Boolean) ? "SHOW PROTOCOLS" : "SHOW BLUEPRINTS"}</span>
+              </button>
 
               <button
                 type="button"
@@ -1739,206 +1845,340 @@ export const VerificationSection = () => {
             </div>
           </div>
 
-          {/* 4 Kinetic Interactive Step Cards */}
-          <div className="verif-steps-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* 4 Kinetic 3D Holographic Flip Step Cards */}
+          <div className="verif-steps-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 [perspective:1200px]">
             {VERIFICATION_STEPS.map((s, idx) => {
               const isActive = activeStepIdx === idx;
+              const isFlipped = !!flippedCards[idx];
               const StepIcon = s.icon;
+              const bp = s.blueprint;
 
               return (
                 <div
                   key={s.step}
-                  onMouseMove={handleCardMouseMove}
+                  onMouseMove={(e) => handleCard3DMouseMove(e, idx)}
+                  onMouseLeave={() => handleCard3DMouseLeave(idx)}
                   onClick={() => {
                     setActiveStepIdx(idx);
                     setIsStepAutoPlaying(false);
                   }}
-                  className={`verif-step-card relative rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 group cursor-pointer overflow-hidden ${
-                    isActive
-                      ? 'bg-white border-2 border-black shadow-xl -translate-y-2 ring-1 ring-black/10'
-                      : 'bg-white border border-zinc-300 hover:border-black shadow-2xs hover:shadow-lg hover:-translate-y-1'
-                  }`}
+                  style={{
+                    transform: tiltStyle[idx] || 'perspective(1000px) rotateX(0deg) rotateY(0deg)',
+                    transition: 'transform 0.15s ease-out',
+                  }}
+                  className="verif-step-card relative rounded-2xl min-h-[490px] cursor-pointer group select-none"
                 >
-                  {/* Interactive Cursor Spotlight Specular Sheen */}
-                  <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl bg-[radial-gradient(350px_circle_at_var(--mouse-x,150px)_var(--mouse-y,100px),rgba(0,0,0,0.04),transparent_70%)]" />
+                  {/* Flipping Container with preserve-3d */}
+                  <div
+                    className={`relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] ${
+                      isFlipped ? '[transform:rotateY(180deg)]' : ''
+                    }`}
+                  >
+                    {/* ========================================================
+                        FRONT FACE: Citizen Verification Protocol
+                        ======================================================== */}
+                    <div
+                      className={`absolute inset-0 [backface-visibility:hidden] rounded-2xl p-5 flex flex-col justify-between overflow-hidden transition-all duration-300 ${
+                        isActive
+                          ? 'bg-white border-2 border-black shadow-xl ring-1 ring-black/10'
+                          : 'bg-white border border-zinc-300 hover:border-black shadow-2xs hover:shadow-lg'
+                      }`}
+                    >
+                      {/* Interactive Cursor Spotlight Specular Sheen */}
+                      <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl bg-[radial-gradient(350px_circle_at_var(--mouse-x,150px)_var(--mouse-y,100px),rgba(0,0,0,0.04),transparent_70%)]" />
 
-                  {/* Top Laser Sweep Hairline */}
-                  <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-black to-transparent pointer-events-none transition-all duration-700 ${
-                    isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 -translate-x-full group-hover:translate-x-full'
-                  }`} />
+                      {/* Top Laser Sweep Hairline */}
+                      <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-black to-transparent pointer-events-none transition-all duration-700 ${
+                        isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 -translate-x-full group-hover:translate-x-full'
+                      }`} />
 
-                  {/* Card Header */}
-                  <div className="relative z-10 space-y-3">
-                    <div className="flex items-center justify-between pb-2.5 border-b border-zinc-200">
-                      <div className="flex items-center space-x-2">
-                        <span className={`font-mono text-2xl font-black transition-transform duration-300 ${
-                          isActive ? 'text-black scale-110' : 'text-zinc-800 group-hover:scale-105'
-                        }`}>
-                          {s.step}
-                        </span>
-                        <span className="font-mono text-[9px] font-bold text-zinc-400 bg-zinc-100 px-1.5 py-0.5 rounded">
-                          {s.stat}
-                        </span>
+                      {/* Card Front Header */}
+                      <div className="relative z-10 space-y-3">
+                        <div className="flex items-center justify-between pb-2.5 border-b border-zinc-200">
+                          <div className="flex items-center space-x-2">
+                            <span className={`font-mono text-2xl font-black transition-transform duration-300 ${
+                              isActive ? 'text-black scale-110' : 'text-zinc-800 group-hover:scale-105'
+                            }`}>
+                              {s.step}
+                            </span>
+                            <span className="font-mono text-[9px] font-bold text-zinc-400 bg-zinc-100 px-1.5 py-0.5 rounded">
+                              {s.stat}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center space-x-2">
+                            {/* Quick Flip to Blueprint Trigger */}
+                            <button
+                              type="button"
+                              onClick={(e) => toggleCardFlip(idx, e)}
+                              className="p-1 rounded-md text-zinc-400 hover:text-black hover:bg-zinc-100 transition-colors"
+                              title="Flip to view Technical Blueprint"
+                            >
+                              <RefreshCw className="w-3.5 h-3.5" />
+                            </button>
+                            <span className="relative flex h-2 w-2">
+                              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${s.beaconColor}`} />
+                              <span className={`relative inline-flex rounded-full h-2 w-2 ${s.beaconColor}`} />
+                            </span>
+                            <StepIcon className={`w-4 h-4 transition-all duration-300 ${
+                              isActive ? 'text-black scale-125 rotate-6' : 'text-zinc-500 group-hover:text-black group-hover:scale-110'
+                            }`} />
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <span className="font-mono text-[9px] font-black uppercase tracking-widest text-zinc-400 block">
+                            {s.phase}
+                          </span>
+                          <span
+                            onClick={(e) => toggleCardFlip(idx, e)}
+                            className="font-mono text-[9px] text-cyan-600 hover:text-cyan-800 hover:underline flex items-center gap-0.5 cursor-pointer"
+                          >
+                            <span>Blueprint Spec ↷</span>
+                          </span>
+                        </div>
+
+                        <h4 className="font-black text-sm sm:text-base text-black uppercase tracking-tight group-hover:text-zinc-900 transition-colors">
+                          {s.title}
+                        </h4>
+
+                        <p className="text-[11px] sm:text-xs text-zinc-600 font-normal leading-relaxed">
+                          {s.desc}
+                        </p>
+
+                        {/* Interactive Visual Specimen Viewports for Each Step */}
+                        {idx === 0 && (
+                          <div className="relative my-3 rounded-xl bg-zinc-950 border border-zinc-800 p-3 overflow-hidden text-white font-mono min-h-[115px] flex flex-col justify-between group/vp">
+                            <div className="absolute inset-0 bg-[radial-gradient(#3f3f46_1px,transparent_1px)] [background-size:12px_12px] opacity-40 pointer-events-none" />
+                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                              <div className={`w-16 h-16 rounded-full border border-dashed border-cyan-400/60 transition-transform duration-700 flex items-center justify-center ${isActive ? 'scale-110 animate-pulse' : 'group-hover/vp:scale-105'}`}>
+                                <div className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+                              </div>
+                            </div>
+                            <div className="relative z-10 flex items-center justify-between text-[10px]">
+                              <span className="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30 flex items-center gap-1">
+                                <span className="w-1 h-1 rounded-full bg-cyan-400 animate-ping" />
+                                <span>OPTICAL RETICLE</span>
+                              </span>
+                              <span className="text-[9px] text-zinc-400 font-bold">ALIGN: 99.8%</span>
+                            </div>
+                            <div className="relative z-10 text-center py-0.5">
+                              <span className="text-xs font-black tracking-widest text-white block">
+                                IS 2347 : 2017
+                              </span>
+                              <span className="text-[9px] text-cyan-400 font-bold block mt-0.5">
+                                [⬢ STANDARD MONOGRAM]
+                              </span>
+                            </div>
+                            <div className="relative z-10 flex items-center justify-between text-[8px] text-zinc-400 border-t border-zinc-800/80 pt-1">
+                              <span>MICRO-ETCH PATTERN</span>
+                              <span className="text-emerald-400 font-bold">AUTHENTIC</span>
+                            </div>
+                          </div>
+                        )}
+
+                        {idx === 1 && (
+                          <div className="relative my-3 rounded-xl bg-zinc-950 border border-zinc-800 p-3 overflow-hidden text-white font-mono min-h-[115px] flex flex-col justify-between group/vp">
+                            <div className="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-amber-400 to-transparent shadow-[0_0_8px_#f59e0b] animate-scanner-laser pointer-events-none z-20" />
+                            <div className="relative z-10 flex items-center justify-between text-[10px]">
+                              <span className="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30 flex items-center gap-1">
+                                <span className="w-1 h-1 rounded-full bg-amber-400 animate-ping" />
+                                <span>LASER OCR</span>
+                              </span>
+                              <span className="text-[9px] text-amber-400 font-bold">12μm DEPTH</span>
+                            </div>
+                            <div className="relative z-10 flex items-center justify-center gap-1 py-0.5">
+                              {['A', 'B', '8', '9', 'K', '2'].map((char, cIdx) => (
+                                <div 
+                                  key={cIdx} 
+                                  className={`w-5 h-6 rounded border flex items-center justify-center text-[11px] font-black transition-all ${
+                                    isActive 
+                                      ? 'bg-amber-400/20 border-amber-400 text-white shadow-2xs' 
+                                      : 'bg-zinc-900 border-zinc-700 text-zinc-300 group-hover/vp:border-amber-400/60'
+                                  }`}
+                                >
+                                  {char}
+                                </div>
+                              ))}
+                            </div>
+                            <div className="relative z-10 flex items-center justify-between text-[8px] text-zinc-400 border-t border-zinc-800/80 pt-1">
+                              <span>PARSE 6-CHAR HUID</span>
+                              <span className="text-amber-400 font-bold">CHECKSUM OK</span>
+                            </div>
+                          </div>
+                        )}
+
+                        {idx === 2 && (
+                          <div className="relative my-3 rounded-xl bg-zinc-950 border border-zinc-800 p-3 overflow-hidden text-white font-mono min-h-[115px] flex flex-col justify-between group/vp">
+                            <div className="relative z-10 flex items-center justify-between text-[10px]">
+                              <span className="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30 flex items-center gap-1">
+                                <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+                                <span>CLOUD API</span>
+                              </span>
+                              <span className="text-[9px] text-emerald-400 font-bold">42ms PING</span>
+                            </div>
+                            <div className="relative z-10 py-0.5 space-y-0.5 text-left">
+                              <div className="text-[9px] text-zinc-400 flex items-center gap-1">
+                                <span className="text-emerald-400">&gt;</span>
+                                <span className="truncate">query(CML_8400123)</span>
+                              </div>
+                              <div className="text-[10px] font-black text-white flex items-center gap-1">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
+                                <span className="truncate text-emerald-300">200 OK: OPERATIVE</span>
+                              </div>
+                            </div>
+                            <div className="relative z-10 flex items-center justify-between text-[8px] text-zinc-400 border-t border-zinc-800/80 pt-1">
+                              <span>GAZETTE SYNC</span>
+                              <span className="text-emerald-400 font-bold">100% MATCH</span>
+                            </div>
+                          </div>
+                        )}
+
+                        {idx === 3 && (
+                          <div className="relative my-3 rounded-xl bg-zinc-950 border border-rose-900/60 p-3 overflow-hidden text-white font-mono min-h-[115px] flex flex-col justify-between group/vp">
+                            <div className="absolute inset-0 bg-rose-500/5 animate-pulse pointer-events-none" />
+                            <div className="relative z-10 flex items-center justify-between text-[10px]">
+                              <span className="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-bold border border-rose-500/30 flex items-center gap-1">
+                                <ShieldAlert className="w-2.5 h-2.5 text-rose-400" />
+                                <span>PENAL §29</span>
+                              </span>
+                              <span className="text-[9px] text-rose-400 font-bold">COGNIZABLE</span>
+                            </div>
+                            <div className="relative z-10 text-center py-0.5">
+                              <span className="text-[11px] font-black tracking-tight text-white block uppercase">
+                                2 YEARS PRISON + ₹2L
+                              </span>
+                              <span className="text-[8px] text-rose-400 font-bold block mt-0.5">
+                                MANDATORY FACTORY SEIZURE
+                              </span>
+                            </div>
+                            <div className="relative z-10 flex items-center justify-between text-[8px] text-zinc-400 border-t border-zinc-800/80 pt-1">
+                              <span>ENFORCEMENT SLA</span>
+                              <span className="text-rose-400 font-bold">IMMEDIATE RAID</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
 
-                      <div className="flex items-center space-x-2">
-                        <span className="relative flex h-2 w-2">
-                          <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${s.beaconColor}`} />
-                          <span className={`relative inline-flex rounded-full h-2 w-2 ${s.beaconColor}`} />
-                        </span>
-                        <StepIcon className={`w-4 h-4 transition-all duration-300 ${
-                          isActive ? 'text-black scale-125 rotate-6' : 'text-zinc-500 group-hover:text-black group-hover:scale-110'
-                        }`} />
+                      {/* Card Front Footer: Detail & Direct Simulation Trigger */}
+                      <div className="relative z-10 pt-3 mt-3 border-t border-zinc-100 space-y-2.5">
+                        <p className="font-mono text-[10px] text-zinc-500 leading-tight">
+                          {s.detail}
+                        </p>
+
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              executeStepAction(idx);
+                            }}
+                            className={`flex-1 py-1.5 px-2.5 rounded-xl font-mono text-[10px] font-bold uppercase tracking-wider flex items-center justify-between transition-all cursor-pointer ${
+                              isActive
+                                ? 'bg-black text-white hover:bg-zinc-800 shadow-xs'
+                                : 'bg-zinc-100 text-zinc-700 hover:bg-black hover:text-white'
+                            }`}
+                          >
+                            <span>{s.actionPrompt}</span>
+                            <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => toggleCardFlip(idx, e)}
+                            className="py-1.5 px-2 rounded-xl border border-zinc-200 hover:border-black font-mono text-[10px] font-bold uppercase tracking-wider text-zinc-600 hover:text-black transition-colors"
+                            title="Flip to Blueprint Specs"
+                          >
+                            SPEC ↷
+                          </button>
+                        </div>
                       </div>
                     </div>
 
-                    <span className="font-mono text-[9px] font-black uppercase tracking-widest text-zinc-400 block">
-                      {s.phase}
-                    </span>
+                    {/* ========================================================
+                        BACK FACE: Technical Blueprint Inspection Specifications
+                        ======================================================== */}
+                    <div
+                      className="absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)] rounded-2xl p-5 flex flex-col justify-between bg-zinc-950 text-white border border-zinc-800 shadow-2xl overflow-hidden font-mono select-none"
+                    >
+                      {/* Blueprint Grid Lines Background */}
+                      <div className="absolute inset-0 bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:14px_14px] opacity-60 pointer-events-none" />
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl pointer-events-none" />
+                      <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-cyan-500 via-blue-500 to-transparent pointer-events-none" />
 
-                    <h4 className="font-black text-sm sm:text-base text-black uppercase tracking-tight group-hover:text-zinc-900 transition-colors">
-                      {s.title}
-                    </h4>
-
-                    <p className="text-[11px] sm:text-xs text-zinc-600 font-normal leading-relaxed">
-                      {s.desc}
-                    </p>
-
-                    {/* Interactive Visual Specimen Viewports for Each Step */}
-                    {idx === 0 && (
-                      <div className="relative my-3 rounded-xl bg-zinc-950 border border-zinc-800 p-3 overflow-hidden text-white font-mono min-h-[115px] flex flex-col justify-between group/vp">
-                        <div className="absolute inset-0 bg-[radial-gradient(#3f3f46_1px,transparent_1px)] [background-size:12px_12px] opacity-40 pointer-events-none" />
-                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                          <div className={`w-16 h-16 rounded-full border border-dashed border-cyan-400/60 transition-transform duration-700 flex items-center justify-center ${isActive ? 'scale-110 animate-pulse' : 'group-hover/vp:scale-105'}`}>
-                            <div className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+                      <div className="relative z-10 space-y-2.5">
+                        {/* Blueprint Header */}
+                        <div className="flex items-center justify-between pb-2 border-b border-zinc-800">
+                          <div className="flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                            <span className="text-[10px] font-black text-cyan-400 tracking-wider uppercase">
+                              {bp?.code || `SPEC-0${idx + 1}`}
+                            </span>
                           </div>
+                          <button
+                            type="button"
+                            onClick={(e) => toggleCardFlip(idx, e)}
+                            className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-700 hover:border-zinc-500 text-[10px] text-zinc-300 hover:text-white transition-colors cursor-pointer flex items-center gap-1"
+                          >
+                            <RefreshCw className="w-2.5 h-2.5" />
+                            <span>FLIP ↶</span>
+                          </button>
                         </div>
-                        <div className="relative z-10 flex items-center justify-between text-[10px]">
-                          <span className="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30 flex items-center gap-1">
-                            <span className="w-1 h-1 rounded-full bg-cyan-400 animate-ping" />
-                            <span>OPTICAL RETICLE</span>
-                          </span>
-                          <span className="text-[9px] text-zinc-400 font-bold">ALIGN: 99.8%</span>
-                        </div>
-                        <div className="relative z-10 text-center py-0.5">
-                          <span className="text-xs font-black tracking-widest text-white block">
-                            IS 2347 : 2017
-                          </span>
-                          <span className="text-[9px] text-cyan-400 font-bold block mt-0.5">
-                            [⬢ STANDARD MONOGRAM]
-                          </span>
-                        </div>
-                        <div className="relative z-10 flex items-center justify-between text-[8px] text-zinc-400 border-t border-zinc-800/80 pt-1">
-                          <span>MICRO-ETCH PATTERN</span>
-                          <span className="text-emerald-400 font-bold">AUTHENTIC</span>
-                        </div>
-                      </div>
-                    )}
 
-                    {idx === 1 && (
-                      <div className="relative my-3 rounded-xl bg-zinc-950 border border-zinc-800 p-3 overflow-hidden text-white font-mono min-h-[115px] flex flex-col justify-between group/vp">
-                        <div className="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-amber-400 to-transparent shadow-[0_0_8px_#f59e0b] animate-scanner-laser pointer-events-none z-20" />
-                        <div className="relative z-10 flex items-center justify-between text-[10px]">
-                          <span className="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30 flex items-center gap-1">
-                            <span className="w-1 h-1 rounded-full bg-amber-400 animate-ping" />
-                            <span>LASER OCR</span>
-                          </span>
-                          <span className="text-[9px] text-amber-400 font-bold">12μm DEPTH</span>
+                        <div>
+                          <span className="text-[8px] text-zinc-500 uppercase block tracking-widest">STATUTORY CLAUSE</span>
+                          <span className="text-xs font-black text-white block mt-0.5 truncate">{bp?.clause}</span>
                         </div>
-                        <div className="relative z-10 flex items-center justify-center gap-1 py-0.5">
-                          {['A', 'B', '8', '9', 'K', '2'].map((char, cIdx) => (
-                            <div 
-                              key={cIdx} 
-                              className={`w-5 h-6 rounded border flex items-center justify-center text-[11px] font-black transition-all ${
-                                isActive 
-                                  ? 'bg-amber-400/20 border-amber-400 text-white shadow-2xs' 
-                                  : 'bg-zinc-900 border-zinc-700 text-zinc-300 group-hover/vp:border-amber-400/60'
-                              }`}
-                            >
-                              {char}
+
+                        {/* 3 Inspection Checkpoints */}
+                        <div className="space-y-1 pt-0.5">
+                          <span className="text-[8px] font-black text-zinc-500 uppercase tracking-widest block">INSPECTION CHECKPOINTS</span>
+                          {bp?.checkpoints?.map((cp, cpIdx) => (
+                            <div key={cpIdx} className="bg-zinc-900/90 border border-zinc-800/80 rounded-lg px-2 py-1.5 flex items-center justify-between text-[10px]">
+                              <div className="truncate pr-2">
+                                <span className="text-zinc-400 block text-[8px] truncate">{cp.label}</span>
+                                <span className="text-white font-bold block text-[10px] truncate">{cp.val}</span>
+                              </div>
+                              <span className="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[8px] font-black border border-emerald-500/30 shrink-0">
+                                {cp.status}
+                              </span>
                             </div>
                           ))}
                         </div>
-                        <div className="relative z-10 flex items-center justify-between text-[8px] text-zinc-400 border-t border-zinc-800/80 pt-1">
-                          <span>PARSE 6-CHAR HUID</span>
-                          <span className="text-amber-400 font-bold">CHECKSUM OK</span>
+
+                        {/* Tolerance Bound */}
+                        <div className="bg-cyan-950/30 border border-cyan-900/50 rounded-lg p-2 text-[10px]">
+                          <span className="text-[8px] text-cyan-400 font-black uppercase block tracking-wider">TOLERANCE BOUND</span>
+                          <span className="text-cyan-200 font-bold block mt-0.5 text-[10px]">{bp?.tolerance}</span>
                         </div>
                       </div>
-                    )}
 
-                    {idx === 2 && (
-                      <div className="relative my-3 rounded-xl bg-zinc-950 border border-zinc-800 p-3 overflow-hidden text-white font-mono min-h-[115px] flex flex-col justify-between group/vp">
-                        <div className="relative z-10 flex items-center justify-between text-[10px]">
-                          <span className="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30 flex items-center gap-1">
-                            <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
-                            <span>CLOUD API</span>
-                          </span>
-                          <span className="text-[9px] text-emerald-400 font-bold">42ms PING</span>
+                      {/* Back Face Footer */}
+                      <div className="relative z-10 pt-2 border-t border-zinc-800/80 space-y-2">
+                        <div className="text-[8px] text-zinc-500 truncate">
+                          AUTH: {bp?.authority}
                         </div>
-                        <div className="relative z-10 py-0.5 space-y-0.5 text-left">
-                          <div className="text-[9px] text-zinc-400 flex items-center gap-1">
-                            <span className="text-emerald-400">&gt;</span>
-                            <span className="truncate">query(CML_8400123)</span>
-                          </div>
-                          <div className="text-[10px] font-black text-white flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
-                            <span className="truncate text-emerald-300">200 OK: OPERATIVE</span>
-                          </div>
-                        </div>
-                        <div className="relative z-10 flex items-center justify-between text-[8px] text-zinc-400 border-t border-zinc-800/80 pt-1">
-                          <span>GAZETTE SYNC</span>
-                          <span className="text-emerald-400 font-bold">100% MATCH</span>
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              executeStepAction(idx);
+                            }}
+                            className="flex-1 py-1.5 px-2 rounded-lg bg-cyan-400 text-black hover:bg-cyan-300 font-mono text-[9px] font-black uppercase tracking-wider flex items-center justify-center gap-1 cursor-pointer transition-colors"
+                          >
+                            <span>TEST BLUEPRINT</span>
+                            <ArrowRight className="w-2.5 h-2.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => toggleCardFlip(idx, e)}
+                            className="py-1.5 px-2 rounded-lg bg-zinc-900 border border-zinc-700 hover:border-zinc-500 text-zinc-300 font-mono text-[9px] font-bold uppercase transition-colors"
+                          >
+                            RETURN ↶
+                          </button>
                         </div>
                       </div>
-                    )}
-
-                    {idx === 3 && (
-                      <div className="relative my-3 rounded-xl bg-zinc-950 border border-rose-900/60 p-3 overflow-hidden text-white font-mono min-h-[115px] flex flex-col justify-between group/vp">
-                        <div className="absolute inset-0 bg-rose-500/5 animate-pulse pointer-events-none" />
-                        <div className="relative z-10 flex items-center justify-between text-[10px]">
-                          <span className="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-bold border border-rose-500/30 flex items-center gap-1">
-                            <ShieldAlert className="w-2.5 h-2.5 text-rose-400" />
-                            <span>PENAL §29</span>
-                          </span>
-                          <span className="text-[9px] text-rose-400 font-bold">COGNIZABLE</span>
-                        </div>
-                        <div className="relative z-10 text-center py-0.5">
-                          <span className="text-[11px] font-black tracking-tight text-white block uppercase">
-                            2 YEARS PRISON + ₹2L
-                          </span>
-                          <span className="text-[8px] text-rose-400 font-bold block mt-0.5">
-                            MANDATORY FACTORY SEIZURE
-                          </span>
-                        </div>
-                        <div className="relative z-10 flex items-center justify-between text-[8px] text-zinc-400 border-t border-zinc-800/80 pt-1">
-                          <span>ENFORCEMENT SLA</span>
-                          <span className="text-rose-400 font-bold">IMMEDIATE RAID</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Card Footer: Detail & Direct Simulation Trigger */}
-                  <div className="relative z-10 pt-3 mt-3 border-t border-zinc-100 space-y-2.5">
-                    <p className="font-mono text-[10px] text-zinc-500 leading-tight">
-                      {s.detail}
-                    </p>
-
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        executeStepAction(idx);
-                      }}
-                      className={`w-full py-1.5 px-2.5 rounded-xl font-mono text-[10px] font-bold uppercase tracking-wider flex items-center justify-between transition-all cursor-pointer ${
-                        isActive
-                          ? 'bg-black text-white hover:bg-zinc-800 shadow-xs'
-                          : 'bg-zinc-100 text-zinc-700 hover:bg-black hover:text-white'
-                      }`}
-                    >
-                      <span>{s.actionPrompt}</span>
-                      <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
-                    </button>
+                    </div>
                   </div>
                 </div>
               );
