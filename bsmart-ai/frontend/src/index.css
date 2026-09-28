@@ -604,6 +604,54 @@ body {
   animation: scannerLaser 3.2s ease-in-out infinite;
 }
 
+/* 3D Holographic Flip Cards & Mobile Presets */
+.preserve-3d {
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+@keyframes mobileHoloBreath {
+  0%, 100% {
+    transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1);
+  }
+  25% {
+    transform: perspective(1000px) rotateX(3deg) rotateY(-3.5deg) scale3d(1.015, 1.015, 1.015);
+  }
+  50% {
+    transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1.02, 1.02, 1.02);
+  }
+  75% {
+    transform: perspective(1000px) rotateX(-2.5deg) rotateY(3deg) scale3d(1.015, 1.015, 1.015);
+  }
+}
+
+.animate-mobile-holo {
+  animation: mobileHoloBreath 5s ease-in-out infinite;
+}
+
+@keyframes laserSweepHorizontal {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.animate-laser-sweep {
+  animation: laserSweepHorizontal 2.4s ease-in-out infinite;
+}
+
 /* Accessibility: prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
@@ -614,4 +662,5 @@ body {
     transition-duration: 0s !important;
   }
 }
+
 

@@ -603,9 +603,43 @@ export const VerificationSection = () => {
     }
   };
 
-  // Section 05.B 3D Holographic Flip Cards State & Cursor Tilt Physics
+  // Section 05.B 3D Holographic Flip Cards State, Cursor & Mobile Gyro Tilt Physics
   const [flippedCards, setFlippedCards] = useState({});
   const [tiltStyle, setTiltStyle] = useState({});
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [mobileTiltAngle, setMobileTiltAngle] = useState({ x: 0, y: 0 });
+  const touchStartRef = useRef({ x: 0, y: 0, time: 0 });
+  const isTouchingCardRef = useRef(false);
+
+  useEffect(() => {
+    const checkTouch = () => {
+      setIsTouchDevice('ontouchstart' in window || (navigator.maxTouchPoints && navigator.maxTouchPoints > 0));
+    };
+    checkTouch();
+    window.addEventListener('resize', checkTouch);
+
+    // Mobile Gyroscope / Physical Device Tilt Support
+    const handleOrientation = (e) => {
+      if (e && e.gamma !== null && e.beta !== null) {
+        // gamma is left/right roll [-90, 90]
+        // beta is front/back pitch [-180, 180], typical reading 35-50 when holding phone in hand
+        const rotY = Math.max(-12, Math.min(12, e.gamma * 0.35));
+        const rotX = Math.max(-12, Math.min(12, -(e.beta - 45) * 0.3));
+        setMobileTiltAngle({ x: rotX, y: rotY });
+      }
+    };
+
+    if (typeof window !== 'undefined' && window.DeviceOrientationEvent) {
+      window.addEventListener('deviceorientation', handleOrientation, true);
+    }
+
+    return () => {
+      window.removeEventListener('resize', checkTouch);
+      if (typeof window !== 'undefined' && window.DeviceOrientationEvent) {
+        window.removeEventListener('deviceorientation', handleOrientation, true);
+      }
+    };
+  }, []);
 
   const handleCard3DMouseMove = (e, idx) => {
     const card = e.currentTarget;
@@ -631,6 +665,74 @@ export const VerificationSection = () => {
       ...prev,
       [idx]: `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`
     }));
+  };
+
+  // Mobile Touch Tilt Physics
+  const handleCardTouchStart = (e, idx) => {
+    const touch = e.touches && e.touches[0];
+    if (!touch) return;
+    touchStartRef.current = { x: touch.clientX, y: touch.clientY, time: Date.now() };
+    isTouchingCardRef.current = true;
+    updateCardTouchTilt(touch, e.currentTarget, idx);
+  };
+
+  const handleCardTouchMove = (e, idx) => {
+    const touch = e.touches && e.touches[0];
+    if (!touch) return;
+    updateCardTouchTilt(touch, e.currentTarget, idx);
+  };
+
+  const updateCardTouchTilt = (touch, card, idx) => {
+    const rect = card.getBoundingClientRect();
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = -((y - centerY) / centerY) * 12;
+    const rotateY = ((x - centerX) / centerX) * 12;
+
+    card.style.setProperty('--mouse-x', `${Math.max(0, Math.min(rect.width, x))}px`);
+    card.style.setProperty('--mouse-y', `${Math.max(0, Math.min(rect.height, y))}px`);
+
+    setTiltStyle((prev) => ({
+      ...prev,
+      [idx]: `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`
+    }));
+  };
+
+  const handleCardTouchEnd = (idx) => {
+    isTouchingCardRef.current = false;
+    setTiltStyle((prev) => ({
+      ...prev,
+      [idx]: `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`
+    }));
+  };
+
+  // Mobile Grid Touch Swipe Gesture Handler
+  const handleGridTouchStart = (e) => {
+    if (e.touches && e.touches[0]) {
+      touchStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY, time: Date.now() };
+    }
+  };
+
+  const handleGridTouchEnd = (e) => {
+    if (!e.changedTouches || e.changedTouches.length === 0) return;
+    const deltaX = e.changedTouches[0].clientX - touchStartRef.current.x;
+    const deltaY = e.changedTouches[0].clientY - touchStartRef.current.y;
+    const deltaTime = Date.now() - touchStartRef.current.time;
+
+    // Detect horizontal swipe (> 45px distance and dominantly horizontal within 600ms)
+    if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY) * 1.4 && deltaTime < 600) {
+      if (deltaX < 0) {
+        // Swipe Left -> Next Step
+        setActiveStepIdx((prev) => (prev + 1) % VERIFICATION_STEPS.length);
+        setIsStepAutoPlaying(false);
+      } else {
+        // Swipe Right -> Prev Step
+        setActiveStepIdx((prev) => (prev - 1 + VERIFICATION_STEPS.length) % VERIFICATION_STEPS.length);
+        setIsStepAutoPlaying(false);
+      }
+    }
   };
 
   const toggleCardFlip = (idx, e) => {
@@ -1845,32 +1947,72 @@ export const VerificationSection = () => {
             </div>
           </div>
 
+          {/* Mobile Navigation & Gyro Tilt Helper Indicator */}
+          <div className="sm:hidden flex items-center justify-between text-[10px] font-mono text-zinc-500 px-1 py-0.5">
+            <span className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-ping" />
+              <span>Swipe or tilt phone for 3D</span>
+            </span>
+            <span className="text-zinc-600 font-bold bg-zinc-100 px-2 py-0.5 rounded-md border border-zinc-200">
+              Tap card to flip ↷
+            </span>
+          </div>
+
           {/* 4 Kinetic 3D Holographic Flip Step Cards */}
-          <div className="verif-steps-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 [perspective:1200px]">
+          <div 
+            onTouchStart={handleGridTouchStart}
+            onTouchEnd={handleGridTouchEnd}
+            className="verif-steps-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 [perspective:1200px]"
+          >
             {VERIFICATION_STEPS.map((s, idx) => {
               const isActive = activeStepIdx === idx;
               const isFlipped = !!flippedCards[idx];
               const StepIcon = s.icon;
               const bp = s.blueprint;
 
+              // Determine computed 3D tilt:
+              // 1. Direct active touch/cursor tilt if present
+              // 2. Mobile device gyroscope orientation angle if active step
+              // 3. Neutral 3D perspective fallback
+              const cardTransform = tiltStyle[idx] || (
+                isActive && (mobileTiltAngle.x !== 0 || mobileTiltAngle.y !== 0)
+                  ? `perspective(1000px) rotateX(${mobileTiltAngle.x.toFixed(2)}deg) rotateY(${mobileTiltAngle.y.toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`
+                  : undefined
+              );
+
               return (
                 <div
                   key={s.step}
                   onMouseMove={(e) => handleCard3DMouseMove(e, idx)}
                   onMouseLeave={() => handleCard3DMouseLeave(idx)}
+                  onTouchStart={(e) => handleCardTouchStart(e, idx)}
+                  onTouchMove={(e) => handleCardTouchMove(e, idx)}
+                  onTouchEnd={() => handleCardTouchEnd(idx)}
                   onClick={() => {
-                    setActiveStepIdx(idx);
-                    setIsStepAutoPlaying(false);
+                    if (activeStepIdx === idx) {
+                      // On mobile / desktop, tapping the already active card flips it!
+                      toggleCardFlip(idx);
+                    } else {
+                      setActiveStepIdx(idx);
+                      setIsStepAutoPlaying(false);
+                    }
                   }}
                   style={{
-                    transform: tiltStyle[idx] || 'perspective(1000px) rotateX(0deg) rotateY(0deg)',
-                    transition: 'transform 0.15s ease-out',
+                    transform: cardTransform || 'perspective(1000px) rotateX(0deg) rotateY(0deg)',
+                    transition: isTouchingCardRef.current ? 'none' : 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                    WebkitTransformStyle: 'preserve-3d',
+                    transformStyle: 'preserve-3d',
                   }}
-                  className="verif-step-card relative rounded-2xl min-h-[490px] cursor-pointer group select-none"
+                  className={`verif-step-card relative rounded-2xl min-h-[515px] sm:min-h-[490px] cursor-pointer group select-none touch-manipulation ${
+                    isActive && !tiltStyle[idx] && mobileTiltAngle.x === 0 && mobileTiltAngle.y === 0
+                      ? 'animate-mobile-holo sm:animate-none'
+                      : ''
+                  }`}
                 >
                   {/* Flipping Container with preserve-3d */}
                   <div
-                    className={`relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] ${
+                    style={{ WebkitTransformStyle: 'preserve-3d', transformStyle: 'preserve-3d' }}
+                    className={`relative w-full h-full transition-transform duration-700 preserve-3d ${
                       isFlipped ? '[transform:rotateY(180deg)]' : ''
                     }`}
                   >
@@ -1878,18 +2020,23 @@ export const VerificationSection = () => {
                         FRONT FACE: Citizen Verification Protocol
                         ======================================================== */}
                     <div
-                      className={`absolute inset-0 [backface-visibility:hidden] rounded-2xl p-5 flex flex-col justify-between overflow-hidden transition-all duration-300 ${
+                      style={{ WebkitBackfaceVisibility: 'hidden', backfaceVisibility: 'hidden' }}
+                      className={`absolute inset-0 backface-hidden rounded-2xl p-4 sm:p-5 flex flex-col justify-between overflow-hidden transition-all duration-300 ${
                         isActive
                           ? 'bg-white border-2 border-black shadow-xl ring-1 ring-black/10'
                           : 'bg-white border border-zinc-300 hover:border-black shadow-2xs hover:shadow-lg'
                       }`}
                     >
-                      {/* Interactive Cursor Spotlight Specular Sheen */}
-                      <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl bg-[radial-gradient(350px_circle_at_var(--mouse-x,150px)_var(--mouse-y,100px),rgba(0,0,0,0.04),transparent_70%)]" />
+                      {/* Interactive Cursor & Touch Spotlight Specular Sheen */}
+                      <div 
+                        className={`pointer-events-none absolute inset-0 transition-opacity duration-300 rounded-2xl bg-[radial-gradient(350px_circle_at_var(--mouse-x,150px)_var(--mouse-y,100px),rgba(0,0,0,0.06),transparent_70%)] ${
+                          isActive ? 'opacity-100 sm:opacity-0 sm:group-hover:opacity-100' : 'opacity-0 group-hover:opacity-100'
+                        }`} 
+                      />
 
-                      {/* Top Laser Sweep Hairline */}
+                      {/* Top Laser Sweep Hairline (Continuous sweep on active step) */}
                       <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-black to-transparent pointer-events-none transition-all duration-700 ${
-                        isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 -translate-x-full group-hover:translate-x-full'
+                        isActive ? 'opacity-100 animate-laser-sweep' : 'opacity-0 group-hover:opacity-100 -translate-x-full group-hover:translate-x-full'
                       }`} />
 
                       {/* Card Front Header */}
@@ -1930,12 +2077,14 @@ export const VerificationSection = () => {
                           <span className="font-mono text-[9px] font-black uppercase tracking-widest text-zinc-400 block">
                             {s.phase}
                           </span>
-                          <span
+                          <button
+                            type="button"
                             onClick={(e) => toggleCardFlip(idx, e)}
-                            className="font-mono text-[9px] text-cyan-600 hover:text-cyan-800 hover:underline flex items-center gap-0.5 cursor-pointer"
+                            className="font-mono text-[9px] text-cyan-700 bg-cyan-50 sm:bg-transparent px-2 py-0.5 sm:px-0 sm:py-0 rounded-full border border-cyan-200 sm:border-0 hover:text-cyan-900 hover:underline flex items-center gap-0.5 cursor-pointer font-bold"
+                            title="Tap to flip card and view technical blueprint"
                           >
                             <span>Blueprint Spec ↷</span>
-                          </span>
+                          </button>
                         </div>
 
                         <h4 className="font-black text-sm sm:text-base text-black uppercase tracking-tight group-hover:text-zinc-900 transition-colors">
@@ -2098,7 +2247,8 @@ export const VerificationSection = () => {
                         BACK FACE: Technical Blueprint Inspection Specifications
                         ======================================================== */}
                     <div
-                      className="absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)] rounded-2xl p-5 flex flex-col justify-between bg-zinc-950 text-white border border-zinc-800 shadow-2xl overflow-hidden font-mono select-none"
+                      style={{ WebkitBackfaceVisibility: 'hidden', backfaceVisibility: 'hidden' }}
+                      className="absolute inset-0 backface-hidden [transform:rotateY(180deg)] rounded-2xl p-4 sm:p-5 flex flex-col justify-between bg-zinc-950 text-white border border-zinc-800 shadow-2xl overflow-hidden font-mono select-none"
                     >
                       {/* Blueprint Grid Lines Background */}
                       <div className="absolute inset-0 bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:14px_14px] opacity-60 pointer-events-none" />
