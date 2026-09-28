@@ -78,11 +78,11 @@ export const AISection = () => {
     <section
       ref={sectionRef}
       data-theme="dark"
-      className="bg-black text-white py-24 sm:py-36 px-6 sm:px-12 border-b border-zinc-900 relative overflow-hidden"
+      className="bg-black text-white py-12 sm:py-24 md:py-36 px-6 sm:px-12 border-b border-zinc-900 relative overflow-hidden"
     >
       <div className="max-w-6xl mx-auto w-full">
         {/* Header */}
-        <div className="ai-headline max-w-4xl mb-14 sm:mb-20">
+        <div className="ai-headline max-w-4xl mb-8 sm:mb-14 md:mb-20">
           <div className="font-mono text-xs sm:text-sm tracking-widest text-zinc-500 uppercase mb-3 flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
             <span>04 — ANTI-HALLUCINATION RETRIEVAL</span>

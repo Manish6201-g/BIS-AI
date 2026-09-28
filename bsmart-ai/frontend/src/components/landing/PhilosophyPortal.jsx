@@ -241,7 +241,9 @@ export const PhilosophyPortal = () => {
 
     if (contentRef.current && sectionRef.current) {
       const contentHeight = contentRef.current.scrollHeight;
-      const totalH = vh * 1.2 + contentHeight;
+      // Mobile needs much less scroll room for the portal animation
+      const scrollPadding = mobile ? 0.5 : 1.2;
+      const totalH = vh * scrollPadding + contentHeight;
       sectionRef.current.style.height = `${totalH}px`;
       sectionRef.current.style.minHeight = `${totalH}px`;
     }

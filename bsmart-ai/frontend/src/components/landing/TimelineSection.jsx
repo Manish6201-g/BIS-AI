@@ -76,11 +76,11 @@ export const TimelineSection = () => {
     <section
       ref={timelineRef}
       data-theme="light"
-      className="bg-tech-dotted-white text-black py-28 sm:py-36 px-6 sm:px-12 border-b border-zinc-200 relative overflow-hidden"
+      className="bg-tech-dotted-white text-black py-14 sm:py-28 md:py-36 px-6 sm:px-12 border-b border-zinc-200 relative overflow-hidden"
     >
       <div className="max-w-5xl mx-auto w-full">
         {/* Header */}
-        <div className="timeline-header max-w-3xl mb-16 sm:mb-24 text-center sm:text-left">
+        <div className="timeline-header max-w-3xl mb-8 sm:mb-16 md:mb-24 text-center sm:text-left">
           <div className="font-mono text-xs sm:text-sm tracking-widest text-zinc-500 uppercase mb-3">
             03 — BISmart AI WORKFLOW
           </div>

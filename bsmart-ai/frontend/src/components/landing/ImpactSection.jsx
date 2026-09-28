@@ -56,9 +56,9 @@ const CounterMetric = ({ value, suffix = '+', label, description }) => {
  */
 export const ImpactSection = () => {
   return (
-    <section className="w-full bg-black text-white py-32 px-6 md:px-12 lg:px-16 border-t border-white/10 relative z-20">
+    <section className="w-full bg-black text-white py-16 sm:py-24 md:py-32 px-6 md:px-12 lg:px-16 border-t border-white/10 relative z-20">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-20 sm:mb-24 flex items-center justify-between border-b border-white/10 pb-6">
+        <div className="mb-10 sm:mb-20 sm:mb-24 flex items-center justify-between border-b border-white/10 pb-6">
           <h2 className="font-mono text-xs font-bold uppercase tracking-[0.25em] text-zinc-400">
             NATIONAL REGULATORY IMPACT
           </h2>
@@ -68,7 +68,7 @@ export const ImpactSection = () => {
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-24 gap-y-24 sm:gap-y-36">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-24 gap-y-14 sm:gap-y-24 md:gap-y-36">
           <CounterMetric
             value={20000}
             suffix="+"
