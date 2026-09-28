@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { 
   ShieldCheck, 
@@ -9,7 +10,19 @@ import {
   ExternalLink, 
   Search, 
   ArrowRight,
-  Maximize2
+  Maximize2,
+  ChevronRight,
+  ChevronLeft,
+  Play,
+  Pause,
+  Layers,
+  LayoutGrid,
+  ShieldAlert,
+  Flame,
+  Scale,
+  Check,
+  Activity,
+  Compass
 } from "lucide-react";
 
 export interface ScrollChoreographyImages {
@@ -35,48 +48,126 @@ export interface ScrollChoreographyProps {
   subtitle?: string;
 }
 
-function interpolate(
-  t: number,
-  inputRange: number[],
-  outputRange: string[]
-): string {
-  if (t <= inputRange[0]) return outputRange[0];
-  if (t >= inputRange[inputRange.length - 1])
-    return outputRange[outputRange.length - 1];
-
-  for (let i = 0; i < inputRange.length - 1; i++) {
-    const start = inputRange[i];
-    const end = inputRange[i + 1];
-    if (t >= start && t <= end) {
-      const localT = (t - start) / (end - start);
-      const startVal = parseFloat(outputRange[i]);
-      const endVal = parseFloat(outputRange[i + 1]);
-      const unit = outputRange[i].replace(/[-\d.]/g, "");
-      return `${startVal + (endVal - startVal) * localT}${unit}`;
-    }
-  }
-  return outputRange[outputRange.length - 1];
+interface QuadrantConfig {
+  id: string;
+  index: string;
+  key: keyof ScrollChoreographyImages;
+  defaultTag: string;
+  defaultTitle: string;
+  defaultSubtitle: string;
+  standard: string;
+  category: string;
+  statusText: string;
+  statusBadge: string;
+  accentBorder: string;
+  telemetry: { label: string; value: string }[];
+  highlights: string[];
+  actionUrl: string;
+  actionLabel: string;
 }
 
-function interpolateNum(
-  t: number,
-  inputRange: number[],
-  outputRange: number[]
-): number {
-  if (t <= inputRange[0]) return outputRange[0];
-  if (t >= inputRange[inputRange.length - 1])
-    return outputRange[outputRange.length - 1];
-
-  for (let i = 0; i < inputRange.length - 1; i++) {
-    const start = inputRange[i];
-    const end = inputRange[i + 1];
-    if (t >= start && t <= end) {
-      const localT = (t - start) / (end - start);
-      return outputRange[i] + (outputRange[i + 1] - outputRange[i]) * localT;
-    }
-  }
-  return outputRange[outputRange.length - 1];
-}
+const QUADRANTS: QuadrantConfig[] = [
+  {
+    id: "quad-1",
+    index: "01",
+    key: "topLeft",
+    defaultTag: "01 — PROOF TESTING",
+    defaultTitle: "SCHEME-I FACTORY INSPECTION",
+    defaultSubtitle: "Hydrostatic test bench & thermal safety audit",
+    standard: "IS 2347 / IS 4151 / IS 14543",
+    category: "MECHANICAL & PRESSURE INTEGRITY",
+    statusText: "OPERATIVE // FACTORY TESTED",
+    statusBadge: "bg-emerald-50 text-emerald-800 border-emerald-300",
+    accentBorder: "group-hover:border-emerald-500",
+    telemetry: [
+      { label: "BURST PRESSURE", value: "17-BAR TESTED" },
+      { label: "SIT LOGGING", value: "DAILY BATCH RECORD" },
+      { label: "LEAK TOLERANCE", value: "0.00% ZERO ESCAPE" },
+    ],
+    highlights: [
+      "Mandatory on-site factory laboratory for daily batch hydrostatic sampling",
+      "Thermal safety release plug activation tested under accelerated stress",
+      "Traceable to licensed factory premise gazette registration",
+    ],
+    actionUrl: "#verif-quick-tool",
+    actionLabel: "Verify CM/L Licence",
+  },
+  {
+    id: "quad-2",
+    index: "02",
+    key: "bottomRight",
+    defaultTag: "02 — HALLMARKING",
+    defaultTitle: "6-CHAR LASER HUID ASSAY",
+    defaultSubtitle: "AHC verified gold fineness (22K916 / 18K750)",
+    standard: "IS 1417:2016 MANDATE",
+    category: "PRECIOUS METALS PURITY ASSAY",
+    statusText: "AUTHENTIC // CENTRAL MIRROR",
+    statusBadge: "bg-amber-50 text-amber-900 border-amber-300",
+    accentBorder: "group-hover:border-amber-500",
+    telemetry: [
+      { label: "LASER ETCHING", value: "6-CHAR UNIQUE HUID" },
+      { label: "FINENESS ASSAY", value: "916 (22K GOLD)" },
+      { label: "AHC TEST LABS", value: "1,650+ ACCREDITED" },
+    ],
+    highlights: [
+      "Microscopic laser-etched HUID unique to every piece of jewellery",
+      "Central assay mirror prevents karatage dilution and under-carat fraud",
+      "Traceable directly to the certified Assaying & Hallmarking Centre",
+    ],
+    actionUrl: "#verif-quick-tool",
+    actionLabel: "Query Gold HUID",
+  },
+  {
+    id: "quad-3",
+    index: "03",
+    key: "bottomLeft",
+    defaultTag: "03 — GAZETTE REGISTRY",
+    defaultTitle: "STATUTORY QCO MANDATES",
+    defaultSubtitle: "Cognizable consumer protection under Section 16",
+    standard: "BIS ACT 2016 §16 & §29",
+    category: "STATUTORY CRIMINAL LAW",
+    statusText: "MANDATORY // ENFORCED",
+    statusBadge: "bg-red-50 text-red-900 border-red-300",
+    accentBorder: "group-hover:border-red-500",
+    telemetry: [
+      { label: "MANDATORY QCOs", value: "150+ ORDERS" },
+      { label: "PENALTY CLAUSE", value: "UP TO 2 YRS JAIL" },
+      { label: "HELPLINE 24/7", value: "TOLL-FREE 1915" },
+    ],
+    highlights: [
+      "Strict prohibition on sale of non-certified goods in mandatory sectors",
+      "Statutory penalties of ₹2,00,000 to 10× product value and seizure",
+      "Cognizable consumer complaint filing with direct magistrate jurisdiction",
+    ],
+    actionUrl: "/assistant",
+    actionLabel: "Report Counterfeit Goods",
+  },
+  {
+    id: "quad-4",
+    index: "04",
+    key: "topRight",
+    defaultTag: "04 — CONVERGENCE",
+    defaultTitle: "CENTRAL BIS AUTHENTICITY EMBLEM",
+    defaultSubtitle: "National Gazette Mirror & Citizen Verification Hub",
+    standard: "CENTRAL REPOSITORY",
+    category: "NATIONAL VERIFICATION NETWORK",
+    statusText: "100% OPERATIONAL",
+    statusBadge: "bg-black text-white border-black",
+    accentBorder: "group-hover:border-black",
+    telemetry: [
+      { label: "ACTIVE LICENCES", value: "45,000+ CM/L" },
+      { label: "API LATENCY", value: "< 120ms LIVE" },
+      { label: "GAZETTE SYNC", value: "100% GROUNDED" },
+    ],
+    highlights: [
+      "Real-time synchronized central mirror of all operative licences",
+      "Multi-modal verification: ISI CM/L code, QR scan, and Laser HUID",
+      "Direct citizen access with complete transparency and zero paywall",
+    ],
+    actionUrl: "/verify-isi",
+    actionLabel: "Open Master Registry",
+  },
+];
 
 export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
   images,
@@ -84,428 +175,647 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
   className,
   badge = "05.CHOREOGRAPHY — CITIZEN STATUTORY PROOF MATRIX",
   title = "CHOREOGRAPHED REGULATORY PROOFS",
-  subtitle = "Scroll through the 4 verification quadrants as statutory telemetry converges into the national central authenticity emblem."
+  subtitle = "Explore the 4 statutory pillars of product quality & hallmarking assurance as they converge into the national central authenticity network."
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [smoothProgress, setSmoothProgress] = useState(0);
+  const [activeStep, setActiveStep] = useState<number>(0); // 0, 1, 2, 3, or 4 (Converged)
+  const [viewMode, setViewMode] = useState<"matrix" | "focus" | "converged">("matrix");
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
-  const stiffness = 380;
-  const dampingVal = 38;
-  const mass = 1.0;
-
+  // Auto-play cycling when enabled
   useEffect(() => {
-    let animationFrameId: number;
-    let velocity = 0;
-    let currentProgress = 0;
-    let currentSmoothProgress = 0;
+    if (!isPlaying) return;
+    const interval = setInterval(() => {
+      setActiveStep((prev) => (prev + 1) % 5);
+    }, 4500);
+    return () => clearInterval(interval);
+  }, [isPlaying]);
 
+  // Synchronize with scroll position through the section container
+  useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const viewportH = window.innerHeight;
-      const scrollableHeight = rect.height - viewportH;
-
-      if (scrollableHeight <= 0) {
-        currentProgress = 0;
-      } else {
-        const scrolled = -rect.top;
-        currentProgress = Math.max(0, Math.min(1, scrolled / scrollableHeight));
+      if (!containerRef.current || isPlaying) return;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const rect = containerRef.current?.getBoundingClientRect();
+          if (rect) {
+            const viewportH = window.innerHeight;
+            // When container enters viewport mid-screen, track relative scroll progress
+            const topOffset = viewportH * 0.5 - rect.top;
+            const totalH = rect.height;
+            if (topOffset >= 0 && topOffset <= totalH) {
+              const progress = Math.max(0, Math.min(1, topOffset / totalH));
+              // Map progress to steps: 0 -> Step 0, 0.25 -> Step 1, 0.50 -> Step 2, 0.75 -> Step 3, 0.90 -> Step 4
+              if (progress < 0.22) {
+                setActiveStep(0);
+              } else if (progress < 0.44) {
+                setActiveStep(1);
+              } else if (progress < 0.66) {
+                setActiveStep(2);
+              } else if (progress < 0.88) {
+                setActiveStep(3);
+              } else {
+                setActiveStep(4);
+              }
+            }
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isPlaying]);
 
-    const loop = () => {
-      const dt = 1 / 60;
-      const displacement = currentProgress - currentSmoothProgress;
-      const springForce = stiffness * displacement;
-      const dampingForce = -dampingVal * velocity;
-      const acceleration = (springForce + dampingForce) / mass;
-
-      velocity += acceleration * dt;
-      currentSmoothProgress += velocity * dt;
-
-      setSmoothProgress(currentSmoothProgress);
-      animationFrameId = requestAnimationFrame(loop);
-    };
-
-    animationFrameId = requestAnimationFrame(loop);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, []);
-
-  const sp = smoothProgress;
-
-  // Responsive quadrant coordinates - tight, filled positioning
-  const xLeft = "-23vw";
-  const xRight = "23vw";
-  const yTop = "-18vh";
-  const yBottom = "18vh";
-
-  // Top Left Style (Quadrant 1)
-  const tlTransform = `translate(-50%, -50%) translate(${interpolate(
-    sp,
-    [0, 0.1, 0.45, 0.75, 1],
-    [xLeft, xLeft, "0vw", "0vw", "0vw"]
-  )}, ${interpolate(
-    sp,
-    [0, 0.1, 0.45, 0.75, 1],
-    [yTop, yTop, "0vh", "0vh", "0vh"]
-  )})`;
-  const tlOpacity = interpolateNum(sp, [0.55, 0.72], [1, 0]);
-
-  // Bottom Right Style (Quadrant 2)
-  const brTransform = `translate(-50%, -50%) translate(${interpolate(
-    sp,
-    [0, 0.1, 0.45, 0.75, 1],
-    [xRight, xRight, "0vw", "0vw", "0vw"]
-  )}, ${interpolate(
-    sp,
-    [0, 0.1, 0.45, 0.75, 1],
-    [yBottom, yBottom, "0vh", "0vh", "0vh"]
-  )})`;
-  const brOpacity = interpolateNum(sp, [0.55, 0.72], [1, 0]);
-
-  // Bottom Left Style (Quadrant 3)
-  const blTransform = `translate(-50%, -50%) translate(${interpolate(
-    sp,
-    [0, 0.1, 0.45, 0.75, 1],
-    [xLeft, xLeft, "0vw", "0vw", "0vw"]
-  )}, ${interpolate(
-    sp,
-    [0, 0.1, 0.45, 0.75, 1],
-    [yBottom, yBottom, "0vh", "0vh", "0vh"]
-  )})`;
-  const blOpacity = interpolateNum(sp, [0.55, 0.72], [1, 0]);
-
-  // Top Right Style (Quadrant 4 Hero - choreographs and expands to fill the stage)
-  const trTransform = `translate(-50%, -50%) translate(${interpolate(
-    sp,
-    [0, 0.1, 0.45, 0.75, 1],
-    [xRight, xRight, "0vw", "0vw", "0vw"]
-  )}, ${interpolate(
-    sp,
-    [0, 0.1, 0.45, 0.75, 1],
-    [yTop, yTop, "0vh", "0vh", "0vh"]
-  )})`;
-
-  const trWidth = interpolate(
-    sp,
-    [0.45, 0.75, 1],
-    ["44vw", "88vw", "94vw"]
-  );
-
-  const trHeight = interpolate(
-    sp,
-    [0.45, 0.75, 1],
-    ["32vh", "72vh", "78vh"]
-  );
-
-  const heroContentOpacity = interpolateNum(sp, [0.65, 0.85], [0, 1]);
-  const heroContentScale = interpolateNum(sp, [0.65, 0.85], [0.95, 1]);
-
-  const baseCardClasses =
-    "absolute left-1/2 top-1/2 w-[88vw] sm:w-[44vw] h-[28vh] sm:h-[32vh] overflow-hidden rounded-2xl sm:rounded-3xl border border-zinc-300 bg-zinc-950 shadow-xl will-change-transform transition-shadow duration-300";
+  const activeQuadrant = activeStep < 4 ? QUADRANTS[activeStep] : QUADRANTS[3];
+  const activeImage = images[activeQuadrant.key] || images.topRight;
+  const activeCaption = captions?.[activeQuadrant.key];
 
   return (
     <div
       ref={containerRef}
-      className={cn("relative h-[160vh] sm:h-[180vh] w-full border border-zinc-300 bg-white rounded-[32px] overflow-hidden shadow-xs", className)}
+      className={cn(
+        "relative w-full border border-zinc-300 bg-white rounded-[28px] sm:rounded-[36px] overflow-hidden shadow-xs",
+        className
+      )}
     >
-      {/* Background Architectural Blueprint Matrix (Ensures NO empty blank space) */}
+      {/* Subtle Blueprint Grid Pattern Backdrop */}
       <div className="absolute inset-0 pointer-events-none opacity-40">
         <div className="absolute inset-0 bg-[radial-gradient(#e4e4e7_1px,transparent_1px)] [background-size:24px_24px]" />
         
-        {/* Technical Coordinate Markers */}
-        <div className="absolute top-4 left-6 font-mono text-[9px] text-zinc-400 uppercase tracking-widest">
-          CHOREO // VIEWPORT MATRIX [0,0]
+        {/* Technical Corner Markers */}
+        <div className="absolute top-4 left-6 font-mono text-[9px] text-zinc-400 uppercase tracking-widest hidden sm:block">
+          CHOREO // MATRIX [0,0]
         </div>
-        <div className="absolute top-4 right-6 font-mono text-[9px] text-zinc-400 uppercase tracking-widest">
-          GAZETTE MIRROR: ACTIVE // 100% GROUNDED
+        <div className="absolute top-4 right-6 font-mono text-[9px] text-zinc-400 uppercase tracking-widest hidden sm:block">
+          CENTRAL GAZETTE MIRROR // ACTIVE
         </div>
-        <div className="absolute bottom-4 left-6 font-mono text-[9px] text-zinc-400 uppercase tracking-widest">
-          STATUTORY SECTION 16 SAFETY PIPELINE
-        </div>
-        <div className="absolute bottom-4 right-6 font-mono text-[9px] text-zinc-400 uppercase tracking-widest">
-          FPS // 60 SPRING INTERPOLATION
-        </div>
-
-        {/* Center Crosshair Overlay */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full border border-dashed border-zinc-300" />
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full border border-zinc-200" />
       </div>
 
-      {/* Sticky Interactive Stage Container */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-between py-6 sm:py-8 pointer-events-none">
+      <div className="relative z-10 p-5 sm:p-8 lg:p-10 space-y-6 sm:space-y-8">
         
-        {/* Header Bar */}
-        <div className="relative z-50 text-center px-4 max-w-4xl mx-auto pointer-events-auto">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full border border-zinc-300 bg-white font-mono text-[10px] sm:text-[11px] tracking-widest text-zinc-700 uppercase shadow-2xs mb-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
-            <span>{badge}</span>
+        {/* ========================================================
+            01. Section Header & High-Density Telemetry Bar
+            ======================================================== */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-zinc-200 pb-6">
+          <div className="space-y-2 max-w-3xl">
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full border border-zinc-300 bg-white font-mono text-[10px] sm:text-[11px] tracking-widest text-zinc-700 uppercase shadow-2xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
+              <span>{badge}</span>
+            </div>
+
+            <h3 className="editorial-headline text-2xl sm:text-3xl lg:text-4xl font-black uppercase tracking-tight text-black leading-tight">
+              {title}
+            </h3>
+
+            <p className="text-xs sm:text-sm text-zinc-600 font-mono leading-relaxed">
+              {subtitle}
+            </p>
           </div>
 
-          <h3 className="editorial-headline text-2xl sm:text-4xl lg:text-5xl font-black uppercase tracking-tight text-black">
-            {title}
-          </h3>
+          {/* View Mode Switcher & Auto-Play Controls */}
+          <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
+            <div className="inline-flex p-1 bg-zinc-100 rounded-xl border border-zinc-200">
+              <button
+                type="button"
+                onClick={() => setViewMode("matrix")}
+                className={cn(
+                  "px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition-all cursor-pointer",
+                  viewMode === "matrix"
+                    ? "bg-black text-white shadow-xs"
+                    : "text-zinc-600 hover:text-black"
+                )}
+              >
+                <LayoutGrid className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">2×2 Matrix</span>
+                <span className="sm:hidden">Matrix</span>
+              </button>
 
-          <p className="text-xs sm:text-sm text-zinc-600 font-mono mt-1 max-w-2xl mx-auto leading-relaxed">
-            {subtitle}
-          </p>
+              <button
+                type="button"
+                onClick={() => setViewMode("focus")}
+                className={cn(
+                  "px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition-all cursor-pointer",
+                  viewMode === "focus"
+                    ? "bg-black text-white shadow-xs"
+                    : "text-zinc-600 hover:text-black"
+                )}
+              >
+                <Maximize2 className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Deep Inspect</span>
+                <span className="sm:hidden">Inspect</span>
+              </button>
 
-          {/* Real-Time Telemetry Counters Ribbon */}
-          <div className="hidden sm:grid grid-cols-4 gap-2 max-w-2xl mx-auto mt-3 pt-3 border-t border-zinc-200 text-center font-mono">
-            <div className="bg-zinc-50 border border-zinc-200 rounded-lg py-1 px-2">
-              <span className="text-xs font-black text-black block">45,000+</span>
-              <span className="text-[9px] text-zinc-500 uppercase">Active CM/L</span>
+              <button
+                type="button"
+                onClick={() => {
+                  setViewMode("converged");
+                  setActiveStep(4);
+                }}
+                className={cn(
+                  "px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition-all cursor-pointer",
+                  viewMode === "converged"
+                    ? "bg-black text-white shadow-xs"
+                    : "text-zinc-600 hover:text-black"
+                )}
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>Converged Matrix</span>
+              </button>
             </div>
-            <div className="bg-zinc-50 border border-zinc-200 rounded-lg py-1 px-2">
-              <span className="text-xs font-black text-black block">1,650+</span>
-              <span className="text-[9px] text-zinc-500 uppercase">AHC Labs</span>
-            </div>
-            <div className="bg-zinc-50 border border-zinc-200 rounded-lg py-1 px-2">
-              <span className="text-xs font-black text-black block">150+</span>
-              <span className="text-[9px] text-zinc-500 uppercase">QCO Schemes</span>
-            </div>
-            <div className="bg-zinc-50 border border-zinc-200 rounded-lg py-1 px-2">
-              <span className="text-xs font-black text-emerald-600 block">&lt; 120ms</span>
-              <span className="text-[9px] text-zinc-500 uppercase">Live Latency</span>
-            </div>
+
+            {/* Auto Play / Pause Toggle */}
+            <button
+              type="button"
+              onClick={() => setIsPlaying(!isPlaying)}
+              className={cn(
+                "p-2 rounded-xl border transition-all cursor-pointer flex items-center gap-1 text-[11px] font-bold",
+                isPlaying
+                  ? "bg-emerald-50 border-emerald-300 text-emerald-800"
+                  : "bg-white border-zinc-300 text-zinc-600 hover:text-black hover:border-black"
+              )}
+              title={isPlaying ? "Pause automated choreography" : "Auto-play choreography steps"}
+            >
+              {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+              <span className="hidden sm:inline">{isPlaying ? "PAUSE" : "AUTO"}</span>
+            </button>
           </div>
         </div>
 
-        {/* 4-Quadrant Stage Center */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          
-          {/* Top Left: Quadrant 1 */}
-          <div
-            className={cn(baseCardClasses, "z-10")}
-            style={{ transform: tlTransform, opacity: tlOpacity }}
-          >
-            <img
-              src={images.topLeft}
-              alt="Quadrant Top Left"
-              className="size-full object-cover grayscale brightness-90 contrast-125"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10 p-5 flex flex-col justify-between text-white font-mono">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] uppercase font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded">
-                  {captions?.topLeft?.tag || "01 — PROOF TESTING"}
-                </span>
-                <span className="text-[10px] text-zinc-400 font-bold">IS 2347 COMPLIANT</span>
-              </div>
-              <div>
-                <h4 className="text-sm sm:text-base font-black uppercase text-white">
-                  {captions?.topLeft?.title || "SCHEME-I FACTORY INSPECTION"}
-                </h4>
-                <p className="text-[11px] text-zinc-300 mt-0.5">
-                  {captions?.topLeft?.subtitle || "Hydrostatic test bench & safety valve burst audit"}
-                </p>
-                <div className="mt-2 flex items-center space-x-2 text-[10px] text-emerald-300">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>Mandatory Daily SIT Logbook Verified</span>
-                </div>
-              </div>
-            </div>
-          </div>
+        {/* ========================================================
+            02. Stepper Pill Navigation (Always Organized & Clear)
+            ======================================================== */}
+        <div className="space-y-2">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 font-mono text-[11px]">
+            {QUADRANTS.map((quad, idx) => {
+              const isSelected = activeStep === idx && viewMode !== "converged";
+              return (
+                <button
+                  key={quad.id}
+                  type="button"
+                  onClick={() => {
+                    setActiveStep(idx);
+                    if (viewMode === "converged") setViewMode("focus");
+                  }}
+                  className={cn(
+                    "p-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between space-y-1",
+                    isSelected
+                      ? "bg-black text-white border-black shadow-xs ring-1 ring-black"
+                      : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-white hover:border-zinc-400"
+                  )}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className={cn(
+                      "text-[9px] font-bold uppercase tracking-wider",
+                      isSelected ? "text-zinc-400" : "text-zinc-500"
+                    )}>
+                      PILLAR {quad.index}
+                    </span>
+                    <span className={cn(
+                      "w-1.5 h-1.5 rounded-full",
+                      isSelected ? "bg-emerald-400 animate-pulse" : "bg-zinc-300"
+                    )} />
+                  </div>
+                  <p className="font-bold text-xs truncate leading-tight">
+                    {quad.defaultTitle.split(" ")[0]} {quad.defaultTitle.split(" ")[1] || ""}
+                  </p>
+                  <span className={cn(
+                    "text-[9px] font-mono truncate",
+                    isSelected ? "text-zinc-300" : "text-zinc-400"
+                  )}>
+                    {quad.standard}
+                  </span>
+                </button>
+              );
+            })}
 
-          {/* Bottom Right: Quadrant 2 */}
-          <div
-            className={cn(baseCardClasses, "z-20")}
-            style={{ transform: brTransform, opacity: brOpacity }}
-          >
-            <img
-              src={images.bottomRight}
-              alt="Quadrant Bottom Right"
-              className="size-full object-cover grayscale brightness-90 contrast-125"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10 p-5 flex flex-col justify-between text-white font-mono">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] uppercase font-bold text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded">
-                  {captions?.bottomRight?.tag || "02 — HALLMARKING"}
-                </span>
-                <span className="text-[10px] text-zinc-400 font-bold">22K 916 // 18K 750</span>
-              </div>
-              <div>
-                <h4 className="text-sm sm:text-base font-black uppercase text-white">
-                  {captions?.bottomRight?.title || "6-CHAR LASER HUID ASSAY"}
-                </h4>
-                <p className="text-[11px] text-zinc-300 mt-0.5">
-                  {captions?.bottomRight?.subtitle || "AHC verified gold fineness & laser traceability"}
-                </p>
-                <div className="mt-2 flex items-center space-x-2 text-[10px] text-amber-300">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>Microscopic Laser Etch Registered in Central AHC</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom Left: Quadrant 3 */}
-          <div
-            className={cn(baseCardClasses, "z-30")}
-            style={{ transform: blTransform, opacity: blOpacity }}
-          >
-            <img
-              src={images.bottomLeft}
-              alt="Quadrant Bottom Left"
-              className="size-full object-cover grayscale brightness-90 contrast-125"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10 p-5 flex flex-col justify-between text-white font-mono">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] uppercase font-bold text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 px-2 py-0.5 rounded">
-                  {captions?.bottomLeft?.tag || "03 — GAZETTE REGISTRY"}
-                </span>
-                <span className="text-[10px] text-zinc-400 font-bold">SECTION 16 MANDATE</span>
-              </div>
-              <div>
-                <h4 className="text-sm sm:text-base font-black uppercase text-white">
-                  {captions?.bottomLeft?.title || "STATUTORY QCO MANDATES"}
-                </h4>
-                <p className="text-[11px] text-zinc-300 mt-0.5">
-                  {captions?.bottomLeft?.subtitle || "Cognizable consumer protection under Section 16"}
-                </p>
-                <div className="mt-2 flex items-center space-x-2 text-[10px] text-cyan-300">
-                  <FileText className="w-3.5 h-3.5" />
-                  <span>Central DPIIT Gazette Orders Grounded</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Top Right: Quadrant 4 (Hero - Choreographs & Expands to Full Screen) */}
-          <div
-            className={cn(
-              baseCardClasses,
-              "z-40 origin-center bg-zinc-950 border-2 border-black"
-            )}
-            style={{
-              transform: trTransform,
-              width: trWidth,
-              height: trHeight,
-            }}
-          >
-            <img
-              src={images.topRight}
-              alt="Hero Quadrant"
-              className="size-full object-cover brightness-95 contrast-110"
-            />
-
-            {/* Micro Initial Caption (Visible when small) */}
-            <div 
-              className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/20 p-5 flex flex-col justify-between text-white font-mono"
-              style={{ opacity: 1 - heroContentOpacity }}
-            >
-              <div className="flex justify-between items-start">
-                <span className="text-[10px] uppercase font-bold text-white bg-white/20 px-2.5 py-0.5 rounded-full border border-white/30 backdrop-blur-xs flex items-center gap-1.5">
-                  <Maximize2 className="w-3 h-3 text-emerald-400 animate-pulse" />
-                  <span>{captions?.topRight?.tag || "04 — CONVERGENCE"}</span>
-                </span>
-                <span className="text-[10px] text-zinc-400">HERO EXPAND ↓</span>
-              </div>
-              <div>
-                <h4 className="text-sm sm:text-base font-black uppercase text-white">
-                  {captions?.topRight?.title || "CENTRAL BIS AUTHENTICITY EMBLEM"}
-                </h4>
-                <p className="text-[11px] text-zinc-300">
-                  {captions?.topRight?.subtitle || "Scroll down to converge quadrants into full verification mode"}
-                </p>
-              </div>
-            </div>
-
-            {/* Expanded Hero Experience Overlay (Revealed at scroll >= 0.65) */}
-            <div
-              className="absolute inset-0 bg-black/85 backdrop-blur-md p-6 sm:p-10 flex flex-col justify-between text-white font-mono pointer-events-auto"
-              style={{
-                opacity: heroContentOpacity,
-                transform: `scale(${heroContentScale})`,
-                pointerEvents: sp > 0.65 ? "auto" : "none",
+            {/* 5th Pill: Full Convergence */}
+            <button
+              type="button"
+              onClick={() => {
+                setActiveStep(4);
+                setViewMode("converged");
               }}
+              className={cn(
+                "col-span-2 sm:col-span-1 p-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between space-y-1",
+                activeStep === 4 || viewMode === "converged"
+                  ? "bg-black text-white border-black shadow-xs ring-1 ring-black"
+                  : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-white hover:border-zinc-400"
+              )}
             >
-              {/* Top Banner inside Expanded Hero */}
-              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-zinc-800 pb-3">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-xl bg-white text-black flex items-center justify-center font-black text-sm shadow-md">
-                    BIS
+              <div className="flex items-center justify-between">
+                <span className="text-[9px] font-bold uppercase tracking-wider text-amber-400">
+                  FINAL STAGE
+                </span>
+                <Sparkles className="w-3 h-3 text-amber-400" />
+              </div>
+              <p className="font-bold text-xs truncate leading-tight">
+                CONVERGED SUITE
+              </p>
+              <span className={cn(
+                "text-[9px] font-mono truncate",
+                activeStep === 4 ? "text-zinc-300" : "text-zinc-400"
+              )}>
+                ALL 4 PILLARS IN SYNC
+              </span>
+            </button>
+          </div>
+
+          {/* Stepper Progress Bar */}
+          <div className="w-full bg-zinc-100 h-1 rounded-full overflow-hidden">
+            <div
+              className="bg-black h-full transition-all duration-500 ease-out"
+              style={{ width: `${((activeStep + 1) / 5) * 100}%` }}
+            />
+          </div>
+        </div>
+
+        {/* ========================================================
+            03. Main Presentation: (Matrix View OR Focus View OR Converged)
+            ======================================================== */}
+        
+        {/* VIEW 1: Clean 2x2 Matrix Grid (Organized, No Collisions) */}
+        {viewMode === "matrix" && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+            {QUADRANTS.map((quad, idx) => {
+              const imgUrl = images[quad.key] || images.topRight;
+              const cap = captions?.[quad.key];
+              const isSelected = activeStep === idx;
+
+              return (
+                <div
+                  key={quad.id}
+                  onClick={() => setActiveStep(idx)}
+                  className={cn(
+                    "group relative rounded-2xl sm:rounded-3xl border overflow-hidden transition-all duration-300 cursor-pointer flex flex-col justify-between min-h-[300px] sm:min-h-[340px] bg-zinc-950 text-white p-5 sm:p-6",
+                    isSelected
+                      ? "border-black shadow-lg ring-2 ring-black"
+                      : "border-zinc-300 hover:border-zinc-500 shadow-xs"
+                  )}
+                >
+                  {/* Background Specimen Image with Cinematic Dark Gradient */}
+                  <img
+                    src={imgUrl}
+                    alt={quad.defaultTitle}
+                    className="absolute inset-0 size-full object-cover opacity-25 group-hover:opacity-35 group-hover:scale-105 transition-all duration-500 filter grayscale"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/75 to-transparent pointer-events-none" />
+
+                  {/* Top Bar inside Card */}
+                  <div className="relative z-10 flex items-start justify-between gap-3">
+                    <div className="space-y-1">
+                      <div className="flex items-center space-x-2">
+                        <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 border border-white/20 text-white uppercase tracking-wider">
+                          {cap?.tag || quad.defaultTag}
+                        </span>
+                        <span className="font-mono text-[10px] text-zinc-400">
+                          {quad.standard}
+                        </span>
+                      </div>
+                      <h4 className="editorial-headline text-lg sm:text-xl font-black uppercase text-white mt-1">
+                        {cap?.title || quad.defaultTitle}
+                      </h4>
+                      <p className="text-xs text-zinc-300 font-mono leading-snug">
+                        {cap?.subtitle || quad.defaultSubtitle}
+                      </p>
+                    </div>
+
+                    <span className={cn(
+                      "font-mono text-[9px] font-bold px-2 py-0.5 rounded-md uppercase border shrink-0",
+                      quad.statusBadge
+                    )}>
+                      {quad.statusText.split("//")[0]}
+                    </span>
                   </div>
-                  <div>
-                    <span className="text-xs font-bold text-white uppercase tracking-wider block">
-                      BUREAU OF INDIAN STANDARDS // AUTHENTICITY NETWORK
-                    </span>
-                    <span className="text-[10px] sm:text-[11px] text-emerald-400 font-mono">
-                      NATIONAL GAZETTE REGULATORY MIRROR • LIVE AUDIT TELEMETRY
-                    </span>
+
+                  {/* Telemetry Chips in Card */}
+                  <div className="relative z-10 grid grid-cols-3 gap-2 my-4 pt-4 border-t border-white/10 font-mono">
+                    {quad.telemetry.map((t, tIdx) => (
+                      <div key={tIdx} className="bg-white/5 rounded-lg p-2 border border-white/10">
+                        <span className="text-[8px] sm:text-[9px] text-zinc-400 uppercase tracking-widest block truncate">
+                          {t.label}
+                        </span>
+                        <span className="text-[10px] sm:text-[11px] font-bold text-white block truncate mt-0.5">
+                          {t.value}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Bottom Inspection Actions */}
+                  <div className="relative z-10 flex items-center justify-between pt-3 border-t border-white/10 text-xs font-mono">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveStep(idx);
+                        setViewMode("focus");
+                      }}
+                      className="text-white font-bold hover:underline flex items-center gap-1 group-hover:translate-x-0.5 transition-transform"
+                    >
+                      <span>DEEP INSPECTION</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+
+                    <a
+                      href={quad.actionUrl}
+                      onClick={(e) => e.stopPropagation()}
+                      className="text-zinc-400 hover:text-white flex items-center gap-1 text-[11px]"
+                    >
+                      <span>{quad.actionLabel}</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
                   </div>
                 </div>
+              );
+            })}
+          </div>
+        )}
 
-                <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                  <span>100% OPERATIONAL TELEMETRY</span>
+        {/* VIEW 2: Deep Focus Inspector (Single Specimen Showcase) */}
+        {viewMode === "focus" && (
+          <div className="bg-zinc-950 text-white rounded-2xl sm:rounded-3xl border border-zinc-800 overflow-hidden shadow-xl grid grid-cols-1 lg:grid-cols-12">
+            
+            {/* Left 6 Cols: Cinematic Image Specimen with Crosshair Overlay */}
+            <div className="lg:col-span-6 relative min-h-[320px] lg:min-h-[460px] overflow-hidden bg-black flex flex-col justify-between p-6">
+              <img
+                src={activeImage}
+                alt={activeQuadrant.defaultTitle}
+                className="absolute inset-0 size-full object-cover opacity-60 filter contrast-125"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/60 pointer-events-none" />
+
+              {/* Holographic Crosshair Target */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-40">
+                <div className="w-48 h-48 rounded-full border border-dashed border-white/40" />
+                <div className="absolute w-64 h-64 rounded-full border border-white/20" />
+                <div className="absolute w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              </div>
+
+              {/* Specimen Header */}
+              <div className="relative z-10 flex items-center justify-between font-mono text-xs">
+                <span className="px-2.5 py-1 rounded-full bg-black/60 border border-white/20 backdrop-blur-md uppercase text-[10px] font-bold text-white">
+                  PILLAR {activeQuadrant.index} // SPECIMEN
+                </span>
+                <span className="text-[10px] text-zinc-300">
+                  STANDARD: {activeQuadrant.standard}
                 </span>
               </div>
 
-              {/* Center Inspection Matrix inside Expanded Hero */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 my-auto py-4">
-                <div className="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-4 sm:p-5 space-y-2">
-                  <span className="text-[10px] text-zinc-400 uppercase tracking-widest block font-bold">
-                    01 — ISI MONOGRAM
+              {/* Specimen Footer */}
+              <div className="relative z-10 space-y-1">
+                <span className="font-mono text-[10px] uppercase font-bold text-emerald-400 block tracking-widest">
+                  {activeQuadrant.category}
+                </span>
+                <h4 className="editorial-headline text-xl sm:text-2xl font-black uppercase text-white">
+                  {activeCaption?.title || activeQuadrant.defaultTitle}
+                </h4>
+                <p className="text-xs text-zinc-300 font-mono">
+                  {activeCaption?.subtitle || activeQuadrant.defaultSubtitle}
+                </p>
+              </div>
+            </div>
+
+            {/* Right 6 Cols: Rich Regulatory Proof Telemetry & Checklist */}
+            <div className="lg:col-span-6 p-6 sm:p-8 flex flex-col justify-between space-y-6 font-mono">
+              <div className="space-y-4">
+                
+                {/* Status Indicator */}
+                <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
+                  <div className="flex items-center space-x-2">
+                    <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                    <span className="text-xs font-bold uppercase tracking-wider text-white">
+                      STATUTORY VERIFICATION PROFILE
+                    </span>
+                  </div>
+                  <span className={cn(
+                    "text-[10px] font-bold px-2 py-0.5 rounded border uppercase",
+                    activeQuadrant.statusBadge
+                  )}>
+                    {activeQuadrant.statusText}
                   </span>
-                  <p className="text-sm font-black text-white">7-Digit CM/L Code Validation</p>
-                  <p className="text-xs text-zinc-400 leading-relaxed">
-                    Direct validation of factory premise, registered product category, and active expiry date in the Gazette.
-                  </p>
                 </div>
 
-                <div className="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-4 sm:p-5 space-y-2">
-                  <span className="text-[10px] text-zinc-400 uppercase tracking-widest block font-bold">
-                    02 — GOLD HUID TRACEABILITY
-                  </span>
-                  <p className="text-sm font-black text-white">6-Character Micro Laser Etch</p>
-                  <p className="text-xs text-zinc-400 leading-relaxed">
-                    Trace exact fineness (22K916, 18K750) and official AHC centre registration number to prevent karatage fraud.
-                  </p>
+                {/* 3 Telemetry Data Boxes */}
+                <div className="grid grid-cols-3 gap-2">
+                  {activeQuadrant.telemetry.map((t, idx) => (
+                    <div key={idx} className="bg-zinc-900 border border-zinc-800 rounded-xl p-3">
+                      <span className="text-[9px] text-zinc-400 block uppercase tracking-wider truncate">
+                        {t.label}
+                      </span>
+                      <span className="text-xs font-black text-white block mt-0.5 truncate">
+                        {t.value}
+                      </span>
+                    </div>
+                  ))}
                 </div>
 
-                <div className="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-4 sm:p-5 space-y-2">
+                {/* Statutory Checkpoints Checklist */}
+                <div className="space-y-2 pt-2">
                   <span className="text-[10px] text-zinc-400 uppercase tracking-widest block font-bold">
-                    03 — STATUTORY REMEDY
+                    INSPECTION PROTOCOL CHECKPOINTS
                   </span>
-                  <p className="text-sm font-black text-white">Section 15 & 29 Enforcement</p>
-                  <p className="text-xs text-zinc-400 leading-relaxed">
-                    Instant counterfeit violation forwarding to central enforcement officers with 24/7 National Consumer Helpline 1915.
-                  </p>
+                  <div className="space-y-2">
+                    {activeQuadrant.highlights.map((h, hIdx) => (
+                      <div key={hIdx} className="flex items-start space-x-2.5 text-xs text-zinc-300 leading-snug">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                        <span>{h}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
+
               </div>
 
-              {/* Bottom Quick Links in Expanded Hero */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-3 border-t border-zinc-800">
-                <div className="text-xs text-zinc-400">
-                  <span className="text-white font-bold">Statutory Guarantee:</span> All data queries verified against official Gazette notifications.
-                </div>
-                <div className="flex items-center space-x-3">
-                  <a
-                    href="#verif-quick-tool"
-                    className="px-5 py-2.5 rounded-xl bg-white text-black hover:bg-zinc-200 text-xs font-bold uppercase tracking-wider transition-colors text-center cursor-pointer shadow-xs"
+              {/* Navigation & Action Triggers */}
+              <div className="pt-4 border-t border-zinc-800 flex flex-wrap items-center justify-between gap-3 text-xs">
+                <div className="flex items-center space-x-2">
+                  <button
+                    type="button"
+                    onClick={() => setActiveStep((prev) => (prev > 0 ? prev - 1 : 3))}
+                    className="p-2 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-white text-white cursor-pointer"
+                    title="Previous pillar"
                   >
-                    Proceed To Verification Matrix ↓
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                  <span className="text-zinc-400 text-[11px]">
+                    PILLAR {activeQuadrant.index} OF 04
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setActiveStep((prev) => (prev < 3 ? prev + 1 : 0))}
+                    className="p-2 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-white text-white cursor-pointer"
+                    title="Next pillar"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <button
+                    type="button"
+                    onClick={() => setViewMode("matrix")}
+                    className="px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-white hover:bg-zinc-800 text-xs font-bold uppercase transition-colors cursor-pointer"
+                  >
+                    Back to Matrix
+                  </button>
+
+                  <a
+                    href={activeQuadrant.actionUrl}
+                    className="px-4 py-2 rounded-xl bg-white text-black hover:bg-zinc-200 text-xs font-bold uppercase transition-colors flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <span>{activeQuadrant.actionLabel}</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </a>
                 </div>
               </div>
+
+            </div>
+          </div>
+        )}
+
+        {/* VIEW 3: Converged Central Master Verification Suite */}
+        {viewMode === "converged" && (
+          <div className="bg-zinc-950 text-white rounded-2xl sm:rounded-3xl border border-zinc-800 p-6 sm:p-10 space-y-8 font-mono shadow-2xl">
+            
+            {/* Header with National Emblem Ribbon */}
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-zinc-800 pb-5">
+              <div className="flex items-center space-x-3.5">
+                <div className="w-12 h-12 rounded-2xl bg-white text-black flex items-center justify-center font-black text-base shadow-lg">
+                  BIS
+                </div>
+                <div>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm font-bold text-white uppercase tracking-wider block">
+                      NATIONAL BUREAU OF INDIAN STANDARDS
+                    </span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  </div>
+                  <span className="text-[11px] text-emerald-400 font-mono">
+                    AUTHENTICATED GAZETTE VERIFICATION NETWORK • CENTRAL MIRROR
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>100% OPERATIONAL TELEMETRY</span>
+                </span>
+              </div>
+            </div>
+
+            {/* 3 Inspection Pillars in Converged Mode */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-5 space-y-2 hover:border-zinc-700 transition-colors">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] text-zinc-400 uppercase tracking-widest block font-bold">
+                    01 — ISI MONOGRAM
+                  </span>
+                  <span className="text-[9px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    SCHEME-I
+                  </span>
+                </div>
+                <p className="text-sm font-black text-white">7-Digit CM/L Licence Code</p>
+                <p className="text-xs text-zinc-400 leading-relaxed">
+                  Real-time validation of factory location, registered product category, scope of certification, and active expiry date in the Gazette.
+                </p>
+              </div>
+
+              <div className="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-5 space-y-2 hover:border-zinc-700 transition-colors">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] text-zinc-400 uppercase tracking-widest block font-bold">
+                    02 — GOLD HUID TRACEABILITY
+                  </span>
+                  <span className="text-[9px] px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                    IS 1417:2016
+                  </span>
+                </div>
+                <p className="text-sm font-black text-white">6-Character Micro Laser Etch</p>
+                <p className="text-xs text-zinc-400 leading-relaxed">
+                  Trace exact fineness (22K916, 18K750, 14K585) and official AHC centre registration number to prevent karatage dilution and jewellery fraud.
+                </p>
+              </div>
+
+              <div className="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-5 space-y-2 hover:border-zinc-700 transition-colors">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] text-zinc-400 uppercase tracking-widest block font-bold">
+                    03 — STATUTORY REMEDY
+                  </span>
+                  <span className="text-[9px] px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/20">
+                    BIS ACT §16 & §29
+                  </span>
+                </div>
+                <p className="text-sm font-black text-white">Cognizable Criminal Remedy</p>
+                <p className="text-xs text-zinc-400 leading-relaxed">
+                  Instant counterfeit violation forwarding to central enforcement officers with 24/7 National Consumer Helpline 1915 integration.
+                </p>
+              </div>
+            </div>
+
+            {/* Bottom Actions inside Converged Mode */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-4 border-t border-zinc-800">
+              <div className="text-xs text-zinc-400">
+                <span className="text-white font-bold">Statutory Guarantee:</span> All citizen verification queries are cryptographically matched with official Gazette records.
+              </div>
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setViewMode("matrix")}
+                  className="px-4 py-2.5 rounded-xl bg-zinc-900 border border-zinc-700 text-white hover:bg-zinc-800 text-xs font-bold uppercase transition-colors cursor-pointer"
+                >
+                  View 2×2 Matrix
+                </button>
+                <a
+                  href="#verif-quick-tool"
+                  className="px-5 py-2.5 rounded-xl bg-white text-black hover:bg-zinc-200 text-xs font-bold uppercase tracking-wider transition-colors text-center cursor-pointer shadow-xs font-bold"
+                >
+                  Proceed To Instant Verifier ↓
+                </a>
+              </div>
             </div>
 
           </div>
+        )}
 
-        </div>
-
-        {/* Scroll Prompt Bottom Indicator */}
-        <div className="relative z-50 text-center pointer-events-auto px-4">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full border border-zinc-300 bg-white font-mono text-[10px] uppercase tracking-widest text-zinc-600 shadow-2xs">
-            <span className="w-1.5 h-1.5 rounded-full bg-black animate-pulse" />
-            <span>{sp < 0.5 ? "Scroll down to converge quadrants into full verification mode ↓" : "Quadrants converged into central inspection matrix"}</span>
+        {/* ========================================================
+            04. 4-Metric Telemetry Ribbon (Always Visible & Organized)
+            ======================================================== */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 pt-2 font-mono">
+          <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-3">
+            <span className="text-[9px] sm:text-[10px] text-zinc-500 uppercase tracking-wider block">
+              Active CM/L Licences
+            </span>
+            <span className="text-base sm:text-lg font-black text-black block mt-0.5">
+              45,000+
+            </span>
+          </div>
+          <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-3">
+            <span className="text-[9px] sm:text-[10px] text-zinc-500 uppercase tracking-wider block">
+              Certified AHC Labs
+            </span>
+            <span className="text-base sm:text-lg font-black text-black block mt-0.5">
+              1,650+
+            </span>
+          </div>
+          <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-3">
+            <span className="text-[9px] sm:text-[10px] text-zinc-500 uppercase tracking-wider block">
+              Mandatory QCO Orders
+            </span>
+            <span className="text-base sm:text-lg font-black text-black block mt-0.5">
+              150+ Schemes
+            </span>
+          </div>
+          <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-3">
+            <span className="text-[9px] sm:text-[10px] text-zinc-500 uppercase tracking-wider block">
+              Live Central Latency
+            </span>
+            <span className="text-base sm:text-lg font-black text-emerald-600 block mt-0.5">
+              &lt; 120ms Verified
+            </span>
           </div>
         </div>
 
