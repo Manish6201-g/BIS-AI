@@ -33,8 +33,39 @@ import {
   BadgeCheck, 
   RefreshCw 
 } from 'lucide-react';
+import { ScrollChoreography } from '../ui/scroll-choreography';
 
 gsap.registerPlugin(ScrollTrigger);
+
+const CHOREOGRAPHY_IMAGES = {
+  topLeft: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80",
+  bottomRight: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?auto=format&fit=crop&w=1200&q=80",
+  bottomLeft: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1200&q=80",
+  topRight: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1600&q=80"
+};
+
+const CHOREOGRAPHY_CAPTIONS = {
+  topLeft: {
+    tag: "01 — PROOF TESTING",
+    title: "SCHEME-I FACTORY INSPECTION",
+    subtitle: "Hydrostatic test bench & thermal safety audit"
+  },
+  bottomRight: {
+    tag: "02 — HALLMARKING",
+    title: "6-CHAR LASER HUID ASSAY",
+    subtitle: "AHC verified gold fineness (22K916 / 18K750)"
+  },
+  bottomLeft: {
+    tag: "03 — GAZETTE REGISTRY",
+    title: "STATUTORY QCO MANDATES",
+    subtitle: "Cognizable consumer protection under Section 16"
+  },
+  topRight: {
+    tag: "04 — CONVERGENCE",
+    title: "CENTRAL BIS AUTHENTICITY EMBLEM",
+    subtitle: "Scroll to expand full verification matrix"
+  }
+};
 
 const ISI_SAMPLES = [
   {
@@ -465,7 +496,7 @@ export const VerificationSection = () => {
           </div>
 
           {/* Right Column: Live Interactive Quick Verifier Console */}
-          <div className="verif-quick-box lg:col-span-5 bg-white border border-zinc-300 rounded-[24px] p-6 sm:p-7 shadow-xs hover:border-black transition-colors flex flex-col justify-between space-y-4">
+          <div id="verif-quick-tool" className="verif-quick-box lg:col-span-5 bg-white border border-zinc-300 rounded-[24px] p-6 sm:p-7 shadow-xs hover:border-black transition-colors flex flex-col justify-between space-y-4">
             
             <div>
               {/* Header with Live Status */}
@@ -630,7 +661,20 @@ export const VerificationSection = () => {
         </div>
 
         {/* ========================================================
-            02. Side-by-Side Genuine vs Counterfeit Spotting Guide
+            02. Scroll Choreography: 4 Quadrants of Regulatory Assurance
+            ======================================================== */}
+        <div className="pt-4 sm:pt-8">
+          <ScrollChoreography
+            images={CHOREOGRAPHY_IMAGES}
+            captions={CHOREOGRAPHY_CAPTIONS}
+            badge="05.CHOREOGRAPHY — CITIZEN STATUTORY PROOF MATRIX"
+            title="CHOREOGRAPHED REGULATORY PROOFS"
+            subtitle="Scroll through the 4 verification quadrants as statutory telemetry converges into the national central authenticity emblem."
+          />
+        </div>
+
+        {/* ========================================================
+            03. Side-by-Side Genuine vs Counterfeit Spotting Guide
             ======================================================== */}
         <div className="bg-white border border-zinc-300 rounded-[28px] p-6 sm:p-8 shadow-xs space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-200 pb-4">
