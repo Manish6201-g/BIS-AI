@@ -56,18 +56,8 @@ const CounterMetric = ({ value, suffix = '+', label, description }) => {
  */
 export const ImpactSection = () => {
   return (
-    <section 
-      data-theme="dark" 
-      className="w-full bg-black text-white py-32 px-6 md:px-12 lg:px-16 border-t border-zinc-900 relative z-20 overflow-hidden select-none"
-    >
-      {/* Ambient radial glow matching the unified dark aesthetic */}
-      <div 
-        className="absolute inset-0 z-0 pointer-events-none"
-        style={{
-          background: 'radial-gradient(125% 125% at 50% 10%, #0F0F11 50%, #3ca2fa10 100%)'
-        }}
-      />
-      <div className="mx-auto max-w-7xl relative z-10">
+    <section className="w-full bg-black text-white py-32 px-6 md:px-12 lg:px-16 border-t border-white/10 relative z-20">
+      <div className="mx-auto max-w-7xl">
         <div className="mb-20 sm:mb-24 flex items-center justify-between border-b border-white/10 pb-6">
           <h2 className="font-mono text-xs font-bold uppercase tracking-[0.25em] text-zinc-400">
             NATIONAL REGULATORY IMPACT

@@ -75,34 +75,25 @@ export const TimelineSection = () => {
   return (
     <section
       ref={timelineRef}
-      data-theme="dark"
-      className="bg-black text-white py-24 sm:py-32 px-6 sm:px-12 border-b border-zinc-900 relative overflow-hidden select-none"
+      data-theme="light"
+      className="bg-tech-dotted-white text-black py-28 sm:py-36 px-6 sm:px-12 border-b border-zinc-200 relative overflow-hidden"
     >
-      {/* Ambient Radial Gradient Glow */}
-      <div 
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'radial-gradient(125% 125% at 50% 10%, #0F0F11 50%, #3ca2fa12 100%)'
-        }}
-      />
-
-      <div className="relative z-10 max-w-5xl mx-auto w-full">
+      <div className="max-w-5xl mx-auto w-full">
         {/* Header */}
-        <div className="timeline-header max-w-3xl mb-16 sm:mb-24 text-center sm:text-left space-y-4">
-          <div className="inline-flex items-center space-x-2 text-[11px] font-mono tracking-widest text-[#3ca2fa] uppercase bg-[#3ca2fa]/10 border border-[#3ca2fa]/30 px-3 py-1 rounded-full">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#3ca2fa] animate-pulse" />
-            <span>03 — BISmart AI WORKFLOW</span>
+        <div className="timeline-header max-w-3xl mb-16 sm:mb-24 text-center sm:text-left">
+          <div className="font-mono text-xs sm:text-sm tracking-widest text-zinc-500 uppercase mb-3">
+            03 — BISmart AI WORKFLOW
           </div>
-          <h2 className="editorial-headline text-4xl sm:text-6xl md:text-7xl text-white">
+          <h2 className="editorial-headline text-4xl sm:text-6xl md:text-7xl text-black">
             HOW BISmart AI <br />
-            <span className="text-zinc-500">WORKS.</span>
+            <span className="text-zinc-400">WORKS.</span>
           </h2>
         </div>
 
         {/* Kinetic Alternating Center-Line Timeline Container */}
-        <div className="relative mx-auto max-w-5xl space-y-12 md:space-y-16 pt-8 pb-12 before:absolute before:inset-y-0 before:left-[15px] md:before:left-1/2 before:w-px before:bg-gradient-to-b before:from-transparent before:via-zinc-800 before:to-transparent">
+        <div className="relative mx-auto max-w-5xl space-y-12 md:space-y-16 pt-8 pb-12 before:absolute before:inset-y-0 before:left-[15px] md:before:left-1/2 before:w-px before:bg-gradient-to-b before:from-transparent before:via-black/20 before:to-transparent">
           {/* Active Animated Connecting Line */}
-          <div className="timeline-progress-line absolute left-[15px] md:left-1/2 top-4 bottom-4 w-px bg-gradient-to-b from-[#3ca2fa] via-cyan-400 to-emerald-400 origin-top scale-y-0 will-change-transform z-0 -translate-x-1/2 shadow-[0_0_8px_#3ca2fa]" />
+          <div className="timeline-progress-line absolute left-[15px] md:left-1/2 top-4 bottom-4 w-px bg-black origin-top scale-y-0 will-change-transform z-0 -translate-x-1/2" />
 
           {/* Timeline Nodes */}
           {steps.map((s, idx) => {
@@ -116,45 +107,45 @@ export const TimelineSection = () => {
                 <div className={`hidden md:flex w-[calc(50%-3rem)] ${isEven ? 'justify-end text-right' : 'justify-start text-left'} pt-1`}>
                   {isEven ? (
                     <div className="space-y-1">
-                      <span className="font-mono text-xs font-black text-zinc-500 uppercase tracking-[0.3em] group-hover:text-zinc-300 transition-colors duration-300">
+                      <span className="font-mono text-xs font-black text-black/40 uppercase tracking-[0.3em] group-hover:text-black transition-colors duration-300">
                         PHASE {s.num}
                       </span>
-                      <h4 className="font-sans text-xl font-black text-white uppercase tracking-tight group-hover:text-[#3ca2fa] group-hover:-translate-x-1 transition-all duration-300">
+                      <h4 className="font-sans text-xl font-black text-[#050505] uppercase tracking-tight group-hover:-translate-x-1 transition-transform duration-300">
                         {s.title}
                       </h4>
                     </div>
                   ) : (
-                    <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-normal max-w-md group-hover:text-zinc-300 group-hover:-translate-x-1 transition-all duration-300">
+                    <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed font-normal max-w-md group-hover:-translate-x-1 transition-transform duration-300">
                       {s.desc}
                     </p>
                   )}
                 </div>
 
                 {/* Center Magnetic Circle Node */}
-                <div className="absolute left-[15px] md:left-1/2 top-0 -translate-x-1/2 w-8 h-8 rounded-full bg-zinc-950 border border-zinc-800 flex items-center justify-center group-hover:scale-125 group-hover:border-[#3ca2fa] group-hover:shadow-[0_0_12px_#3ca2fa80] transition-all duration-300 z-10">
-                  <span className="w-2 h-2 rounded-full bg-zinc-600 group-hover:bg-[#3ca2fa] transition-colors duration-300" />
+                <div className="absolute left-[15px] md:left-1/2 top-0 -translate-x-1/2 w-8 h-8 rounded-full bg-white border border-black/20 flex items-center justify-center group-hover:scale-125 group-hover:border-black group-hover:shadow-md transition-all duration-300 z-10">
+                  <span className="w-2 h-2 rounded-full bg-black/40 group-hover:bg-black transition-colors duration-300" />
                 </div>
 
                 {/* Right Side (Desktop & Mobile): Content on Even, Step Number on Odd */}
                 <div className={`w-full md:w-[calc(50%-3rem)] pl-12 md:pl-0 flex flex-col items-start ${!isEven ? 'md:items-start text-left' : 'text-left'} gap-2`}>
                   {/* Mobile Step Badge */}
-                  <span className="md:hidden font-mono text-[10px] font-black text-zinc-500 uppercase tracking-[0.25em]">
+                  <span className="md:hidden font-mono text-[10px] font-black text-black/40 uppercase tracking-[0.25em]">
                     PHASE {s.num} — {s.title}
                   </span>
 
                   {isEven ? (
-                    <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-normal max-w-md group-hover:text-zinc-300 group-hover:translate-x-1 transition-all duration-300">
+                    <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed font-normal max-w-md group-hover:translate-x-1 transition-transform duration-300">
                       {s.desc}
                     </p>
                   ) : (
                     <div className="space-y-1">
-                      <span className="hidden md:block font-mono text-xs font-black text-zinc-500 uppercase tracking-[0.3em] group-hover:text-zinc-300 transition-colors duration-300">
+                      <span className="hidden md:block font-mono text-xs font-black text-black/40 uppercase tracking-[0.3em] group-hover:text-black transition-colors duration-300">
                         PHASE {s.num}
                       </span>
-                      <h4 className="hidden md:block font-sans text-xl font-black text-white uppercase tracking-tight group-hover:text-[#3ca2fa] group-hover:translate-x-1 transition-all duration-300">
+                      <h4 className="hidden md:block font-sans text-xl font-black text-[#050505] uppercase tracking-tight group-hover:translate-x-1 transition-transform duration-300">
                         {s.title}
                       </h4>
-                      <p className="md:hidden text-xs sm:text-sm text-zinc-400 leading-relaxed font-normal max-w-md">
+                      <p className="md:hidden text-xs sm:text-sm text-zinc-600 leading-relaxed font-normal max-w-md">
                         {s.desc}
                       </p>
                     </div>

@@ -107,7 +107,7 @@ const DomainMenuItem = ({ text, items, isFirst }) => {
   return (
     <div
       className={`menu__item ${isOpen ? 'is-open' : ''}`}
-      style={{ borderTop: isFirst ? 'none' : '1px solid rgba(255, 255, 255, 0.1)' }}
+      style={{ borderTop: isFirst ? 'none' : '1px solid rgba(0, 0, 0, 0.15)' }}
     >
       <a className="menu__item-link" href="#" onClick={toggle}>
         <span className="menu__item-text">{text}</span>
@@ -137,26 +137,26 @@ const DomainMenuItem = ({ text, items, isFirst }) => {
  */
 const MissionView = () => {
   return (
-    <div className="w-full h-full bg-black text-white font-sans flex flex-col justify-between overflow-y-auto">
-      <div className="w-full px-6 md:px-12 lg:px-16 pt-20 pb-10 bg-black/95 backdrop-blur-md z-10 flex-shrink-0 border-b border-zinc-900">
+    <div className="w-full h-full bg-white text-black font-sans flex flex-col justify-between overflow-y-auto">
+      <div className="w-full px-6 md:px-12 lg:px-16 pt-20 pb-10 bg-white z-10 flex-shrink-0">
         <div className="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-5 gap-y-8">
           <div className="md:col-span-1">
-            <span className="text-[11px] font-mono font-bold uppercase tracking-[0.25em] text-[#3ca2fa] block">
+            <span className="text-[11px] font-mono font-bold uppercase tracking-[0.25em] text-zinc-500 block">
               STATUTORY MANDATE
             </span>
           </div>
           <div className="md:col-span-4">
-            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight leading-[0.95] text-white">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight leading-[0.95] text-black">
               Verify. Comply. Certify.
             </h2>
-            <p className="mt-6 text-sm sm:text-base md:text-lg text-zinc-400 max-w-3xl leading-relaxed">
+            <p className="mt-6 text-sm sm:text-base md:text-lg text-zinc-600 max-w-3xl leading-relaxed">
               India’s next-generation statutory regulatory intelligence ecosystem — orchestrating Indian Standards (IS), mandatory Quality Control Orders (QCO), and laboratory testing into verifiable, real-time national certification.
             </p>
           </div>
         </div>
       </div>
 
-      <div className="w-full border-t border-zinc-900 relative overflow-hidden flex-1 flex flex-col justify-center bg-zinc-950">
+      <div className="w-full border-t border-black relative overflow-hidden flex-1 flex flex-col justify-center">
         <nav className="menu">
           {DOMAINS_DATA.map((domain, i) => (
             <DomainMenuItem
@@ -343,7 +343,7 @@ export const PhilosophyPortal = () => {
           // Fade out border smoothly as aperture expands
           const borderFade = Math.max(0, 1 - eased / 0.5);
           boxEl.style.borderWidth = borderFade < 0.01 ? '0px' : '2px';
-          boxEl.style.borderColor = `rgba(60, 162, 250, ${(borderFade * 0.6).toFixed(3)})`;
+          boxEl.style.borderColor = `rgba(0, 0, 0, ${borderFade.toFixed(3)})`;
         }
       });
     };
@@ -362,18 +362,9 @@ export const PhilosophyPortal = () => {
   return (
     <section
       ref={sectionRef}
-      data-theme="dark"
-      className="relative bg-black text-white font-sans z-30 select-none overflow-hidden"
+      className="relative bg-white text-black font-sans z-30"
       style={{ minHeight: '320vh' }}
     >
-      {/* Ambient radial glow matching the unified dark aesthetic */}
-      <div 
-        className="absolute inset-0 z-0 pointer-events-none"
-        style={{
-          background: 'radial-gradient(125% 125% at 50% 10%, #0F0F11 50%, #3ca2fa10 100%)'
-        }}
-      />
-
       <div id="domains-anchor" style={{ position: 'absolute', top: '120vh', left: 0, height: '1px', width: '1px', pointerEvents: 'none' }} />
 
       {/* Connecting Curved Arc Stroke SVG */}
@@ -394,7 +385,7 @@ export const PhilosophyPortal = () => {
           <path
             ref={pathRef}
             fill="none"
-            stroke="#3ca2fa"
+            stroke="#000000"
             strokeLinecap="round"
             style={{
               strokeWidth: isMobile ? '0.8vw' : '10px',
@@ -416,9 +407,8 @@ export const PhilosophyPortal = () => {
           height: `${currentBoxH}px`,
           marginLeft: `-${currentBoxW / 2}px`,
           marginTop: `-${currentBoxH / 2}px`,
-          background: '#09090b',
-          border: '2px solid rgba(60, 162, 250, 0.4)',
-          boxShadow: '0 0 50px rgba(60, 162, 250, 0.15)',
+          background: 'white',
+          border: '2px solid black',
           visibility: 'hidden',
           opacity: 0,
           zIndex: 50,
