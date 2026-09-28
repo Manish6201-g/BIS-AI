@@ -25,6 +25,9 @@ import {
   Check, 
   X, 
   ChevronRight, 
+  ChevronLeft,
+  Pause,
+  Play,
   Info, 
   Droplet, 
   Baby, 
@@ -538,23 +541,26 @@ export const VerificationSection = () => {
       }
     });
 
-    gsap.from('.verif-category-card', {
-      y: 45,
-      opacity: 0,
-      scale: 0.95,
-      duration: 0.6,
-      stagger: 0.07,
-      ease: 'back.out(1.2)',
-      scrollTrigger: {
-        trigger: '.verif-categories-grid',
-        start: 'top 82%',
-        once: true,
-      }
-    });
-  }, { scope: sectionRef });
+    if (sectionRef.current?.querySelector('.verif-categories-grid')) {
+      gsap.from('.verif-category-card', {
+        y: 45,
+        opacity: 0,
+        scale: 0.95,
+        duration: 0.6,
+        stagger: 0.07,
+        ease: 'back.out(1.2)',
+        scrollTrigger: {
+          trigger: '.verif-categories-grid',
+          start: 'top 82%',
+          once: true,
+        }
+      });
+    }
+  }, { scope: sectionRef, dependencies: [scannerViewMode] });
 
   const activeIsi = ISI_SAMPLES[isiIdx];
   const activeHuid = HUID_SAMPLES[huidIdx];
+  const activeCat = MANDATORY_SAFETY_CATEGORIES[selectedCatIdx] || MANDATORY_SAFETY_CATEGORIES[0];
 
   return (
     <section
@@ -1274,12 +1280,8 @@ export const VerificationSection = () => {
           {/* ========================================================
               MODE 1: Kinetic Holographic Specimen Laser Scanner
               ======================================================== */}
-          {scannerViewMode === 'scanner' && (() => {
-            const activeCat = MANDATORY_SAFETY_CATEGORIES[selectedCatIdx];
-            const ActiveIcon = activeCat.icon;
-
-            return (
-              <div className="bg-white border border-zinc-300 rounded-[28px] sm:rounded-[36px] p-5 sm:p-7 shadow-xs overflow-hidden">
+          {scannerViewMode === 'scanner' && (
+            <div className="bg-white border border-zinc-300 rounded-[28px] sm:rounded-[36px] p-5 sm:p-7 shadow-xs overflow-hidden">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
                   
                   {/* Left Column: Interactive Product Selector Dial (4 Cols) */}
@@ -1471,8 +1473,7 @@ export const VerificationSection = () => {
                   </div>
                 </div>
               </div>
-            );
-          })()}
+          )}
 
           {/* ========================================================
               MODE 2: 8-Card Blueprint Grid View (All Side-by-Side)
