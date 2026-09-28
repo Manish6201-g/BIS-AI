@@ -557,7 +557,7 @@ export const FeatureStack = () => {
         </div>
 
         {/* Kinetic Exact Scroll Stack End: responsive spacer */}
-        <div ref={endRef} className={`scroll-stack-end pointer-events-none ${isMobile ? 'h-[30vh]' : 'h-[120vh]'}`} />
+        <div ref={endRef} className={`scroll-stack-end pointer-events-none ${isMobile ? 'h-[30vh]' : 'h-[40vh]'}`} />
       </div>
 
       {/* Kinetic Exact Kinetic Animation Layer (Mobile: S-Curve Snake Path, Desktop: Rotating Arc Wheel) */}
