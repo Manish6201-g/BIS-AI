@@ -355,7 +355,7 @@ export const FeatureStack = () => {
   }, [recalc, update]);
 
   return (
-    <section className="min-h-screen bg-black text-white font-sans relative select-none">
+    <section data-theme="dark" className="min-h-screen bg-black text-white font-sans relative select-none">
       {/* Kinetic Exact Milestones Header Marquee (Matches both desktop & mobile videos) */}
       <div className="w-full h-[20vh] md:h-[25vh] lg:h-[45vh] border-b border-white/20 overflow-hidden flex items-center relative z-10 bg-black select-none">
         <div className="marquee-selected-works">

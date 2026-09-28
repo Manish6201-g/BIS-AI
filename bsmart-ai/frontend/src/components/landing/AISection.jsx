@@ -78,9 +78,16 @@ export const AISection = () => {
     <section
       ref={sectionRef}
       data-theme="dark"
-      className="bg-black text-white py-24 sm:py-36 px-6 sm:px-12 border-b border-zinc-900 relative overflow-hidden"
+      className="bg-black text-white py-24 sm:py-36 px-6 sm:px-12 border-b border-zinc-900 relative overflow-hidden select-none"
     >
-      <div className="max-w-6xl mx-auto w-full">
+      {/* Ambient radial glow matching the unified dark aesthetic */}
+      <div 
+        className="absolute inset-0 z-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(125% 125% at 50% 10%, #0F0F11 50%, #3ca2fa10 100%)'
+        }}
+      />
+      <div className="max-w-6xl mx-auto w-full relative z-10">
         {/* Header */}
         <div className="ai-headline max-w-4xl mb-14 sm:mb-20">
           <div className="font-mono text-xs sm:text-sm tracking-widest text-zinc-500 uppercase mb-3 flex items-center gap-2">

@@ -434,10 +434,14 @@ body {
   justify-content: space-between;
   text-transform: uppercase;
   text-decoration: none;
-  color: #000;
+  color: #fff;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease;
+}
+
+.menu__item-link:hover {
+  color: #3ca2fa;
 }
 
 .menu__item-arrow {
