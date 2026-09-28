@@ -6,6 +6,7 @@ import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { LandingNavbar } from './components/landing/LandingNavbar';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 // Pages
 import { LandingPage } from './pages/LandingPage';
@@ -65,13 +66,15 @@ function AppLayout() {
 
 function App() {
   return (
-    <AuthProvider>
-      <LanguageProvider>
-        <Router>
-          <AppLayout />
-        </Router>
-      </LanguageProvider>
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <LanguageProvider>
+          <Router>
+            <AppLayout />
+          </Router>
+        </LanguageProvider>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 
