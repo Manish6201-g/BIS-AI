@@ -205,10 +205,10 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
   return (
     <div
       ref={containerRef}
-      className={cn("relative h-[80vh] sm:h-[180vh] w-full", className)}
+      className={cn("relative h-auto sm:h-[180vh] w-full", className)}
     >
       {/* Sticky Choreography Cinema Viewport */}
-      <div className="sticky top-20 sm:top-24 h-[calc(100vh-5.5rem)] sm:h-[calc(100vh-6.5rem)] max-h-[800px] min-h-[420px] sm:min-h-[540px] w-full overflow-hidden rounded-[24px] sm:rounded-[32px] border border-zinc-300 bg-zinc-950 text-white flex flex-col justify-between p-4 sm:p-6 shadow-2xl">
+      <div className="relative sm:sticky top-0 sm:top-24 h-[70vh] sm:h-[calc(100vh-6.5rem)] max-h-[800px] min-h-[420px] sm:min-h-[540px] w-full overflow-hidden rounded-[24px] sm:rounded-[32px] border border-zinc-300 bg-zinc-950 text-white flex flex-col justify-between p-4 sm:p-6 shadow-2xl">
         
         {/* Subtle Architectural Grid Backdrop */}
         <div className="absolute inset-0 pointer-events-none opacity-30">
