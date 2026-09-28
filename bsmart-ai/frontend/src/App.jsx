@@ -24,7 +24,7 @@ function AppLayout() {
   const isLanding = location.pathname === '/';
 
   return (
-    <div className={`flex flex-col min-h-screen ${isLanding ? 'bg-white text-black' : 'bg-gov-bg'}`}>
+    <div className="flex flex-col min-h-screen bg-tech-dotted-white text-black selection:bg-black selection:text-white">
       {/* Editorial Minimal Navbar on Landing, Standard Portal Navbar on Functional Subpages */}
       {isLanding ? <LandingNavbar /> : <Navbar />}
 

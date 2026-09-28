@@ -218,7 +218,7 @@ export const Navbar = () => {
               ) : (
                 <Link
                   to="/auth"
-                  className="flex items-center space-x-1.5 px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-black rounded-xl text-xs font-extrabold tracking-wider uppercase transition-all shadow-xs"
+                  className="flex items-center space-x-1.5 px-4 py-2 bg-white hover:bg-zinc-200 text-black rounded-xl text-xs font-mono font-bold tracking-wider uppercase transition-all shadow-xs cursor-pointer"
                 >
                   <Lock className="w-3.5 h-3.5" />
                   <span>Portal Sign In</span>
@@ -274,7 +274,7 @@ export const Navbar = () => {
               <Link
                 to="/auth"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block w-full text-center py-2 bg-emerald-500 text-black font-bold rounded-xl text-xs uppercase"
+                className="block w-full text-center py-2 bg-white hover:bg-zinc-200 text-black font-mono font-bold rounded-xl text-xs uppercase"
               >
                 Sign In / Register
               </Link>

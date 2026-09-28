@@ -118,27 +118,31 @@ export const AuthPage = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto px-4 py-12 space-y-6">
+    <div className="max-w-md mx-auto px-4 py-12 space-y-6 animate-fadeIn font-mono">
       {/* Header */}
-      <div className="text-center">
-        <div className="w-12 h-12 rounded-2xl bg-gov-navy text-white flex items-center justify-center mx-auto mb-3 shadow-md">
-          <Shield className="w-6 h-6 text-amber-400" />
+      <div className="text-center space-y-2">
+        <div className="w-12 h-12 rounded-2xl bg-black text-white flex items-center justify-center mx-auto shadow-md">
+          <Shield className="w-6 h-6 text-white" />
         </div>
-        <h1 className="text-2xl font-extrabold text-gov-navy">
-          {isRegister ? "Create BISmart Portal Account" : "Sign In to BISmart AI"}
+        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full border border-zinc-300 bg-white font-mono text-[11px] tracking-widest text-zinc-700 uppercase shadow-2xs">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+          <span>Access Control Gateway</span>
+        </div>
+        <h1 className="editorial-headline text-2xl sm:text-3xl font-black text-black tracking-tight uppercase">
+          {isRegister ? "Create Portal Account" : "Sign In to BISmart AI"}
         </h1>
-        <p className="text-xs text-slate-500 mt-1">
-          Official Access for Consumers, Manufacturers & BIS Officers
+        <p className="text-xs text-zinc-500 font-mono">
+          Statutory Access for Consumers, Manufacturers & BIS Officers
         </p>
       </div>
 
       {/* Mode Switcher Tabs */}
-      <div className="flex bg-slate-100 p-1 rounded-xl">
+      <div className="flex bg-zinc-100 p-1 rounded-xl border border-zinc-200">
         <button
           type="button"
           onClick={() => { setIsRegister(false); setError(null); }}
-          className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
-            !isRegister ? 'bg-white text-gov-navy shadow-xs' : 'text-slate-500 hover:text-slate-800'
+          className={`flex-1 py-2 text-xs font-mono font-bold uppercase tracking-wider rounded-lg transition-all cursor-pointer ${
+            !isRegister ? 'bg-black text-white shadow-xs' : 'text-zinc-600 hover:text-black'
           }`}
         >
           Sign In
@@ -146,8 +150,8 @@ export const AuthPage = () => {
         <button
           type="button"
           onClick={() => { setIsRegister(true); setError(null); }}
-          className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
-            isRegister ? 'bg-white text-gov-navy shadow-xs' : 'text-slate-500 hover:text-slate-800'
+          className={`flex-1 py-2 text-xs font-mono font-bold uppercase tracking-wider rounded-lg transition-all cursor-pointer ${
+            isRegister ? 'bg-black text-white shadow-xs' : 'text-zinc-600 hover:text-black'
           }`}
         >
           New Registration
@@ -155,11 +159,11 @@ export const AuthPage = () => {
       </div>
 
       {/* Quick Demo Login Cards */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-2">
+      <div className="bg-white p-4 rounded-2xl border border-zinc-300 shadow-2xs space-y-2">
         <div className="flex items-center justify-between">
-          <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center space-x-1">
-            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-            <span>Official Demo Accounts (One-Click)</span>
+          <label className="text-[11px] font-mono font-bold text-zinc-500 uppercase tracking-wider flex items-center space-x-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-black" />
+            <span>Preset Audit Credentials (One-Click)</span>
           </label>
         </div>
         <div className="grid grid-cols-3 gap-2 pt-1">
@@ -167,38 +171,38 @@ export const AuthPage = () => {
             type="button"
             disabled={submitting}
             onClick={() => handleQuickDemoLogin('consumer@bismart.gov.in', 'Demo1234!')}
-            className="p-2.5 text-center rounded-xl border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 transition-colors disabled:opacity-50"
+            className="p-2.5 text-center rounded-xl border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 text-black transition-colors disabled:opacity-50 cursor-pointer"
           >
-            <span className="text-xs font-bold block">Consumer</span>
-            <span className="text-[10px] text-emerald-700">Citizen</span>
+            <span className="text-xs font-mono font-bold block uppercase">Consumer</span>
+            <span className="text-[10px] font-mono text-zinc-500">Citizen</span>
           </button>
 
           <button
             type="button"
             disabled={submitting}
             onClick={() => handleQuickDemoLogin('industry@bismart.gov.in', 'Demo1234!')}
-            className="p-2.5 text-center rounded-xl border border-purple-200 bg-purple-50 hover:bg-purple-100 text-purple-900 transition-colors disabled:opacity-50"
+            className="p-2.5 text-center rounded-xl border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 text-black transition-colors disabled:opacity-50 cursor-pointer"
           >
-            <span className="text-xs font-bold block">Industry</span>
-            <span className="text-[10px] text-purple-700">Manufacturer</span>
+            <span className="text-xs font-mono font-bold block uppercase">Industry</span>
+            <span className="text-[10px] font-mono text-zinc-500">Manufacturer</span>
           </button>
 
           <button
             type="button"
             disabled={submitting}
             onClick={() => handleQuickDemoLogin('admin@bismart.gov.in', 'Admin1234!')}
-            className="p-2.5 text-center rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 text-red-900 transition-colors disabled:opacity-50"
+            className="p-2.5 text-center rounded-xl border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 text-black transition-colors disabled:opacity-50 cursor-pointer"
           >
-            <span className="text-xs font-bold block">Admin</span>
-            <span className="text-[10px] text-red-700">BIS Officer</span>
+            <span className="text-xs font-mono font-bold block uppercase">Admin</span>
+            <span className="text-[10px] font-mono text-zinc-500">BIS Officer</span>
           </button>
         </div>
       </div>
 
       {/* Main Authentication Card */}
-      <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+      <div className="bg-white p-6 sm:p-8 rounded-2xl border border-zinc-300 shadow-2xs space-y-4">
         {error && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-xl flex items-center space-x-2 text-red-700 text-xs font-medium">
+          <div className="p-3 bg-red-50 border border-red-200 rounded-xl flex items-center space-x-2 text-red-700 text-xs font-mono font-medium">
             <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
             <span>{error}</span>
           </div>
@@ -208,26 +212,26 @@ export const AuthPage = () => {
           {isRegister && (
             <>
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Full Legal Name</label>
+                <label className="block text-xs font-mono font-bold uppercase tracking-wider text-zinc-700 mb-1.5">Full Legal Name</label>
                 <div className="relative">
-                  <User className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+                  <User className="w-4 h-4 absolute left-3 top-3 text-zinc-400" />
                   <input
                     type="text"
                     required
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     placeholder="e.g. Aarav Sharma"
-                    className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-gov-blue"
+                    className="w-full bg-zinc-50 border border-zinc-300 rounded-xl pl-9 pr-3 py-2.5 text-xs text-black font-mono focus:outline-none focus:border-black focus:bg-white shadow-inner"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Portal Account Role</label>
+                <label className="block text-xs font-mono font-bold uppercase tracking-wider text-zinc-700 mb-1.5">Portal Account Role</label>
                 <select
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-gov-blue font-medium"
+                  className="w-full bg-zinc-50 border border-zinc-300 rounded-xl px-3 py-2.5 text-xs text-black font-mono focus:outline-none focus:border-black focus:bg-white font-medium cursor-pointer"
                 >
                   <option value="consumer">Consumer / Citizen / Researcher</option>
                   <option value="industry">Industry / Manufacturer / Importer</option>
@@ -236,15 +240,15 @@ export const AuthPage = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Organization / Enterprise (Optional)</label>
+                <label className="block text-xs font-mono font-bold uppercase tracking-wider text-zinc-700 mb-1.5">Organization / Enterprise (Optional)</label>
                 <div className="relative">
-                  <Building className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+                  <Building className="w-4 h-4 absolute left-3 top-3 text-zinc-400" />
                   <input
                     type="text"
                     value={organization}
                     onChange={(e) => setOrganization(e.target.value)}
                     placeholder="e.g. Apex Kitchenware & Manufacturing Ltd"
-                    className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-gov-blue"
+                    className="w-full bg-zinc-50 border border-zinc-300 rounded-xl pl-9 pr-3 py-2.5 text-xs text-black font-mono focus:outline-none focus:border-black focus:bg-white shadow-inner"
                   />
                 </div>
               </div>
@@ -252,36 +256,36 @@ export const AuthPage = () => {
           )}
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Email Address</label>
+            <label className="block text-xs font-mono font-bold uppercase tracking-wider text-zinc-700 mb-1.5">Email Address</label>
             <div className="relative">
-              <Mail className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+              <Mail className="w-4 h-4 absolute left-3 top-3 text-zinc-400" />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="e.g. name@organization.gov.in"
-                className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-gov-blue"
+                className="w-full bg-zinc-50 border border-zinc-300 rounded-xl pl-9 pr-3 py-2.5 text-xs text-black font-mono focus:outline-none focus:border-black focus:bg-white shadow-inner"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Password</label>
+            <label className="block text-xs font-mono font-bold uppercase tracking-wider text-zinc-700 mb-1.5">Password</label>
             <div className="relative">
-              <Lock className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+              <Lock className="w-4 h-4 absolute left-3 top-3 text-zinc-400" />
               <input
                 type={showPassword ? "text" : "password"}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-10 py-2 text-xs text-slate-900 focus:outline-none focus:border-gov-blue"
+                className="w-full bg-zinc-50 border border-zinc-300 rounded-xl pl-9 pr-10 py-2.5 text-xs text-black font-mono focus:outline-none focus:border-black focus:bg-white shadow-inner"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600"
+                className="absolute right-3 top-2.5 text-zinc-400 hover:text-black cursor-pointer"
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -290,16 +294,16 @@ export const AuthPage = () => {
 
           {isRegister && (
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Confirm Password</label>
+              <label className="block text-xs font-mono font-bold uppercase tracking-wider text-zinc-700 mb-1.5">Confirm Password</label>
               <div className="relative">
-                <Lock className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+                <Lock className="w-4 h-4 absolute left-3 top-3 text-zinc-400" />
                 <input
                   type={showPassword ? "text" : "password"}
                   required
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-gov-blue"
+                  className="w-full bg-zinc-50 border border-zinc-300 rounded-xl pl-9 pr-3 py-2.5 text-xs text-black font-mono focus:outline-none focus:border-black focus:bg-white shadow-inner"
                 />
               </div>
             </div>
@@ -308,7 +312,7 @@ export const AuthPage = () => {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full bg-gov-blue hover:bg-blue-900 text-white font-bold py-2.5 rounded-xl text-xs shadow-xs transition-colors disabled:opacity-50 flex items-center justify-center space-x-2"
+            className="w-full bg-black hover:bg-zinc-800 text-white font-mono font-bold uppercase py-2.5 rounded-xl text-xs shadow-xs transition-colors disabled:opacity-50 flex items-center justify-center space-x-2 cursor-pointer"
           >
             <span>{submitting ? "Authenticating..." : isRegister ? "Complete Registration" : "Sign In to Portal"}</span>
             <ArrowRight className="w-4 h-4" />
@@ -322,7 +326,7 @@ export const AuthPage = () => {
               setIsRegister(!isRegister);
               setError(null);
             }}
-            className="text-xs font-semibold text-gov-blue hover:underline"
+            className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-800 hover:text-black hover:underline cursor-pointer"
           >
             {isRegister ? "Already registered? Sign In instead" : "Need an account? Register here"}
           </button>

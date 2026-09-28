@@ -65,39 +65,39 @@ export const VoiceModal = ({ isOpen, onClose, onTranscript }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
-      <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 text-center relative animate-scaleUp">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+      <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-zinc-300 text-center relative animate-scaleUp font-mono">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1 rounded-full hover:bg-slate-100"
+          className="absolute top-4 right-4 text-zinc-400 hover:text-black p-1 rounded-full hover:bg-zinc-100 transition-colors cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Pulsing Mic Circle */}
         <div className="relative mx-auto my-6 w-24 h-24 flex items-center justify-center">
-          <div className="absolute inset-0 rounded-full bg-blue-100 animate-ping opacity-75"></div>
-          <div className="relative w-20 h-20 rounded-full bg-gradient-to-tr from-gov-navy to-gov-blue flex items-center justify-center text-white shadow-lg">
-            <Mic className="w-10 h-10 animate-pulse text-amber-400" />
+          <div className="absolute inset-0 rounded-full bg-zinc-200 animate-ping opacity-60"></div>
+          <div className="relative w-20 h-20 rounded-full bg-black flex items-center justify-center text-white shadow-lg">
+            <Mic className="w-9 h-9 animate-pulse text-white" />
           </div>
         </div>
 
-        <h3 className="text-lg font-bold text-slate-900">
+        <h3 className="editorial-headline text-lg font-bold text-black uppercase">
           {currentLang === 'hi' ? 'बोलिए, हम सुन रहे हैं...' : 'Listening in Bhashini Mode...'}
         </h3>
-        <p className="text-xs text-slate-500 mt-1">
+        <p className="text-xs text-zinc-500 font-mono mt-1">
           {currentLang === 'hi' ? 'हिन्दी में अपना प्रश्न पूछें (जैसे: प्रेशर कुकर का मानक)' : 'Speak your question in English or Indian languages'}
         </p>
 
         {/* Transcription Display */}
-        <div className="mt-4 p-3 bg-slate-50 rounded-xl border border-slate-200 min-h-[50px] flex items-center justify-center text-slate-800 text-sm font-medium">
+        <div className="mt-4 p-3 bg-zinc-50 rounded-xl border border-zinc-300 min-h-[50px] flex items-center justify-center text-black text-xs font-mono">
           {interimText || (currentLang === 'hi' ? 'आवाज़ रिकॉर्ड की जा रही है...' : 'Listening for audio stream...')}
         </div>
 
         {/* Quick Voice Demo Presets */}
-        <div className="mt-6 text-left border-t border-slate-100 pt-4">
-          <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-2">
-            Or Click a Voice Sample to Ask:
+        <div className="mt-6 text-left border-t border-zinc-200 pt-4">
+          <label className="text-[11px] font-mono font-bold text-zinc-500 uppercase tracking-wider block mb-2">
+            Preset Voice Prompts:
           </label>
           <div className="grid grid-cols-1 gap-1.5">
             {quickVoicePrompts.map((p, idx) => (
@@ -107,10 +107,10 @@ export const VoiceModal = ({ isOpen, onClose, onTranscript }) => {
                   onTranscript(p.text);
                   onClose();
                 }}
-                className="text-left text-xs bg-slate-50 hover:bg-blue-50 hover:text-gov-blue p-2 rounded-lg border border-slate-200 hover:border-blue-300 transition-colors flex items-center justify-between"
+                className="text-left text-xs font-mono bg-zinc-50 hover:bg-zinc-100 text-zinc-800 hover:text-black p-2.5 rounded-lg border border-zinc-200 hover:border-zinc-400 transition-colors flex items-center justify-between cursor-pointer"
               >
                 <span className="truncate">{p.label}</span>
-                <Volume2 className="w-3.5 h-3.5 text-slate-400 shrink-0 ml-2" />
+                <Volume2 className="w-3.5 h-3.5 text-zinc-500 shrink-0 ml-2" />
               </button>
             ))}
           </div>

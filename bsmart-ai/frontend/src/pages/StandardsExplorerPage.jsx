@@ -58,37 +58,40 @@ export const StandardsExplorerPage = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 select-none">
       {/* Header */}
       <div>
-        <span className="text-xs font-bold text-gov-blue uppercase tracking-wider">BIS Repository</span>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-gov-navy mt-1">
-          Indian Standards (IS) Directory & Clause Explorer
+        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full border border-zinc-300 bg-white font-mono text-[11px] tracking-widest text-zinc-700 uppercase shadow-2xs mb-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+          <span>03 — NATIONAL GAZETTE REPOSITORY</span>
+        </div>
+        <h1 className="editorial-headline text-2xl sm:text-4xl lg:text-5xl font-black uppercase tracking-tight text-black mt-1 leading-none">
+          INDIAN STANDARDS (IS) DIRECTORY
         </h1>
-        <p className="text-xs sm:text-sm text-slate-600 mt-2 max-w-2xl leading-relaxed">
-          Browse verified Indian Standards published under the authority of the Bureau of Indian Standards. Inspect granular clauses, quality specifications, and testing protocols.
+        <p className="text-xs sm:text-sm text-zinc-600 mt-2 max-w-3xl leading-relaxed">
+          Browse verified Indian Standards published under statutory gazettes. Inspect granular clauses, mandatory parameters, and laboratory test protocols.
         </p>
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+      <div className="bg-white p-5 sm:p-6 rounded-[24px] border border-zinc-300 shadow-xs space-y-4">
         <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+            <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-3.5" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by IS code (e.g. IS 2347, IS 269) or keyword..."
-              className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-4 py-2.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-gov-blue/20 focus:border-gov-blue"
+              className="w-full bg-zinc-50 border border-zinc-300 rounded-xl pl-10 pr-4 py-2.5 text-xs font-mono text-black placeholder:text-zinc-400 focus:outline-none focus:border-black focus:bg-white uppercase transition-all"
             />
           </div>
 
-          <div className="w-full sm:w-64">
+          <div className="w-full sm:w-72">
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-gov-blue font-medium"
+              className="w-full bg-zinc-50 border border-zinc-300 rounded-xl px-3.5 py-2.5 text-xs font-mono text-black focus:outline-none focus:border-black font-medium cursor-pointer"
             >
               {categories.map((c, i) => (
                 <option key={i} value={c}>{c}</option>
@@ -98,21 +101,22 @@ export const StandardsExplorerPage = () => {
 
           <button
             type="submit"
-            className="bg-gov-blue hover:bg-blue-900 text-white font-bold px-6 py-2.5 rounded-xl text-xs shadow-xs transition-colors whitespace-nowrap"
+            className="bg-black hover:bg-zinc-800 text-white font-mono text-xs font-bold uppercase px-6 py-2.5 rounded-xl shadow-xs transition-colors whitespace-nowrap cursor-pointer flex items-center justify-center space-x-1.5"
           >
-            Search Standards
+            <Search className="w-3.5 h-3.5" />
+            <span>SEARCH STANDARDS</span>
           </button>
         </form>
 
-        <div className="flex items-center space-x-2 pt-2 border-t border-slate-100 text-xs">
-          <label className="flex items-center space-x-2 cursor-pointer text-slate-700 font-medium">
+        <div className="flex items-center space-x-2 pt-3 border-t border-zinc-100 text-xs font-mono">
+          <label className="flex items-center space-x-2 cursor-pointer text-zinc-700 font-bold">
             <input
               type="checkbox"
               checked={mandatoryOnly}
               onChange={(e) => setMandatoryOnly(e.target.checked)}
-              className="rounded border-slate-300 text-gov-blue focus:ring-gov-blue w-4 h-4"
+              className="rounded border-zinc-400 accent-black text-black focus:ring-black w-4 h-4 cursor-pointer"
             />
-            <span>Show Only Standards under Mandatory Quality Control Order (QCO)</span>
+            <span className="uppercase text-[11px] tracking-wide">Show Only Mandatory Quality Control Orders (QCO)</span>
           </label>
         </div>
       </div>
@@ -120,33 +124,33 @@ export const StandardsExplorerPage = () => {
       {/* Standards List */}
       <div className="space-y-4">
         {loading ? (
-          <div className="p-12 text-center text-slate-500 bg-white rounded-2xl border border-slate-200">
-            <div className="w-6 h-6 border-2 border-gov-blue border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-            <span className="text-xs font-medium">Loading standards from knowledge repository...</span>
+          <div className="p-12 text-center text-zinc-500 bg-white rounded-[24px] border border-zinc-300 font-mono">
+            <div className="w-6 h-6 border-2 border-black border-t-transparent rounded-full animate-spin mx-auto mb-2.5"></div>
+            <span className="text-xs uppercase font-bold tracking-wider">Synchronizing gazetted standards repository...</span>
           </div>
         ) : standards.length === 0 ? (
-          <div className="p-12 text-center text-slate-500 bg-white rounded-2xl border border-slate-200">
-            <BookOpen className="w-10 h-10 text-slate-300 mx-auto mb-2" />
-            <h3 className="text-sm font-bold text-slate-700">No Standards Found</h3>
-            <p className="text-xs text-slate-500 mt-1">Try broadening your search query or changing filters.</p>
+          <div className="p-12 text-center text-zinc-500 bg-white rounded-[24px] border border-zinc-300 font-mono space-y-2">
+            <BookOpen className="w-10 h-10 text-zinc-400 mx-auto mb-2" />
+            <h3 className="text-sm font-bold uppercase text-black">No Standards Found</h3>
+            <p className="text-xs text-zinc-600 font-sans">Try broadening your search query or changing filters.</p>
           </div>
         ) : (
           standards.map((std) => (
             <div
               key={std.id}
-              className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:border-blue-300 transition-all space-y-4"
+              className="bg-white p-6 sm:p-7 rounded-[24px] border border-zinc-300 shadow-xs hover:border-black transition-all space-y-4 group"
             >
-              <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-100 pb-3">
                 <div className="flex items-center space-x-2">
-                  <span className="bg-gov-navy text-white text-xs font-black px-3 py-1 rounded-md font-mono">
+                  <span className="bg-black text-white text-xs font-black px-3 py-1 rounded-md font-mono">
                     {std.is_number}
                   </span>
                   {std.mandatory_status && (
-                    <span className="bg-red-100 text-red-800 text-[11px] font-bold px-2 py-0.5 rounded">
-                      Mandatory QCO
+                    <span className="bg-red-50 text-red-900 border border-red-200 text-[11px] font-mono font-bold px-2.5 py-0.5 rounded uppercase">
+                      MANDATORY QCO
                     </span>
                   )}
-                  <span className="bg-blue-50 text-gov-blue text-[11px] font-semibold px-2 py-0.5 rounded">
+                  <span className="bg-zinc-100 text-zinc-800 border border-zinc-200 text-[11px] font-mono font-bold px-2.5 py-0.5 rounded uppercase">
                     {std.category}
                   </span>
                 </div>
@@ -155,30 +159,30 @@ export const StandardsExplorerPage = () => {
                   href={std.source_url || "https://www.services.bis.gov.in"}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-xs text-slate-500 hover:text-gov-blue inline-flex items-center space-x-1"
+                  className="font-mono text-xs text-zinc-500 hover:text-black font-bold uppercase inline-flex items-center space-x-1"
                 >
-                  <span>Official BIS Document</span>
+                  <span>GAZETTE NOTIFICATION</span>
                   <ExternalLink className="w-3.5 h-3.5" />
                 </a>
               </div>
 
               <div>
-                <h3 className="text-base font-bold text-gov-navy">{std.title}</h3>
-                <p className="text-xs text-slate-600 mt-1 leading-relaxed">{std.scope}</p>
+                <h3 className="text-lg font-black uppercase text-black tracking-tight">{std.title}</h3>
+                <p className="text-xs text-zinc-600 mt-1.5 leading-relaxed font-normal">{std.scope}</p>
               </div>
 
               {std.qco_reference && (
-                <div className="bg-amber-50/70 border border-amber-200 p-2.5 rounded-lg text-xs flex items-center space-x-2 text-amber-900">
+                <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl text-xs flex items-center space-x-2 text-amber-950 font-mono">
                   <AlertCircle className="w-4 h-4 text-amber-700 shrink-0" />
-                  <span><strong>Statutory Order:</strong> {std.qco_reference}</span>
+                  <span><strong>STATUTORY ORDER:</strong> {std.qco_reference}</span>
                 </div>
               )}
 
               {/* Clauses Preview */}
               {std.clauses && std.clauses.length > 0 && (
-                <div className="pt-3 border-t border-slate-100">
-                  <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-2">
-                    Key Standard Clauses (Click to inspect verbatim text):
+                <div className="pt-3 border-t border-zinc-100">
+                  <span className="font-mono text-[10px] font-bold text-zinc-400 uppercase tracking-widest block mb-2">
+                    KEY STANDARD CLAUSES (CLICK TO INSPECT RECORD):
                   </span>
                   <div className="flex flex-wrap gap-2">
                     {std.clauses.map((cl) => (
@@ -194,9 +198,9 @@ export const StandardsExplorerPage = () => {
                           });
                           setDrawerOpen(true);
                         }}
-                        className="text-xs bg-slate-50 hover:bg-blue-50 text-slate-800 hover:text-gov-blue border border-slate-200 hover:border-blue-300 px-2.5 py-1 rounded-lg font-medium transition-colors text-left"
+                        className="text-xs font-mono bg-zinc-50 hover:bg-zinc-100 text-zinc-800 hover:text-black border border-zinc-200 hover:border-black px-3 py-1.5 rounded-xl font-bold transition-all text-left shadow-2xs cursor-pointer"
                       >
-                        <strong className="text-gov-blue">Clause {cl.clause_number}:</strong> {cl.title}
+                        <strong className="text-black">Clause {cl.clause_number}:</strong> {cl.title}
                       </button>
                     ))}
                   </div>

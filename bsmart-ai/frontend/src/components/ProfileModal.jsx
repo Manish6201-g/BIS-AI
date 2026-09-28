@@ -95,17 +95,17 @@ export const ProfileModal = ({ isOpen, onClose }) => {
     'bg-emerald-50 text-emerald-700 border-emerald-200';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150">
-      <div className="bg-white rounded-2xl shadow-xl border border-slate-200 max-w-lg w-full overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150">
+      <div className="bg-white rounded-2xl shadow-2xl border border-zinc-300 max-w-lg w-full overflow-hidden font-mono">
         {/* Modal Header */}
-        <div className="bg-gov-navy px-6 py-4 flex items-center justify-between text-white">
+        <div className="bg-black px-6 py-4 flex items-center justify-between text-white border-b border-zinc-800">
           <div className="flex items-center space-x-2">
-            <User className="w-5 h-5 text-amber-400" />
-            <h3 className="text-sm font-bold tracking-wide">Account Profile & Security</h3>
+            <User className="w-5 h-5 text-white" />
+            <h3 className="text-sm font-bold uppercase tracking-wider text-white">Account Profile & Security</h3>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
+            className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -114,18 +114,18 @@ export const ProfileModal = ({ isOpen, onClose }) => {
         {/* Modal Body */}
         <div className="p-6 space-y-5 max-h-[80vh] overflow-y-auto">
           {/* User Overview Box */}
-          <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-xl">
+          <div className="flex items-center justify-between p-4 bg-zinc-50 border border-zinc-200 rounded-xl">
             <div className="space-y-1">
-              <span className="text-[11px] text-slate-500 font-semibold block">Official Identifier</span>
-              <p className="text-xs font-mono font-bold text-slate-800">{user.email}</p>
-              <div className="flex items-center space-x-2 pt-1 text-[11px] text-slate-500">
+              <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider block">Official Identifier</span>
+              <p className="text-xs font-mono font-bold text-black">{user.email}</p>
+              <div className="flex items-center space-x-2 pt-1 text-[11px] text-zinc-500">
                 <Calendar className="w-3.5 h-3.5" />
                 <span>Joined {new Date(user.created_at || Date.now()).toLocaleDateString()}</span>
               </div>
             </div>
             <div>
-              <span className={`inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-bold border uppercase tracking-wider ${roleBadgeColor}`}>
-                <ShieldCheck className="w-3.5 h-3.5" />
+              <span className="inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-bold border border-zinc-300 bg-white text-black uppercase tracking-wider">
+                <ShieldCheck className="w-3.5 h-3.5 text-black" />
                 <span>{user.role}</span>
               </span>
             </div>
@@ -133,8 +133,8 @@ export const ProfileModal = ({ isOpen, onClose }) => {
 
           {/* Feedback Alerts */}
           {successMsg && (
-            <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center space-x-2 text-emerald-800 text-xs font-semibold">
-              <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
+            <div className="p-3 bg-zinc-100 border border-zinc-300 rounded-xl flex items-center space-x-2 text-black text-xs font-semibold">
+              <CheckCircle2 className="w-4 h-4 shrink-0 text-black" />
               <span>{successMsg}</span>
             </div>
           )}
@@ -148,64 +148,64 @@ export const ProfileModal = ({ isOpen, onClose }) => {
           {/* Edit Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Full Name</label>
+              <label className="block text-xs font-bold uppercase tracking-wider text-zinc-700 mb-1.5">Full Name</label>
               <div className="relative">
-                <User className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+                <User className="w-4 h-4 absolute left-3 top-3 text-zinc-400" />
                 <input
                   type="text"
                   required
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-gov-blue"
+                  className="w-full bg-zinc-50 border border-zinc-300 rounded-xl pl-9 pr-3 py-2 text-xs text-black font-mono focus:outline-none focus:border-black focus:bg-white shadow-inner"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Organization / Enterprise</label>
+              <label className="block text-xs font-bold uppercase tracking-wider text-zinc-700 mb-1.5">Organization / Enterprise</label>
               <div className="relative">
-                <Building className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+                <Building className="w-4 h-4 absolute left-3 top-3 text-zinc-400" />
                 <input
                   type="text"
                   value={organization}
                   onChange={(e) => setOrganization(e.target.value)}
                   placeholder="e.g. Apex Industries Pvt Ltd"
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-gov-blue"
+                  className="w-full bg-zinc-50 border border-zinc-300 rounded-xl pl-9 pr-3 py-2 text-xs text-black font-mono focus:outline-none focus:border-black focus:bg-white shadow-inner"
                 />
               </div>
             </div>
 
-            <div className="pt-2 border-t border-slate-200 space-y-3">
-              <div className="flex items-center space-x-1.5 text-xs font-bold text-slate-800">
-                <KeyRound className="w-4 h-4 text-gov-blue" />
+            <div className="pt-2 border-t border-zinc-200 space-y-3">
+              <div className="flex items-center space-x-1.5 text-xs font-bold uppercase tracking-wider text-black">
+                <KeyRound className="w-4 h-4 text-black" />
                 <span>Change Password (Optional)</span>
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-slate-600 mb-1">New Password</label>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-600 mb-1">New Password</label>
                 <div className="relative">
-                  <Lock className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+                  <Lock className="w-4 h-4 absolute left-3 top-3 text-zinc-400" />
                   <input
                     type="password"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Leave blank to keep current"
-                    className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-gov-blue"
+                    className="w-full bg-zinc-50 border border-zinc-300 rounded-xl pl-9 pr-3 py-2 text-xs text-black font-mono focus:outline-none focus:border-black focus:bg-white shadow-inner"
                   />
                 </div>
               </div>
 
               {newPassword && (
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-600 mb-1">Confirm New Password</label>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-600 mb-1">Confirm New Password</label>
                   <div className="relative">
-                    <Lock className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+                    <Lock className="w-4 h-4 absolute left-3 top-3 text-zinc-400" />
                     <input
                       type="password"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="Repeat new password"
-                      className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-gov-blue"
+                      className="w-full bg-zinc-50 border border-zinc-300 rounded-xl pl-9 pr-3 py-2 text-xs text-black font-mono focus:outline-none focus:border-black focus:bg-white shadow-inner"
                     />
                   </div>
                 </div>
@@ -216,14 +216,14 @@ export const ProfileModal = ({ isOpen, onClose }) => {
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors"
+                className="px-4 py-2 text-xs font-bold uppercase text-zinc-600 hover:text-black hover:bg-zinc-100 rounded-xl transition-colors cursor-pointer"
               >
                 Close
               </button>
               <button
                 type="submit"
                 disabled={saving}
-                className="px-5 py-2 text-xs font-bold text-white bg-gov-blue hover:bg-blue-900 rounded-xl shadow-xs transition-colors disabled:opacity-50"
+                className="px-5 py-2 text-xs font-bold uppercase text-white bg-black hover:bg-zinc-800 rounded-xl shadow-xs transition-colors disabled:opacity-50 cursor-pointer"
               >
                 {saving ? 'Updating...' : 'Save Profile Changes'}
               </button>

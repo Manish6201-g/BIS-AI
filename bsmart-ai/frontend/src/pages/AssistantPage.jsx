@@ -141,29 +141,30 @@ export const AssistantPage = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      {/* Header Banner */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs mb-6 flex flex-wrap items-center justify-between gap-4">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6 select-none">
+      {/* Editorial Header Banner */}
+      <div className="bg-white border border-zinc-300 rounded-[24px] p-5 sm:p-6 shadow-xs flex flex-wrap items-center justify-between gap-4">
         <div>
-          <div className="flex items-center space-x-2">
-            <h1 className="text-lg font-bold text-gov-navy">BISmart Intelligent Assistant</h1>
-            <span className="bg-blue-100 text-gov-blue text-[11px] font-bold px-2 py-0.5 rounded-full">
-              Grounded RAG Engine
-            </span>
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full border border-zinc-300 bg-white font-mono text-[11px] tracking-widest text-zinc-700 uppercase shadow-2xs mb-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+            <span>GROUNDED STATUTORY RAG</span>
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Strict anti-hallucination enforcement • Verifiable clause citations from gazetted standards
+          <h1 className="editorial-headline text-2xl sm:text-3xl font-black uppercase tracking-tight text-black leading-none">
+            AI REGULATORY ASSISTANT
+          </h1>
+          <p className="text-xs sm:text-sm text-zinc-600 mt-1.5 max-w-2xl leading-relaxed">
+            Direct statutory retrieval against official Gazette notifications, Quality Control Orders, and Scheme-I certification requirements. Zero hallucination.
           </p>
         </div>
 
         {/* Controls */}
         <div className="flex items-center space-x-3">
-          <div className="flex items-center space-x-1.5 bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-lg">
-            <Globe className="w-3.5 h-3.5 text-gov-blue" />
+          <div className="flex items-center space-x-1.5 bg-zinc-50 border border-zinc-300 px-3 py-1.5 rounded-xl font-mono text-xs">
+            <Globe className="w-3.5 h-3.5 text-black" />
             <select
               value={currentLang}
               onChange={(e) => setCurrentLang(e.target.value)}
-              className="bg-transparent text-xs font-semibold text-slate-800 focus:outline-none"
+              className="bg-transparent text-xs font-mono font-bold text-black focus:outline-none cursor-pointer"
             >
               {languages.map(l => (
                 <option key={l.code} value={l.code}>{l.native} ({l.name})</option>
@@ -178,7 +179,7 @@ export const AssistantPage = () => {
               content: "Conversation refreshed. How may I assist you with Indian Standards or BIS certification?",
               sources: []
             }])}
-            className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg border border-slate-200"
+            className="p-2 text-zinc-600 hover:text-black hover:bg-zinc-100 rounded-xl border border-zinc-300 transition-colors cursor-pointer"
             title="Clear Chat"
           >
             <RefreshCw className="w-4 h-4" />
@@ -187,7 +188,7 @@ export const AssistantPage = () => {
       </div>
 
       {/* Chat Messages Container */}
-      <div className="bg-white border border-slate-200 rounded-2xl shadow-xs flex flex-col h-[650px] overflow-hidden">
+      <div className="bg-white border border-zinc-300 rounded-[28px] shadow-xs flex flex-col h-[660px] overflow-hidden">
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
           {messages.map((msg) => {
             const isUser = msg.role === 'user';
@@ -195,18 +196,18 @@ export const AssistantPage = () => {
               <div key={msg.id} className={`flex ${isUser ? 'justify-end' : 'justify-start'} animate-fadeIn`}>
                 <div className={`max-w-[85%] sm:max-w-[78%] rounded-2xl p-4 sm:p-5 ${
                   isUser 
-                    ? 'bg-gov-blue text-white shadow-sm' 
-                    : 'bg-slate-50 text-slate-900 border border-slate-200 shadow-xs'
+                    ? 'bg-black text-white shadow-xs' 
+                    : 'bg-zinc-50/80 text-black border border-zinc-200 shadow-2xs'
                 }`}>
                   {/* Assistant Tag & Query Classification */}
                   {!isUser && (
-                    <div className="flex items-center justify-between mb-2.5 pb-2 border-b border-slate-200/80">
-                      <div className="flex items-center space-x-1.5">
-                        <ShieldCheck className="w-4 h-4 text-gov-blue" />
-                        <span className="font-bold text-xs text-gov-navy">BIS Official Assistant</span>
+                    <div className="flex items-center justify-between mb-2.5 pb-2 border-b border-zinc-200">
+                      <div className="flex items-center space-x-1.5 font-mono">
+                        <ShieldCheck className="w-4 h-4 text-black" />
+                        <span className="font-bold text-xs uppercase tracking-wider text-black">BIS Official Assistant</span>
                       </div>
                       {msg.query_classification && (
-                        <span className="text-[10px] font-semibold bg-white border border-slate-200 text-slate-600 px-2 py-0.5 rounded-full">
+                        <span className="font-mono text-[10px] font-bold uppercase bg-white border border-zinc-300 text-zinc-700 px-2 py-0.5 rounded-full">
                           {msg.query_classification}
                         </span>
                       )}
@@ -214,15 +215,15 @@ export const AssistantPage = () => {
                   )}
 
                   {/* Message Content */}
-                  <div className={`text-xs sm:text-sm leading-relaxed whitespace-pre-line ${isUser ? 'text-white' : 'text-slate-800'}`}>
+                  <div className={`text-xs sm:text-sm leading-relaxed whitespace-pre-line font-normal ${isUser ? 'text-zinc-100' : 'text-zinc-800'}`}>
                     {msg.content}
                   </div>
 
                   {/* Sources & Citations Box */}
                   {!isUser && msg.sources && msg.sources.length > 0 && (
-                    <div className="mt-4 pt-3 border-t border-slate-200/80">
-                      <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider flex items-center space-x-1 mb-2">
-                        <FileText className="w-3.5 h-3.5 text-gov-blue" />
+                    <div className="mt-4 pt-3 border-t border-zinc-200">
+                      <label className="font-mono text-[11px] font-bold text-zinc-700 uppercase tracking-wider flex items-center space-x-1.5 mb-2">
+                        <FileText className="w-3.5 h-3.5 text-black" />
                         <span>Verifiable Clause Citations ({msg.sources.length}):</span>
                       </label>
                       <div className="flex flex-wrap gap-2">
@@ -233,9 +234,9 @@ export const AssistantPage = () => {
                               setSelectedCitation(src);
                               setDrawerOpen(true);
                             }}
-                            className="inline-flex items-center space-x-1.5 bg-white hover:bg-blue-50 text-gov-blue border border-blue-200 hover:border-blue-400 px-2.5 py-1 rounded-lg text-xs font-bold transition-all shadow-xs"
+                            className="inline-flex items-center space-x-1.5 bg-white hover:bg-zinc-100 text-black border border-zinc-300 hover:border-black px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition-all shadow-2xs cursor-pointer"
                           >
-                            <span className="text-amber-600 font-extrabold">[{sIdx + 1}]</span>
+                            <span className="text-zinc-500 font-extrabold">[{sIdx + 1}]</span>
                             <span>{src.document} — {src.clause}</span>
                           </button>
                         ))}
@@ -245,44 +246,44 @@ export const AssistantPage = () => {
 
                   {/* Assistant Footer Controls (TTS + Feedback) */}
                   {!isUser && msg.id !== 'welcome' && (
-                    <div className="mt-3 pt-2 flex items-center justify-between text-slate-400 text-xs">
+                    <div className="mt-3 pt-2 flex items-center justify-between text-zinc-400 text-xs border-t border-zinc-100">
                       {/* TTS Speak button */}
                       <button
                         onClick={() => toggleSpeech(msg)}
-                        className="inline-flex items-center space-x-1 hover:text-gov-blue transition-colors text-[11px] font-medium"
+                        className="inline-flex items-center space-x-1 hover:text-black transition-colors font-mono text-[11px] font-bold uppercase cursor-pointer"
                       >
                         {speakingMessageId === msg.id ? (
                           <>
-                            <VolumeX className="w-3.5 h-3.5 text-red-500 animate-pulse" />
-                            <span className="text-red-500">Stop Voice</span>
+                            <VolumeX className="w-3.5 h-3.5 text-red-600 animate-pulse" />
+                            <span className="text-red-600">Stop Voice</span>
                           </>
                         ) : (
                           <>
-                            <Volume2 className="w-3.5 h-3.5" />
+                            <Volume2 className="w-3.5 h-3.5 text-black" />
                             <span>Listen (TTS)</span>
                           </>
                         )}
                       </button>
 
                       {/* Thumbs up/down feedback */}
-                      <div className="flex items-center space-x-2">
-                        <span className="text-[10px] text-slate-400">Helpful?</span>
+                      <div className="flex items-center space-x-2 font-mono">
+                        <span className="text-[10px] text-zinc-400 uppercase">Feedback:</span>
                         <button
                           onClick={() => handleFeedback(msg.id, 1)}
-                          className={`p-1 rounded hover:bg-slate-200 transition-colors ${feedbackSent[msg.id] === 1 ? 'text-emerald-600' : ''}`}
+                          className={`p-1 rounded hover:bg-zinc-200 transition-colors cursor-pointer ${feedbackSent[msg.id] === 1 ? 'text-emerald-600' : 'text-zinc-500'}`}
                           title="Accurate and grounded"
                         >
                           <ThumbsUp className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => handleFeedback(msg.id, -1)}
-                          className={`p-1 rounded hover:bg-slate-200 transition-colors ${feedbackSent[msg.id] === -1 ? 'text-red-500' : ''}`}
+                          className={`p-1 rounded hover:bg-zinc-200 transition-colors cursor-pointer ${feedbackSent[msg.id] === -1 ? 'text-red-600' : 'text-zinc-500'}`}
                           title="Report inaccuracy"
                         >
                           <ThumbsDown className="w-3.5 h-3.5" />
                         </button>
                         {feedbackSent[msg.id] && (
-                          <span className="text-[10px] text-emerald-600 font-semibold flex items-center">
+                          <span className="text-[10px] text-emerald-600 font-bold flex items-center uppercase">
                             <Check className="w-3 h-3 mr-0.5" /> Logged
                           </span>
                         )}
@@ -297,9 +298,9 @@ export const AssistantPage = () => {
           {/* Loading Indicator */}
           {loading && (
             <div className="flex justify-start">
-              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 max-w-sm flex items-center space-x-3">
-                <div className="w-4 h-4 rounded-full border-2 border-gov-blue border-t-transparent animate-spin"></div>
-                <span className="text-xs text-slate-600 font-medium">Retrieving verified BIS clauses & standard codes...</span>
+              <div className="bg-zinc-50 border border-zinc-200 rounded-2xl p-4 max-w-sm flex items-center space-x-3 shadow-2xs font-mono">
+                <div className="w-4 h-4 rounded-full border-2 border-black border-t-transparent animate-spin"></div>
+                <span className="text-xs text-zinc-600 font-bold uppercase tracking-wider">Retrieving gazetted BIS clauses...</span>
               </div>
             </div>
           )}
@@ -307,13 +308,15 @@ export const AssistantPage = () => {
         </div>
 
         {/* Suggested Prompts Carousel */}
-        <div className="px-4 py-2 bg-slate-50 border-t border-slate-200 flex items-center space-x-2 overflow-x-auto">
-          <span className="text-[11px] font-bold text-slate-500 whitespace-nowrap uppercase tracking-wider">Try:</span>
+        <div className="px-4 py-2.5 bg-zinc-50 border-t border-zinc-200 flex items-center space-x-2 overflow-x-auto">
+          <span className="font-mono text-[10px] font-bold text-zinc-400 whitespace-nowrap uppercase tracking-widest">
+            TRY PROMPTS:
+          </span>
           {suggestedQuestions.map((sq, i) => (
             <button
               key={i}
               onClick={() => handleSendMessage(sq.text)}
-              className="text-xs bg-white hover:bg-blue-50 text-slate-700 hover:text-gov-blue border border-slate-200 hover:border-blue-300 rounded-full px-3 py-1 whitespace-nowrap transition-colors shadow-xs"
+              className="font-mono text-xs bg-white hover:bg-zinc-100 text-zinc-700 hover:text-black border border-zinc-300 hover:border-black rounded-full px-3 py-1 whitespace-nowrap transition-colors shadow-2xs cursor-pointer"
             >
               {sq.label}
             </button>
@@ -326,16 +329,16 @@ export const AssistantPage = () => {
             e.preventDefault();
             handleSendMessage();
           }}
-          className="p-3 sm:p-4 bg-white border-t border-slate-200 flex items-center space-x-2"
+          className="p-3 sm:p-4 bg-white border-t border-zinc-200 flex items-center space-x-2"
         >
           {/* Voice input mic button */}
           <button
             type="button"
             onClick={() => setVoiceModalOpen(true)}
-            className="p-2.5 text-slate-600 hover:text-gov-blue hover:bg-blue-50 rounded-xl border border-slate-200 transition-colors"
+            className="p-2.5 text-zinc-700 hover:text-black hover:bg-zinc-100 rounded-xl border border-zinc-300 transition-colors cursor-pointer"
             title="Speak with Bhashini Multilingual Speech"
           >
-            <Mic className="w-5 h-5 text-amber-600" />
+            <Mic className="w-5 h-5 text-black" />
           </button>
 
           {/* Input text field */}
@@ -348,7 +351,7 @@ export const AssistantPage = () => {
                 ? "यहाँ भारतीय मानक या उत्पाद का नाम लिखें (जैसे: सीमेंट, प्रेशर कुकर, पेयजल)..." 
                 : "Ask about any Indian Standard, product requirement, QCO, or certification..."
             }
-            className="flex-1 bg-slate-50 text-slate-900 border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gov-blue/20 focus:border-gov-blue transition-all"
+            className="flex-1 bg-zinc-50 text-black border border-zinc-300 rounded-xl px-4 py-2.5 text-xs sm:text-sm font-mono placeholder:text-zinc-400 focus:outline-none focus:border-black focus:bg-white transition-all uppercase tracking-wide"
             disabled={loading}
           />
 
@@ -356,9 +359,10 @@ export const AssistantPage = () => {
           <button
             type="submit"
             disabled={loading || !inputQuery.trim()}
-            className="bg-gov-blue hover:bg-blue-900 disabled:opacity-50 text-white font-semibold p-2.5 rounded-xl transition-colors shadow-xs"
+            className="bg-black hover:bg-zinc-800 disabled:opacity-40 text-white font-mono text-xs font-bold uppercase px-4 py-2.5 rounded-xl transition-all shadow-xs cursor-pointer flex items-center space-x-1"
           >
-            <Send className="w-5 h-5" />
+            <Send className="w-4 h-4" />
+            <span className="hidden sm:inline">SEND</span>
           </button>
         </form>
       </div>
