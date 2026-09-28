@@ -428,9 +428,9 @@ export const VerificationSection = () => {
     <section
       ref={sectionRef}
       data-theme="light"
-      className="bg-tech-dotted-white text-black py-16 sm:py-24 px-4 sm:px-8 lg:px-12 border-b border-zinc-200 relative overflow-hidden"
+      className="bg-tech-dotted-white text-black py-12 sm:py-16 px-4 sm:px-8 lg:px-12 border-b border-zinc-200 relative overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto w-full space-y-12 sm:space-y-16">
+      <div className="max-w-7xl mx-auto w-full space-y-8 sm:space-y-10">
         
         {/* ========================================================
             01. High-Density Split Header & Interactive Quick Verifier
@@ -643,6 +643,25 @@ export const VerificationSection = () => {
                   </div>
                 </div>
               )}
+
+              {/* Live Certified Registry Telemetry Feed (fills vertical space) */}
+              <div className="mt-3 p-3 bg-zinc-50 border border-zinc-200 rounded-xl space-y-1.5 font-mono text-[10px]">
+                <div className="flex items-center justify-between text-zinc-500 font-bold uppercase tracking-wider">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span>RECENT CITIZEN AUDIT LOG</span>
+                  </span>
+                  <span className="text-zinc-400">CENTRAL MIRROR</span>
+                </div>
+                <div className="flex items-center justify-between py-1 border-t border-zinc-200/60 text-zinc-700">
+                  <span className="truncate max-w-[200px] sm:max-w-none">Hawkins Pressure Cooker (IS 2347)</span>
+                  <span className="font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 rounded">CM/L-8400123 ✓</span>
+                </div>
+                <div className="flex items-center justify-between py-1 border-t border-zinc-200/60 text-zinc-700">
+                  <span className="truncate max-w-[200px] sm:max-w-none">22K 916 Handcrafted Bangle</span>
+                  <span className="font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 rounded">HUID: AA1234 ✓</span>
+                </div>
+              </div>
             </div>
 
             {/* Direct Verification Links */}
