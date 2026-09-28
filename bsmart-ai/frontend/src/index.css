@@ -584,6 +584,26 @@ body {
   letter-spacing: -0.01em;
 }
 
+/* Scanner Laser Sweep Animation for Section 05.A */
+@keyframes scannerLaser {
+  0% {
+    top: 2%;
+    opacity: 0.7;
+  }
+  50% {
+    top: 96%;
+    opacity: 1;
+  }
+  100% {
+    top: 2%;
+    opacity: 0.7;
+  }
+}
+
+.animate-scanner-laser {
+  animation: scannerLaser 3.2s ease-in-out infinite;
+}
+
 /* Accessibility: prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {

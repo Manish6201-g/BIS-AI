@@ -176,6 +176,7 @@ const MANDATORY_SAFETY_CATEGORIES = [
     penalty: "Under §16 & §29: ₹2 Lakhs Fine + 2 Yrs Imprisonment",
     sampleCode: "8400123",
     qcoDate: "Gazette Grounded 2020",
+    image: "https://images.unsplash.com/photo-1584992236310-6edddc08acff?auto=format&fit=crop&w=1200&q=80",
     desc: "Mandatory gasket release mechanisms & burst pressure safety valves prevent catastrophic kitchen explosions."
   },
   {
@@ -192,6 +193,7 @@ const MANDATORY_SAFETY_CATEGORIES = [
     penalty: "Immediate Factory Closure & Production Seizure",
     sampleCode: "1294820",
     qcoDate: "Gazette Grounded 2019",
+    image: "https://images.unsplash.com/photo-1548839140-29a749e1bc4e?auto=format&fit=crop&w=1200&q=80",
     desc: "Rigorous microbiological sterilization, zero pesticide residues, and strict mineral conductivity bounds."
   },
   {
@@ -208,6 +210,7 @@ const MANDATORY_SAFETY_CATEGORIES = [
     penalty: "Non-Certified Helmets Confiscated Under MV Act §129",
     sampleCode: "7123456",
     qcoDate: "Gazette Grounded 2021",
+    image: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=1200&q=80",
     desc: "Dynamic impact deceleration thresholds, chin strap retention load capacity, and shell penetration resistance."
   },
   {
@@ -224,6 +227,7 @@ const MANDATORY_SAFETY_CATEGORIES = [
     penalty: "Cognizable Non-Bailable Prosecution under Section 29",
     sampleCode: "14433",
     qcoDate: "Gazette Grounded 2020",
+    image: "https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=1200&q=80",
     desc: "Essential fatty acid ratios, vitamin bioavailability thresholds, and complete absence of chemical adulterants."
   },
   {
@@ -240,6 +244,7 @@ const MANDATORY_SAFETY_CATEGORIES = [
     penalty: "Seizure & Penalties of 5× Assayed Jewellery Value",
     sampleCode: "AB89K2",
     qcoDate: "Gazette Grounded 2023",
+    image: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?auto=format&fit=crop&w=1200&q=80",
     desc: "Complete statutory elimination of under-karatage with microscopic 6-character laser HUID traceability."
   },
   {
@@ -256,6 +261,7 @@ const MANDATORY_SAFETY_CATEGORIES = [
     penalty: "Commercial Stop-Work Orders & Site Inspection Seizure",
     sampleCode: "694",
     qcoDate: "Gazette Grounded 2023",
+    image: "https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?auto=format&fit=crop&w=1200&q=80",
     desc: "Flame-retardant low-smoke insulation engineered to prevent rapid residential electrical fire spread."
   },
   {
@@ -272,6 +278,7 @@ const MANDATORY_SAFETY_CATEGORIES = [
     penalty: "Port Import Quarantine & Retail Shelf Seizure",
     sampleCode: "9873",
     qcoDate: "Gazette Grounded 2020",
+    image: "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=1200&q=80",
     desc: "Enforced mechanical impact resistance, non-toxic lead-free coatings, and total ban on dangerous plasticizers."
   },
   {
@@ -288,6 +295,7 @@ const MANDATORY_SAFETY_CATEGORIES = [
     penalty: "Immediate Recall Order & Criminal Defect Liability",
     sampleCode: "9798",
     qcoDate: "Gazette Grounded 2021",
+    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80",
     desc: "Zero gas leakage tolerance, burst pressure safety margins, and automated excess-flow shut-off seals."
   }
 ];
@@ -429,9 +437,19 @@ export const VerificationSection = () => {
     }
   };
 
-  // Section 05.A Interactive State & Spotlight
+  // Section 05.A Interactive State, Holographic Scanner & Spotlight
   const [categoryFilter, setCategoryFilter] = useState('all');
-  const [expandedCatId, setExpandedCatId] = useState(null);
+  const [selectedCatIdx, setSelectedCatIdx] = useState(0);
+  const [isScannerPlaying, setIsScannerPlaying] = useState(true);
+  const [scannerViewMode, setScannerViewMode] = useState('scanner'); // 'scanner' or 'grid'
+
+  useEffect(() => {
+    if (!isScannerPlaying || scannerViewMode !== 'scanner') return;
+    const interval = setInterval(() => {
+      setSelectedCatIdx((prev) => (prev + 1) % MANDATORY_SAFETY_CATEGORIES.length);
+    }, 4500);
+    return () => clearInterval(interval);
+  }, [isScannerPlaying, scannerViewMode]);
 
   const handleCardMouseMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -1167,11 +1185,11 @@ export const VerificationSection = () => {
         </div>
 
         {/* ========================================================
-            04. Essential Products Requiring Mandatory ISI Marking (8-Item Grid with Animations)
+            04. Essential Products Requiring Mandatory ISI Marking (Kinetic Holographic Scanner & Matrix)
             ======================================================== */}
         <div className="verif-05a-section space-y-6 pt-4 border-t border-zinc-200">
           
-          {/* Section 05.A Animated Header & Filter Controls */}
+          {/* Section 05.A Header & View Mode Switcher */}
           <div className="verif-05a-header flex flex-col lg:flex-row lg:items-end justify-between gap-4">
             <div>
               <div className="inline-flex items-center space-x-2 font-mono text-[10px] tracking-widest text-zinc-500 uppercase mb-1">
@@ -1183,102 +1201,312 @@ export const VerificationSection = () => {
               </h3>
               <p className="text-xs sm:text-sm text-zinc-600 max-w-xl font-normal leading-relaxed mt-1">
                 Under Section 16 of the BIS Act 2016, selling uncertified products in these mandatory categories 
-                is a cognizable offence punishable with criminal imprisonment and factory closure.
+                is a cognizable criminal offence punishable with imprisonment and factory closure.
               </p>
             </div>
 
-            {/* Interactive Category Filter Pills */}
-            <div className="flex flex-wrap items-center gap-1.5 font-mono text-[11px]">
-              <button
-                type="button"
-                onClick={() => setCategoryFilter('all')}
-                className={`px-3 py-1.5 rounded-xl border transition-all cursor-pointer font-bold ${
-                  categoryFilter === 'all'
-                    ? 'bg-black text-white border-black shadow-xs ring-1 ring-black'
-                    : 'bg-white text-zinc-600 border-zinc-200 hover:border-black hover:text-black'
-                }`}
-              >
-                ALL MANDATORY (8)
-              </button>
-              <button
-                type="button"
-                onClick={() => setCategoryFilter('pressure')}
-                className={`px-3 py-1.5 rounded-xl border transition-all cursor-pointer font-bold ${
-                  categoryFilter === 'pressure'
-                    ? 'bg-black text-white border-black shadow-xs ring-1 ring-black'
-                    : 'bg-white text-zinc-600 border-zinc-200 hover:border-black hover:text-black'
-                }`}
-              >
-                PRESSURE & GAS (2)
-              </button>
-              <button
-                type="button"
-                onClick={() => setCategoryFilter('health')}
-                className={`px-3 py-1.5 rounded-xl border transition-all cursor-pointer font-bold ${
-                  categoryFilter === 'health'
-                    ? 'bg-black text-white border-black shadow-xs ring-1 ring-black'
-                    : 'bg-white text-zinc-600 border-zinc-200 hover:border-black hover:text-black'
-                }`}
-              >
-                CHILD & HEALTH (2)
-              </button>
-              <button
-                type="button"
-                onClick={() => setCategoryFilter('lifestyle')}
-                className={`px-3 py-1.5 rounded-xl border transition-all cursor-pointer font-bold ${
-                  categoryFilter === 'lifestyle'
-                    ? 'bg-black text-white border-black shadow-xs ring-1 ring-black'
-                    : 'bg-white text-zinc-600 border-zinc-200 hover:border-black hover:text-black'
-                }`}
-              >
-                HELMETS & TOYS (2)
-              </button>
-              <button
-                type="button"
-                onClick={() => setCategoryFilter('precious')}
-                className={`px-3 py-1.5 rounded-xl border transition-all cursor-pointer font-bold ${
-                  categoryFilter === 'precious'
-                    ? 'bg-black text-white border-black shadow-xs ring-1 ring-black'
-                    : 'bg-white text-zinc-600 border-zinc-200 hover:border-black hover:text-black'
-                }`}
-              >
-                GOLD & INFRA (2)
-              </button>
+            {/* View Mode Switcher & Auto-Play Controls */}
+            <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
+              <div className="inline-flex p-1 bg-zinc-100 rounded-xl border border-zinc-200">
+                <button
+                  type="button"
+                  onClick={() => setScannerViewMode('scanner')}
+                  className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                    scannerViewMode === 'scanner'
+                      ? 'bg-black text-white shadow-xs'
+                      : 'text-zinc-600 hover:text-black'
+                  }`}
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Holographic Scanner</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setScannerViewMode('grid')}
+                  className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                    scannerViewMode === 'grid'
+                      ? 'bg-black text-white shadow-xs'
+                      : 'text-zinc-600 hover:text-black'
+                  }`}
+                >
+                  <span>All 8 Grid</span>
+                </button>
+              </div>
+
+              {scannerViewMode === 'scanner' && (
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedCatIdx((prev) => (prev > 0 ? prev - 1 : MANDATORY_SAFETY_CATEGORIES.length - 1))}
+                    className="p-1.5 rounded-lg bg-white border border-zinc-200 text-zinc-700 hover:border-black cursor-pointer shadow-2xs"
+                    title="Previous category"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setIsScannerPlaying(!isScannerPlaying)}
+                    className={`px-2.5 py-1.5 rounded-lg border font-bold text-[11px] flex items-center gap-1 transition-all cursor-pointer ${
+                      isScannerPlaying
+                        ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                        : 'bg-white text-zinc-700 border-zinc-200 hover:border-black'
+                    }`}
+                    title={isScannerPlaying ? "Pause auto-scan" : "Start auto-scan"}
+                  >
+                    {isScannerPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+                    <span>{isScannerPlaying ? "PAUSE" : "AUTO"}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setSelectedCatIdx((prev) => (prev + 1) % MANDATORY_SAFETY_CATEGORIES.length)}
+                    className="p-1.5 rounded-lg bg-white border border-zinc-200 text-zinc-700 hover:border-black cursor-pointer shadow-2xs"
+                    title="Next category"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* 8 Category High-Density Animated Cards Grid with Cursor Spotlight & 3D Hover */}
-          <div className="verif-categories-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {MANDATORY_SAFETY_CATEGORIES
-              .filter(cat => categoryFilter === 'all' || cat.group === categoryFilter)
-              .map((cat) => {
+          {/* ========================================================
+              MODE 1: Kinetic Holographic Specimen Laser Scanner
+              ======================================================== */}
+          {scannerViewMode === 'scanner' && (() => {
+            const activeCat = MANDATORY_SAFETY_CATEGORIES[selectedCatIdx];
+            const ActiveIcon = activeCat.icon;
+
+            return (
+              <div className="bg-white border border-zinc-300 rounded-[28px] sm:rounded-[36px] p-5 sm:p-7 shadow-xs overflow-hidden">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+                  
+                  {/* Left Column: Interactive Product Selector Dial (4 Cols) */}
+                  <div className="lg:col-span-4 flex flex-col justify-between space-y-2 border-b lg:border-b-0 lg:border-r border-zinc-200 pb-4 lg:pb-0 lg:pr-6">
+                    <div className="flex items-center justify-between pb-2 border-b border-zinc-200 font-mono text-[10px]">
+                      <span className="text-zinc-500 font-bold uppercase tracking-wider">
+                        MANDATORY SAFETY SELECTION
+                      </span>
+                      <span className="text-black font-bold">
+                        0{selectedCatIdx + 1} // 08
+                      </span>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      {MANDATORY_SAFETY_CATEGORIES.map((cat, idx) => {
+                        const isSelected = selectedCatIdx === idx;
+                        const CatIcon = cat.icon;
+
+                        return (
+                          <button
+                            key={cat.id}
+                            type="button"
+                            onClick={() => {
+                              setSelectedCatIdx(idx);
+                              setIsScannerPlaying(false);
+                            }}
+                            className={`w-full p-2.5 rounded-xl border text-left font-mono transition-all duration-200 flex items-center justify-between group cursor-pointer ${
+                              isSelected
+                                ? 'bg-black text-white border-black shadow-xs ring-1 ring-black'
+                                : 'bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-white hover:border-zinc-400'
+                            }`}
+                          >
+                            <div className="flex items-center space-x-2.5 min-w-0">
+                              <CatIcon className={`w-4 h-4 shrink-0 transition-transform ${isSelected ? 'text-white scale-110' : 'text-zinc-500 group-hover:text-black'}`} />
+                              <div className="truncate">
+                                <span className="text-xs font-bold block truncate leading-tight">
+                                  {cat.name}
+                                </span>
+                                <span className={`text-[9px] block truncate ${isSelected ? 'text-zinc-400' : 'text-zinc-500'}`}>
+                                  {cat.standard}
+                                </span>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center space-x-1.5 shrink-0 ml-2">
+                              <span className="relative flex h-2 w-2">
+                                <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${cat.beaconColor}`} />
+                                <span className={`relative inline-flex rounded-full h-2 w-2 ${cat.beaconColor}`} />
+                              </span>
+                              <ChevronRight className={`w-3.5 h-3.5 transition-transform ${isSelected ? 'text-white translate-x-0.5' : 'text-zinc-400 group-hover:translate-x-0.5'}`} />
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Auto-Scan Progress Bar */}
+                    <div className="pt-2">
+                      <div className="flex items-center justify-between font-mono text-[9px] text-zinc-400 mb-1">
+                        <span>AUTO-SCAN CYCLER:</span>
+                        <span>{isScannerPlaying ? "ACTIVE" : "PAUSED"}</span>
+                      </div>
+                      <div className="w-full bg-zinc-100 h-1 rounded-full overflow-hidden">
+                        <div
+                          className="bg-black h-full transition-all duration-300 ease-out"
+                          style={{ width: `${((selectedCatIdx + 1) / 8) * 100}%` }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right Column: Holographic Laser Scanner Terminal (8 Cols) */}
+                  <div className="lg:col-span-8 flex flex-col justify-between space-y-5">
+                    
+                    {/* Top Specimen Cinema Viewport with Scanning Laser Line */}
+                    <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden bg-zinc-950 min-h-[260px] sm:min-h-[320px] border border-zinc-800 flex flex-col justify-between p-5 text-white font-mono shadow-xl group">
+                      
+                      {/* Background High-Res Specimen Image */}
+                      <img
+                        src={activeCat.image}
+                        alt={activeCat.name}
+                        key={activeCat.id}
+                        className="absolute inset-0 size-full object-cover opacity-50 filter contrast-125 transition-all duration-700 animate-in fade-in"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/30 pointer-events-none" />
+
+                      {/* CONTINUOUS LASER SCANNING BEAM */}
+                      <div className="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_15px_#22d3ee] animate-scanner-laser pointer-events-none z-20" />
+                      <div className="absolute left-0 right-0 h-8 bg-gradient-to-b from-cyan-400/10 to-transparent -translate-y-4 animate-scanner-laser pointer-events-none z-10" />
+
+                      {/* Holographic Radar Crosshairs */}
+                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-30">
+                        <div className="w-48 h-48 rounded-full border border-dashed border-cyan-400" />
+                        <div className="absolute w-64 h-64 rounded-full border border-zinc-600/50" />
+                        <div className="absolute w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+                      </div>
+
+                      {/* Specimen Header Metadata */}
+                      <div className="relative z-30 flex items-center justify-between text-xs">
+                        <div className="flex items-center space-x-2">
+                          <span className="px-2.5 py-1 rounded-full bg-black/70 border border-white/20 backdrop-blur-md uppercase text-[10px] font-bold text-white flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                            <span>SPECIMEN // {activeCat.standard}</span>
+                          </span>
+                          <span className="text-[10px] text-zinc-300 hidden sm:inline">
+                            {activeCat.qcoDate}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-black/60 border border-white/20 backdrop-blur-md text-[10px] font-bold text-emerald-400">
+                          <ShieldCheck className="w-3.5 h-3.5" />
+                          <span>MANDATORY STATUTORY QCO</span>
+                        </div>
+                      </div>
+
+                      {/* Specimen Footer Hologram Info */}
+                      <div className="relative z-30 space-y-1">
+                        <span className="text-[10px] uppercase font-bold text-cyan-400 block tracking-widest">
+                          {activeCat.hazardLevel} • {activeCat.hazard}
+                        </span>
+                        <h4 className="editorial-headline text-xl sm:text-3xl font-black uppercase text-white">
+                          {activeCat.name}
+                        </h4>
+                        <p className="text-xs text-zinc-300 max-w-xl line-clamp-2">
+                          {activeCat.desc}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Bottom Telemetry & Statutory Prosecution Matrix */}
+                    <div className="space-y-3 font-mono">
+                      
+                      {/* 3 Telemetry Data Cells */}
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+                        <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-3">
+                          <span className="text-[9px] text-zinc-500 uppercase font-bold block">
+                            MANDATORY SAFETY SHIELD
+                          </span>
+                          <span className="text-xs sm:text-sm font-black text-black block mt-0.5">
+                            {activeCat.metric}
+                          </span>
+                        </div>
+
+                        <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-3">
+                          <span className="text-[9px] text-zinc-500 uppercase font-bold block">
+                            HAZARD MITIGATION SPEC
+                          </span>
+                          <span className="text-xs sm:text-sm font-black text-zinc-900 block mt-0.5 truncate">
+                            {activeCat.tag}
+                          </span>
+                        </div>
+
+                        <div className="bg-rose-50 border border-rose-200 rounded-xl p-3">
+                          <span className="text-[9px] text-rose-700 uppercase font-bold block">
+                            CRIMINAL PENALTY CLAUSE
+                          </span>
+                          <span className="text-xs font-black text-rose-950 block mt-0.5 truncate">
+                            {activeCat.penalty}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Instant Simulator Action Banner */}
+                      <div className="p-3.5 bg-black text-white rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                        <div className="space-y-0.5">
+                          <div className="flex items-center space-x-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                            <span className="font-bold text-white uppercase tracking-wider text-[11px]">
+                              Verify Registered Licences for {activeCat.name}
+                            </span>
+                          </div>
+                          <p className="text-[10px] text-zinc-400">
+                            Check manufacturer premise, factory validity, and test parameters in the national mirror.
+                          </p>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => simulateCategoryVerification(activeCat)}
+                          className="px-4 py-2 rounded-xl bg-white text-black hover:bg-zinc-200 text-xs font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-1.5 shrink-0 cursor-pointer shadow-xs"
+                        >
+                          <span>Test in Quick Console</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* ========================================================
+              MODE 2: 8-Card Blueprint Grid View (All Side-by-Side)
+              ======================================================== */}
+          {scannerViewMode === 'grid' && (
+            <div className="verif-categories-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {MANDATORY_SAFETY_CATEGORIES.map((cat, idx) => {
                 const IconComponent = cat.icon;
-                const isExpanded = expandedCatId === cat.id;
 
                 return (
                   <div 
                     key={cat.id}
                     onMouseMove={handleCardMouseMove}
-                    onClick={() => setExpandedCatId(isExpanded ? null : cat.id)}
+                    onClick={() => {
+                      setSelectedCatIdx(idx);
+                      setScannerViewMode('scanner');
+                    }}
                     className="verif-category-card relative bg-white border border-zinc-300 rounded-2xl p-5 hover:border-black transition-all duration-300 flex flex-col justify-between group shadow-2xs hover:shadow-xl hover:-translate-y-2 cursor-pointer overflow-hidden"
                   >
                     {/* Interactive Cursor Spotlight Specular Sheen */}
                     <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl bg-[radial-gradient(350px_circle_at_var(--mouse-x,150px)_var(--mouse-y,100px),rgba(0,0,0,0.04),transparent_70%)]" />
 
-                    {/* Top Laser Sweep Hairline (Sweeps on Hover) */}
+                    {/* Top Laser Sweep Hairline */}
                     <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-black to-transparent opacity-0 group-hover:opacity-100 -translate-x-full group-hover:translate-x-full transition-all duration-1000 ease-in-out pointer-events-none" />
 
                     <div className="relative z-10 space-y-3">
-                      {/* Top Header: Standard Code + Live Pulsing Radar Beacon */}
                       <div className="flex items-center justify-between pb-2 border-b border-zinc-200">
                         <div className="flex items-center space-x-1.5">
-                          <IconComponent className="w-4 h-4 text-black group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300" />
-                          <span className="font-mono text-xs font-bold text-black bg-zinc-100 group-hover:bg-black group-hover:text-white transition-colors px-2 py-0.5 rounded">
+                          <IconComponent className="w-4 h-4 text-black group-hover:scale-110 transition-transform duration-300" />
+                          <span className="font-mono text-xs font-bold text-black bg-zinc-100 px-2 py-0.5 rounded">
                             {cat.standard}
                           </span>
                         </div>
 
-                        {/* Live Radar Pulse Indicator */}
                         <div className="flex items-center space-x-1.5 font-mono text-[9px] font-bold">
                           <span className="relative flex h-2 w-2">
                             <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${cat.beaconColor}`} />
@@ -1288,72 +1516,37 @@ export const VerificationSection = () => {
                         </div>
                       </div>
 
-                      {/* Hazard Severity Tag */}
                       <div className="inline-flex items-center space-x-1 px-2 py-0.5 rounded bg-zinc-100 text-zinc-700 font-mono text-[9px] font-bold border border-zinc-200">
                         <ShieldAlert className="w-3 h-3 text-black" />
                         <span>{cat.hazardLevel}</span>
                       </div>
 
-                      {/* Category Name */}
                       <h4 className="font-black text-base text-black uppercase tracking-tight group-hover:text-zinc-900 transition-colors">
                         {cat.name}
                       </h4>
 
-                      {/* Statutory Hazard Description */}
                       <p className="text-[11px] sm:text-xs text-zinc-600 font-normal leading-relaxed">
                         {cat.desc}
                       </p>
-
-                      {/* Expandable Technical Specification & Penalty Drawer */}
-                      {isExpanded && (
-                        <div className="pt-2 border-t border-zinc-200 space-y-2 animate-in fade-in duration-200">
-                          <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-2.5 space-y-1 font-mono text-[10px]">
-                            <span className="text-zinc-400 uppercase font-bold block">STATUTORY PENALTY CLAUSE:</span>
-                            <span className="font-bold text-red-600 block">{cat.penalty}</span>
-                            <div className="flex items-center justify-between text-zinc-500 pt-1 border-t border-zinc-200">
-                              <span>STATUS:</span>
-                              <span className="text-black font-bold">{cat.qcoDate}</span>
-                            </div>
-                          </div>
-
-                          {/* Instant Simulator Trigger Button */}
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              simulateCategoryVerification(cat);
-                            }}
-                            className="w-full py-2 px-3 rounded-xl bg-black text-white hover:bg-zinc-800 text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-xs font-mono"
-                          >
-                            <span>Test In Quick Console</span>
-                            <ArrowRight className="w-3 h-3" />
-                          </button>
-                        </div>
-                      )}
                     </div>
 
-                    {/* Card Footer: Safety Shield Metric & Toggle Spec Trigger */}
                     <div className="relative z-10 pt-3 mt-3 border-t border-zinc-100 flex items-center justify-between text-[11px] font-mono">
                       <div>
                         <span className="text-zinc-400 text-[9px] uppercase block">SAFETY SHIELD:</span>
                         <span className="font-bold text-black text-[11px]">{cat.metric}</span>
                       </div>
 
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setExpandedCatId(isExpanded ? null : cat.id);
-                        }}
-                        className="text-[10px] font-bold text-zinc-600 hover:text-black flex items-center gap-0.5 underline transition-colors cursor-pointer"
-                      >
-                        <span>{isExpanded ? "Hide Spec ▲" : "Inspect Spec ▼"}</span>
-                      </button>
+                      <span className="text-[10px] font-bold text-black group-hover:underline flex items-center gap-0.5">
+                        <span>Scan Spec</span>
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </span>
                     </div>
                   </div>
                 );
               })}
-          </div>
+            </div>
+          )}
+
         </div>
 
         {/* ========================================================
