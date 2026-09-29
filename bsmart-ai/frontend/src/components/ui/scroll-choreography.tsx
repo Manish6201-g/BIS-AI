@@ -111,21 +111,20 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
     return () => cancelAnimationFrame(animationFrameId);
   }, []);
 
-  // Native Scroll Listener
+  // Viewport Intersection & In-view Scroll Progress
   useEffect(() => {
     const handleScroll = () => {
       if (isPlaying || !containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
       const viewportH = window.innerHeight;
-      const totalScrollable = rect.height - viewportH;
-
-      if (totalScrollable <= 0) {
-        targetProgressRef.current = 0;
-      } else {
-        const scrolled = -rect.top;
-        const p = Math.max(0, Math.min(1, scrolled / totalScrollable));
-        targetProgressRef.current = p;
-      }
+      
+      // When top of card is at 80% viewport to when bottom leaves top
+      const start = viewportH * 0.85;
+      const end = -rect.height * 0.3;
+      const totalDist = start - end;
+      const current = start - rect.top;
+      const p = Math.max(0, Math.min(1, current / totalDist));
+      targetProgressRef.current = p;
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -206,15 +205,12 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
     <div
       ref={containerRef}
       className={cn("relative w-full", className)}
-      style={{ height: isMobile ? 'auto' : '180vh' }}
     >
-      {/* Sticky Choreography Cinema Viewport */}
+      {/* Choreography Cinema Viewport */}
       <div
-        className="w-full overflow-hidden rounded-[24px] sm:rounded-[32px] border border-zinc-300 bg-zinc-950 text-white flex flex-col justify-between p-4 sm:p-6 shadow-2xl"
+        className="w-full overflow-hidden rounded-[24px] sm:rounded-[32px] border border-zinc-300 bg-zinc-950 text-white flex flex-col justify-between p-4 sm:p-6 shadow-2xl relative"
         style={{
-          position: isMobile ? 'relative' : 'sticky',
-          top: isMobile ? 'auto' : '6rem',
-          height: isMobile ? '70vh' : 'calc(100vh - 6.5rem)',
+          height: isMobile ? '70vh' : 'min(780px, calc(100vh - 6.5rem))',
           maxHeight: '800px',
           minHeight: isMobile ? '420px' : '540px',
         }}

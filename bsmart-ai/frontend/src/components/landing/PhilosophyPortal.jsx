@@ -365,7 +365,7 @@ export const PhilosophyPortal = () => {
     <section
       ref={sectionRef}
       className="relative bg-white text-black font-sans z-30"
-      style={{ minHeight: isMobile ? '170vh' : '320vh' }}
+      style={{ minHeight: isMobile ? '150vh' : '220vh' }}
     >
       <div id="domains-anchor" style={{ position: 'absolute', top: '120vh', left: 0, height: '1px', width: '1px', pointerEvents: 'none' }} />
 
