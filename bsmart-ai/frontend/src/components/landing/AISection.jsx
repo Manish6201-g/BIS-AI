@@ -4,12 +4,14 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { ShieldCheck, ArrowRight, Sparkles, BookOpen, Terminal, CheckCircle2 } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export const AISection = () => {
   const sectionRef = useRef(null);
   const [selectedPreset, setSelectedPreset] = useState(0);
+  const { t } = useLanguage();
 
   const presets = [
     {
@@ -85,16 +87,14 @@ export const AISection = () => {
         <div className="ai-headline max-w-4xl mb-8 sm:mb-14 md:mb-20">
           <div className="font-mono text-xs sm:text-sm tracking-widest text-zinc-500 uppercase mb-3 flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-            <span>04 — ANTI-HALLUCINATION RETRIEVAL</span>
+            <span>{t('ai_tag')}</span>
           </div>
           <h2 className="editorial-headline text-4xl sm:text-6xl md:text-8xl text-white">
-            INTELLIGENCE <br />
-            FOR <span className="text-zinc-500">INDIAN</span> <br />
-            STANDARDS.
+            {t('ai_title_1') || 'PRECISION OVER'} <br />
+            <span className="text-zinc-500">{t('ai_title_2') || 'PREDICTION.'}</span>
           </h2>
           <p className="text-base sm:text-xl text-zinc-400 font-normal leading-relaxed mt-6 max-w-2xl">
-            Our hybrid semantic vector retrieval searches only authentic Bureau of Indian Standards gazette notifications and Quality Control Orders. 
-            Assertions lacking statutory legal backing are strictly rejected.
+            {t('ai_desc')}
           </p>
         </div>
 

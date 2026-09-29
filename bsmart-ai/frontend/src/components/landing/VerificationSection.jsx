@@ -37,6 +37,7 @@ import {
   RefreshCw 
 } from 'lucide-react';
 import { ScrollChoreography } from '../ui/scroll-choreography';
+import { useLanguage } from '../../context/LanguageContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -404,6 +405,7 @@ const VERIFICATION_STEPS = [
 
 export const VerificationSection = () => {
   const sectionRef = useRef(null);
+  const { t } = useLanguage();
 
   // ISI and HUID simulator index
   const [isiIdx, setIsiIdx] = useState(0);
@@ -868,19 +870,17 @@ export const VerificationSection = () => {
             <div className="space-y-4">
               <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full border border-zinc-300 bg-white font-mono text-[11px] tracking-widest text-zinc-700 uppercase shadow-2xs">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
-                <span>05 — CITIZEN CONSUMER SAFETY & VERIFICATION</span>
+                <span>{t('verif_tag')}</span>
               </div>
 
               <h2 className="editorial-headline text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-black leading-[0.92]">
-                UNDERSTAND <br />
-                WHAT YOU <br />
-                <span className="text-zinc-400">ARE BUYING.</span>
+                {t('verif_title_1') || 'UNDERSTAND'} <br />
+                {t('verif_title_2') || 'WHAT YOU'} <br />
+                <span className="text-zinc-400">{t('verif_title_3') || 'ARE BUYING.'}</span>
               </h2>
 
               <p className="text-sm sm:text-base text-zinc-600 font-normal leading-relaxed max-w-xl">
-                Protect your household against counterfeit goods and karatage fraud. 
-                BISmart AI verifies manufacturer licences and gold purity hallmarking 
-                directly against the live National Gazette of India.
+                {t('verif_desc')}
               </p>
             </div>
 

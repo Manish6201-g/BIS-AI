@@ -4,11 +4,13 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { ArrowUpRight, ArrowRight } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export const HeroSection = () => {
   const heroRef = useRef(null);
+  const { t } = useLanguage();
 
   useGSAP(() => {
     // 1. Page Load Intro Timeline
@@ -87,31 +89,30 @@ export const HeroSection = () => {
           <div className="hero-label flex flex-wrap items-center gap-3">
             <div className="inline-flex items-center space-x-2 text-xs font-mono tracking-widest text-zinc-600 uppercase bg-zinc-100 border border-zinc-200 px-3 py-1 rounded-full">
               <span className="w-1.5 h-1.5 rounded-full bg-black animate-pulse" />
-              <span>01 — WHAT IS BISmart AI</span>
+              <span>{t('hero_tag_what')}</span>
             </div>
             <div className="inline-flex items-center space-x-1.5 text-[11px] font-mono tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full uppercase">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-              <span>SIH26107 REGULATORY PLATFORM</span>
+              <span>{t('hero_tag_sih')}</span>
             </div>
           </div>
 
           {/* Oversized Editorial Headline */}
           <div className="overflow-hidden pt-2">
             <h1 className="editorial-headline text-5xl sm:text-7xl md:text-8xl lg:text-[6.8vw] text-black">
-              <span className="inline-block hero-word mr-3 sm:mr-6">SMARTER</span>
-              <span className="inline-block hero-word mr-3 sm:mr-6">ACCESS</span>
-              <span className="inline-block hero-word mr-3 sm:mr-6 text-zinc-800">TO</span>
+              <span className="inline-block hero-word mr-3 sm:mr-6">{t('hero_headline_1')}</span>
+              <span className="inline-block hero-word mr-3 sm:mr-6">{t('hero_headline_2')}</span>
+              <span className="inline-block hero-word mr-3 sm:mr-6 text-zinc-800">{t('hero_headline_3')}</span>
               <br className="hidden sm:inline" />
-              <span className="inline-block hero-word mr-3 sm:mr-6 text-zinc-400">INDIAN</span>
-              <span className="inline-block hero-word">STANDARDS.</span>
+              <span className="inline-block hero-word mr-3 sm:mr-6 text-zinc-400">{t('hero_headline_4')}</span>
+              <span className="inline-block hero-word">{t('hero_headline_5')}</span>
             </h1>
           </div>
 
           {/* Description */}
           <div className="max-w-2xl pt-2">
             <p className="hero-desc text-base sm:text-xl text-zinc-600 font-normal leading-relaxed">
-              BISmart AI brings artificial intelligence, standards discovery, product verification, 
-              and official Bureau of Indian Standards (BIS) gazette intelligence together into one unified platform.
+              {t('hero_desc')}
             </p>
           </div>
         </div>
@@ -139,8 +140,8 @@ export const HeroSection = () => {
 
             {/* Central Core with Status Ping */}
             <div className="relative z-10 w-24 h-24 rounded-2xl bg-white border border-zinc-200 shadow-xl flex flex-col items-center justify-center p-2 text-center">
-              <span className="text-[10px] font-mono font-bold text-zinc-400 uppercase tracking-wider">GAZETTE</span>
-              <span className="text-sm font-black text-black">ONLINE</span>
+              <span className="text-[10px] font-mono font-bold text-zinc-400 uppercase tracking-wider">{t('hero_radar_gazette')}</span>
+              <span className="text-sm font-black text-black">{t('hero_radar_online')}</span>
               <span className="inline-flex items-center space-x-1 mt-1 text-[9px] font-mono text-emerald-600">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
                 <span>20K+ IS</span>
@@ -149,10 +150,10 @@ export const HeroSection = () => {
 
             {/* Floating Orbiting Data Chips */}
             <div className="absolute -top-3 left-6 bg-white border border-zinc-200 shadow-sm rounded-full px-2.5 py-1 text-[10px] font-mono font-bold text-zinc-700">
-              QCO: ACTIVE
+              {t('hero_radar_qco')}
             </div>
             <div className="absolute -bottom-2 right-4 bg-white border border-zinc-200 shadow-sm rounded-full px-2.5 py-1 text-[10px] font-mono font-bold text-zinc-700">
-              11 LANGUAGES
+              {t('hero_radar_langs')}
             </div>
           </div>
         </div>
@@ -164,7 +165,7 @@ export const HeroSection = () => {
 
         <div className="hero-sub-bar pt-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
           <div className="font-mono text-xs sm:text-sm tracking-[0.25em] text-zinc-500 uppercase">
-            DISCOVER · VERIFY · UNDERSTAND
+            {t('hero_bar')}
           </div>
 
           <div className="flex flex-wrap items-center gap-4">
@@ -172,7 +173,7 @@ export const HeroSection = () => {
               to="/assistant"
               className="hero-cta-btn inline-flex items-center space-x-2 px-6 py-3 rounded-full bg-black text-white hover:bg-zinc-800 text-xs sm:text-sm font-bold tracking-wider uppercase transition-all duration-200 group"
             >
-              <span>Ask AI Assistant</span>
+              <span>{t('hero_btn_assistant')}</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
 
@@ -180,7 +181,7 @@ export const HeroSection = () => {
               to="/matcher"
               className="hero-cta-btn inline-flex items-center space-x-2 px-6 py-3 rounded-full border border-zinc-300 bg-white text-black hover:border-black text-xs sm:text-sm font-bold tracking-wider uppercase transition-all duration-200 group"
             >
-              <span>Find Standard</span>
+              <span>{t('hero_btn_standards')}</span>
               <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </Link>
           </div>

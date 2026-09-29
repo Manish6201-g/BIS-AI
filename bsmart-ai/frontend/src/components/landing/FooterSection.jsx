@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, ArrowUp, Activity } from 'lucide-react';
 import { TextHoverEffect, FooterBackgroundGradient } from '@/components/ui/hover-footer';
+import { useLanguage } from '../../context/LanguageContext';
 
 export const FooterSection = () => {
   const [istTime, setIstTime] = useState('');
+  const { t } = useLanguage();
 
   useEffect(() => {
     const updateTime = () => {
@@ -43,7 +45,7 @@ export const FooterSection = () => {
           <div className="lg:col-span-6 space-y-6">
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-950 font-mono text-[11px] tracking-widest text-zinc-400 uppercase">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-              <span>BUREAU OF INDIAN STANDARDS / SIH26107</span>
+              <span>{t('footer_org')} / SIH26107</span>
             </div>
 
             <h2 className="editorial-headline text-3xl sm:text-5xl lg:text-6xl text-white">
@@ -126,7 +128,7 @@ export const FooterSection = () => {
 
         {/* Operational Status & Back To Top */}
         <div className="border-t border-zinc-900 pt-6 flex flex-col sm:flex-row justify-between items-center text-[11px] font-mono text-zinc-500 gap-4">
-          <span>© 2026 BISMART AI. DEVELOPED FOR SMART INDIA HACKATHON (SIH26107).</span>
+          <span>© 2026 {t('footer_org')}. {t('footer_rights')}</span>
           <div className="flex items-center space-x-4">
             <span className="text-zinc-400">BHASHINI VOICE READY</span>
             <span>•</span>

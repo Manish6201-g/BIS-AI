@@ -2,32 +2,34 @@ import React, { useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
+import { useLanguage } from '../../context/LanguageContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export const TimelineSection = () => {
   const timelineRef = useRef(null);
+  const { t } = useLanguage();
 
   const steps = [
     {
       num: "01",
-      title: "DISCOVER",
-      desc: "Explore 20,000+ Indian Standards (IS Codes) and mandatory Quality Control Orders (QCOs) for any commercial product category."
+      title: t('timeline_step1_title'),
+      desc: t('timeline_step1_desc')
     },
     {
       num: "02",
-      title: "ASK",
-      desc: "Interact with the intelligent assistant using bilingual voice or text in 11 Indian languages (Hindi, English, Tamil, Punjabi, etc.)."
+      title: t('timeline_step2_title'),
+      desc: t('timeline_step2_desc')
     },
     {
       num: "03",
-      title: "UNDERSTAND",
-      desc: "Receive exact clause-level legal grounding with drawer previews of authentic gazetted specifications and laboratory test parameters."
+      title: t('timeline_step3_title'),
+      desc: t('timeline_step3_desc')
     },
     {
       num: "04",
-      title: "VERIFY",
-      desc: "Validate 7-digit ISI CM/L licence numbers and decode 6-character laser-engraved gold HUID hallmarking codes instantly."
+      title: t('timeline_step4_title'),
+      desc: t('timeline_step4_desc')
     }
   ];
 
@@ -82,11 +84,11 @@ export const TimelineSection = () => {
         {/* Header */}
         <div className="timeline-header max-w-3xl mb-8 sm:mb-16 md:mb-24 text-center sm:text-left">
           <div className="font-mono text-xs sm:text-sm tracking-widest text-zinc-500 uppercase mb-3">
-            03 — BISmart AI WORKFLOW
+            {t('timeline_tag')}
           </div>
           <h2 className="editorial-headline text-4xl sm:text-6xl md:text-7xl text-black">
-            HOW BISmart AI <br />
-            <span className="text-zinc-400">WORKS.</span>
+            {t('timeline_title_1')} <br />
+            <span className="text-zinc-400">{t('timeline_title_2')}</span>
           </h2>
         </div>
 

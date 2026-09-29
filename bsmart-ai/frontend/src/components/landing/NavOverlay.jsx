@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ArrowUpRight, Shield, Lock, User, LogOut } from 'lucide-react';
+import { X, ArrowUpRight, Shield, Lock, User, LogOut, Globe } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 
 export const NavOverlay = ({ isOpen, onClose }) => {
   const { user, isAuthenticated, logout } = useAuth();
+  const { currentLang, setCurrentLang, languages, t } = useLanguage();
 
   // Lock background body and html scrolling when menu overlay is open
   useEffect(() => {
@@ -35,13 +37,13 @@ export const NavOverlay = ({ isOpen, onClose }) => {
   }, [isOpen, onClose]);
 
   const menuItems = [
-    { num: "01", label: "HOME", path: "/" },
-    { num: "02", label: "AI ASSISTANT", path: "/assistant", tag: "GROUNDED RAG" },
-    { num: "03", label: "STANDARDS MATCHER", path: "/matcher", tag: "QCO ENFORCEMENT" },
-    { num: "04", label: "CERTIFICATION WIZARD", path: "/certification", tag: "SCHEME-I" },
-    { num: "05", label: "VERIFY ISI MARK", path: "/verify-isi", tag: "7-DIGIT CM/L" },
-    { num: "06", label: "VERIFY GOLD HUID", path: "/verify-huid", tag: "HALLMARKING" },
-    { num: "07", label: "STANDARDS EXPLORER", path: "/standards", tag: "NATIONAL GAZETTE" },
+    { num: "01", label: t('nav_home') || "HOME", path: "/" },
+    { num: "02", label: t('nav_assistant') || "AI ASSISTANT", path: "/assistant", tag: "GROUNDED RAG" },
+    { num: "03", label: t('nav_matcher') || "STANDARDS MATCHER", path: "/matcher", tag: "QCO ENFORCEMENT" },
+    { num: "04", label: t('nav_certification') || "CERTIFICATION WIZARD", path: "/certification", tag: "SCHEME-I" },
+    { num: "05", label: t('nav_isi') || "VERIFY ISI MARK", path: "/verify-isi", tag: "7-DIGIT CM/L" },
+    { num: "06", label: t('nav_huid') || "VERIFY GOLD HUID", path: "/verify-huid", tag: "HALLMARKING" },
+    { num: "07", label: t('nav_standards') || "STANDARDS EXPLORER", path: "/standards", tag: "NATIONAL GAZETTE" },
   ];
 
   return (
@@ -110,8 +112,36 @@ export const NavOverlay = ({ isOpen, onClose }) => {
             </nav>
           </div>
 
+          {/* Quick Indic Language Switcher Row */}
+          <div className="py-4 border-t border-zinc-800/80">
+            <div className="flex items-center space-x-2 text-zinc-400 font-mono text-xs mb-3">
+              <Globe className="w-3.5 h-3.5 text-emerald-400" />
+              <span>INDIAN LANGUAGES / भारतीय भाषाएं:</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {languages.map((lang) => {
+                const isSelected = lang.code === currentLang;
+                return (
+                  <button
+                    key={lang.code}
+                    type="button"
+                    onClick={() => setCurrentLang(lang.code)}
+                    className={`px-3 py-1 rounded-full text-xs font-mono transition-all cursor-pointer ${
+                      isSelected
+                        ? 'bg-emerald-500 text-black font-bold shadow-sm'
+                        : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700'
+                    }`}
+                  >
+                    <span>{lang.native}</span>
+                    <span className="opacity-50 ml-1 text-[10px]">({lang.name})</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Bottom Bar: Auth, SIH Details & Contact */}
-          <div className="border-t border-zinc-800 pt-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 text-xs text-zinc-500 font-mono">
+          <div className="border-t border-zinc-800 pt-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 text-xs text-zinc-500 font-mono">
             <div className="flex items-center space-x-4">
               <span>SIH 2026 • SIH26107</span>
               <span>•</span>
