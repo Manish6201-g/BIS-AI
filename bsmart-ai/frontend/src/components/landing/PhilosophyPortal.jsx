@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { gsap } from 'gsap';
 import { ArrowUpRight } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 /**
  * Kinetic Cubic-Bezier Easing Solver: cubicBezier(0.76, 0, 0.24, 1)
@@ -136,21 +137,30 @@ const DomainMenuItem = ({ text, items, isFirst }) => {
  * Inner Mission View displayed inside the expanded 3D portal
  */
 const MissionView = () => {
+  const { t } = useLanguage();
+
+  const domainLabels = [
+    t('portal_domain1') || 'STANDARDS COGNITION',
+    t('portal_domain2') || 'LABORATORY TESTING & QCO',
+    t('portal_domain3') || 'CITIZEN VERIFICATION',
+    t('portal_domain4') || 'REGULATORY APIS & SANDBOX',
+  ];
+
   return (
     <div className="w-full h-full bg-white text-black font-sans flex flex-col justify-between overflow-y-auto">
       <div className="w-full px-6 md:px-12 lg:px-16 pt-20 pb-10 bg-white z-10 flex-shrink-0">
         <div className="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-5 gap-y-8">
           <div className="md:col-span-1">
             <span className="text-[11px] font-mono font-bold uppercase tracking-[0.25em] text-zinc-500 block">
-              STATUTORY MANDATE
+              {t('portal_mandate')}
             </span>
           </div>
           <div className="md:col-span-4">
             <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight leading-[0.95] text-black">
-              Verify. Comply. Certify.
+              {t('portal_title')}
             </h2>
             <p className="mt-6 text-sm sm:text-base md:text-lg text-zinc-600 max-w-3xl leading-relaxed">
-              India’s next-generation statutory regulatory intelligence ecosystem — orchestrating Indian Standards (IS), mandatory Quality Control Orders (QCO), and laboratory testing into verifiable, real-time national certification.
+              {t('portal_desc')}
             </p>
           </div>
         </div>
@@ -161,7 +171,7 @@ const MissionView = () => {
           {DOMAINS_DATA.map((domain, i) => (
             <DomainMenuItem
               key={domain.text}
-              text={domain.text}
+              text={domainLabels[i] || domain.text}
               items={domain.items}
               isFirst={i === 0}
             />

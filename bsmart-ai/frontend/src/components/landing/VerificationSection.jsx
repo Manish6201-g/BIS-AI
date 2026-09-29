@@ -1111,10 +1111,31 @@ export const VerificationSection = () => {
         <div className="pt-4 sm:pt-8">
           <ScrollChoreography
             images={CHOREOGRAPHY_IMAGES}
-            captions={CHOREOGRAPHY_CAPTIONS}
-            badge="05.CHOREOGRAPHY — CITIZEN STATUTORY PROOF MATRIX"
-            title="CHOREOGRAPHED REGULATORY PROOFS"
-            subtitle="Scroll through the 4 verification quadrants as statutory telemetry converges into the national central authenticity emblem."
+            captions={{
+              topLeft: {
+                tag: "01 — PROOF TESTING",
+                title: t('choreo_q1_title'),
+                subtitle: t('choreo_q1_sub')
+              },
+              bottomRight: {
+                tag: "02 — HALLMARKING",
+                title: t('choreo_q2_title'),
+                subtitle: t('choreo_q2_sub')
+              },
+              bottomLeft: {
+                tag: "03 — GAZETTE REGISTRY",
+                title: t('choreo_q3_title'),
+                subtitle: t('choreo_q3_sub')
+              },
+              topRight: {
+                tag: "04 — CONVERGENCE",
+                title: t('choreo_q4_title'),
+                subtitle: t('choreo_q4_sub')
+              }
+            }}
+            badge={t('choreo_badge')}
+            title={t('choreo_title')}
+            subtitle={t('choreo_subtitle')}
           />
         </div>
 
@@ -1126,14 +1147,14 @@ export const VerificationSection = () => {
             <div>
               <div className="inline-flex items-center space-x-2 font-mono text-[10px] tracking-widest text-zinc-500 uppercase mb-1">
                 <span className="w-3 h-px bg-zinc-400"></span>
-                <span>CONSUMER FRAUD PREVENTION MATRIX</span>
+                <span>{t('guide_tag')}</span>
               </div>
               <h3 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-black">
-                HOW TO SPOT COUNTERFEIT GOODS & FAKE MARKS
+                {t('guide_title')}
               </h3>
             </div>
             <span className="font-mono text-[11px] text-zinc-500 bg-zinc-100 px-3 py-1 rounded-full border border-zinc-200">
-              4 Critical Inspection Points
+              {t('guide_subtitle')}
             </span>
           </div>
 
@@ -1488,14 +1509,13 @@ export const VerificationSection = () => {
             <div>
               <div className="inline-flex items-center space-x-2 font-mono text-[10px] tracking-widest text-zinc-500 uppercase mb-1">
                 <span className="w-3 h-px bg-zinc-400"></span>
-                <span>05.A — STATUTORY MANDATE & CITIZEN PROTECTION</span>
+                <span>{t('sec05a_tag')}</span>
               </div>
               <h3 className="editorial-headline text-2xl sm:text-4xl font-black uppercase tracking-tight text-black leading-tight">
-                ESSENTIAL PRODUCTS REQUIRING MANDATORY ISI MARKING
+                {t('sec05a_title')}
               </h3>
               <p className="text-xs sm:text-sm text-zinc-600 max-w-xl font-normal leading-relaxed mt-1">
-                Under Section 16 of the BIS Act 2016, selling uncertified products in these mandatory categories 
-                is a cognizable criminal offence punishable with imprisonment and factory closure.
+                {t('sec05a_desc')}
               </p>
             </div>
 
@@ -1848,13 +1868,13 @@ export const VerificationSection = () => {
             <div>
               <div className="inline-flex items-center space-x-2 font-mono text-[10px] tracking-widest text-zinc-500 uppercase mb-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span>05.B — STEP-BY-STEP VERIFICATION PROTOCOL</span>
+                <span>{t('sec05b_tag')}</span>
               </div>
               <h3 className="editorial-headline text-2xl sm:text-4xl font-black uppercase tracking-tight text-black">
-                HOW CONSUMERS VERIFY PRODUCTS IN 4 STEPS
+                {t('sec05b_title')}
               </h3>
               <p className="text-xs sm:text-sm text-zinc-600 max-w-xl font-normal leading-relaxed mt-1">
-                A rapid statutory inspection flow engineered for citizens to verify statutory ISI marks and gold HUID hallmarking in under 30 seconds before purchase.
+                {t('sec05b_desc')}
               </p>
             </div>
 
@@ -2408,18 +2428,15 @@ export const VerificationSection = () => {
             <div className="lg:col-span-8 space-y-3">
               <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/30 text-red-400 font-mono text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">
                 <ShieldAlert className="w-3.5 h-3.5" />
-                <span>BIS ACT 2016 SECTION 15 & 29 ENFORCEMENT WARNING</span>
+                <span>{t('sec06_tag')}</span>
               </div>
 
               <h3 className="text-xl sm:text-2xl lg:text-3xl font-black uppercase tracking-tight text-white">
-                SELLING COUNTERFEIT OR UNHALLMARKED GOODS IS A CRIMINAL OFFENCE
+                {t('sec06_title')}
               </h3>
 
               <p className="text-xs sm:text-sm text-zinc-400 font-normal leading-relaxed max-w-2xl">
-                Any manufacturer, distributor, or retailer selling uncertified mandatory QCO products 
-                or unhallmarked gold jewellery is subject to <strong>imprisonment up to 2 years</strong>, 
-                a minimum fine of <strong>₹2,00,000</strong> (extendable up to 10 times the value of goods seized), 
-                and mandatory factory closure under the Bureau of Indian Standards Act, 2016.
+                {t('sec06_desc')}
               </p>
             </div>
 

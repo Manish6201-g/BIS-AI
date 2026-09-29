@@ -75,32 +75,32 @@ export const FooterSection = () => {
           <div className="lg:col-span-6 grid grid-cols-2 sm:grid-cols-3 gap-8 font-mono text-xs">
             <div className="space-y-3">
               <span className="text-zinc-500 tracking-widest uppercase block text-[11px]">
-                EXPLORE
+                {t('footer_explore')}
               </span>
               <ul className="space-y-2 text-zinc-300">
-                <li><Link to="/" className="hover:text-white transition-colors">HOME</Link></li>
-                <li><Link to="/assistant" className="hover:text-white transition-colors">AI ASSISTANT</Link></li>
-                <li><Link to="/matcher" className="hover:text-white transition-colors">STANDARDS MATCHER</Link></li>
-                <li><Link to="/certification" className="hover:text-white transition-colors">10-STEP WIZARD</Link></li>
-                <li><Link to="/standards" className="hover:text-white transition-colors">STANDARDS EXPLORER</Link></li>
+                <li><Link to="/" className="hover:text-white transition-colors">{t('nav_home')}</Link></li>
+                <li><Link to="/assistant" className="hover:text-white transition-colors">{t('nav_assistant')}</Link></li>
+                <li><Link to="/matcher" className="hover:text-white transition-colors">{t('nav_matcher')}</Link></li>
+                <li><Link to="/certification" className="hover:text-white transition-colors">{t('nav_certification')}</Link></li>
+                <li><Link to="/standards" className="hover:text-white transition-colors">{t('nav_standards')}</Link></li>
               </ul>
             </div>
 
             <div className="space-y-3">
               <span className="text-zinc-500 tracking-widest uppercase block text-[11px]">
-                VERIFICATION
+                {t('footer_tools')}
               </span>
               <ul className="space-y-2 text-zinc-300">
-                <li><Link to="/verify-isi" className="hover:text-white transition-colors">7-DIGIT ISI CM/L</Link></li>
-                <li><Link to="/verify-huid" className="hover:text-white transition-colors">GOLD HUID</Link></li>
-                <li><Link to="/auth" className="hover:text-white transition-colors">USER PORTAL</Link></li>
-                <li><Link to="/dashboard" className="hover:text-white transition-colors">ADMIN ANALYTICS</Link></li>
+                <li><Link to="/verify-isi" className="hover:text-white transition-colors">{t('nav_isi')}</Link></li>
+                <li><Link to="/verify-huid" className="hover:text-white transition-colors">{t('nav_huid')}</Link></li>
+                <li><Link to="/auth" className="hover:text-white transition-colors">{t('nav_login')}</Link></li>
+                <li><Link to="/dashboard" className="hover:text-white transition-colors">{t('nav_dashboard')}</Link></li>
               </ul>
             </div>
 
             <div className="space-y-3">
               <span className="text-zinc-500 tracking-widest uppercase block text-[11px]">
-                OFFICIAL
+                {t('footer_govt')}
               </span>
               <ul className="space-y-2 text-zinc-300">
                 <li>
@@ -130,15 +130,15 @@ export const FooterSection = () => {
         <div className="border-t border-zinc-900 pt-6 flex flex-col sm:flex-row justify-between items-center text-[11px] font-mono text-zinc-500 gap-4">
           <span>© 2026 {t('footer_org')}. {t('footer_rights')}</span>
           <div className="flex items-center space-x-4">
-            <span className="text-zinc-400">BHASHINI VOICE READY</span>
+            <span className="text-zinc-400">{t('footer_bhashini')}</span>
             <span>•</span>
-            <span className="text-zinc-400">100% REGULATORY ACCURACY</span>
+            <span className="text-zinc-400">{t('footer_accuracy')}</span>
             <span>•</span>
             <button
               onClick={scrollToTop}
               className="inline-flex items-center space-x-1 text-zinc-400 hover:text-white transition-colors cursor-pointer"
             >
-              <span>BACK TO TOP</span>
+              <span>{t('footer_back_top')}</span>
               <ArrowUp className="w-3 h-3" />
             </button>
           </div>

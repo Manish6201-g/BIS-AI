@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Check, Shield, Cpu, Compass, FileCheck } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 // Exact Kinetic Physics Constants
 const ca = {
@@ -31,6 +32,7 @@ const StarBorder = ({ as: Component = 'div', className = '', color = '#00f2fe, #
 };
 
 export const FeatureStack = () => {
+  const { t } = useLanguage();
   const [isMobile, setIsMobile] = useState(false);
   const cardsRef = useRef([]);
   const cardTops = useRef([]);
@@ -60,52 +62,52 @@ export const FeatureStack = () => {
   const cards = [
     {
       id: "001",
-      title: "AI REGULATORY ASSISTANT",
+      title: t('fs_card1_title'),
       stack: "GROUNDED RAG • 12+ INDIC LANGUAGES • ZERO HALLUCINATION",
-      description: "Instant statutory guidance on mandatory Indian Standards, Quality Control Orders, and Scheme-I licensing. Every citation is legally verified against official BIS gazette gazettes.",
+      description: t('fs_card1_desc'),
       link: "/assistant",
       color: "#00f2fe, #4facfe, #7000ff",
       ctaColor: "#f6d365, #fda085",
-      cta: "Launch Assistant",
+      cta: t('fs_card1_cta'),
       icon: Cpu,
       previewType: "rag",
       chips: ["RAG PIPELINE", "BHASHINI SPEECH", "CLAUSE 5.1 VERIFIED", "< 450MS LATENCY"]
     },
     {
       id: "002",
-      title: "STANDARDS MATCHER",
+      title: t('fs_card2_title'),
       stack: "SEMANTIC SEARCH • HARMONIZED CLASSIFICATION • DPIIT QCOs",
-      description: "Transform commercial product names, raw materials, and capacities into mandatory IS Codes with live enforcement deadlines, testing procedures, and exemption thresholds.",
+      description: t('fs_card2_desc'),
       link: "/matcher",
       color: "#a855f7, #6366f1, #3b82f6",
       ctaColor: "#f6d365, #fda085",
-      cta: "Find My Standard",
+      cta: t('fs_card2_cta'),
       icon: Compass,
       previewType: "matcher",
       chips: ["20,000+ STANDARDS", "QCO RESOLUTION", "HSN CODE MAPPING", "ZERO AMBIGUITY"]
     },
     {
       id: "003",
-      title: "PRODUCT VERIFICATION",
+      title: t('fs_card3_title'),
       stack: "7-DIGIT ISI CM/L • 6-CHAR GOLD HUID • RECALL ALERTS",
-      description: "Protect Indian households from substandard and counterfeit products. Verify genuine manufacturer CM/L numbers and decode 6-character laser-engraved gold hallmarking codes.",
+      description: t('fs_card3_desc'),
       link: "/verify-isi",
       color: "#fbbf24, #f59e0b, #d97706",
       ctaColor: "#f6d365, #fda085",
-      cta: "Verify Authenticity",
+      cta: t('fs_card3_cta'),
       icon: Shield,
       previewType: "verify",
       chips: ["SCHEME-I AUTHENTICITY", "22K/18K/14K HALLMARK", "AHC RECOGNITION", "CITIZEN SAFETY"]
     },
     {
       id: "004",
-      title: "10-STEP CERTIFICATION",
+      title: t('fs_card4_title'),
       stack: "APPLICATION FORM-V • LAB TESTING STI • FACTORY AUDIT",
-      description: "Step-by-step statutory certification roadmap for MSMEs and domestic manufacturers. Tracks testing checklists, STI requirements, and factory audit readiness.",
+      description: t('fs_card4_desc'),
       link: "/certification",
       color: "#10b981, #14b8a6, #06b6d4",
       ctaColor: "#f6d365, #fda085",
-      cta: "Start 10-Step Wizard",
+      cta: t('fs_card4_cta'),
       icon: FileCheck,
       previewType: "wizard",
       chips: ["FORM-V FILING", "STI COMPLIANCE", "IN-HOUSE LAB SETUP", "AUDIT READINESS"]
@@ -362,7 +364,7 @@ export const FeatureStack = () => {
           <div className="marquee-selected-works__track">
             {[0, 1, 2, 3].map(N => (
               <div key={N} className="marquee-selected-works__segment" aria-hidden={N > 0 ? "true" : undefined}>
-                <span className="marquee-selected-works__text">BISmart Milestones</span>
+                <span className="marquee-selected-works__text">{t('fs_marquee')}</span>
                 <span className="marquee-selected-works__dash">-</span>
               </div>
             ))}

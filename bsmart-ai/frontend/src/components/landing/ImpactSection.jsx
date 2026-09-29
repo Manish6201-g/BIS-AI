@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useLanguage } from '../../context/LanguageContext';
 
 /**
  * Animated Counter Metric matching statutory rf implementation
@@ -55,16 +56,18 @@ const CounterMetric = ({ value, suffix = '+', label, description }) => {
  * ImpactSection matching statutory MV / IV component layout
  */
 export const ImpactSection = () => {
+  const { t } = useLanguage();
+
   return (
     <section className="w-full bg-black text-white py-16 sm:py-24 md:py-32 px-6 md:px-12 lg:px-16 border-t border-white/10 relative z-20">
       <div className="mx-auto max-w-7xl">
         <div className="mb-10 sm:mb-20 sm:mb-24 flex items-center justify-between border-b border-white/10 pb-6">
           <h2 className="font-mono text-xs font-bold uppercase tracking-[0.25em] text-zinc-400">
-            NATIONAL REGULATORY IMPACT
+            {t('impact_title')}
           </h2>
           <span className="font-mono text-[10px] uppercase tracking-widest text-emerald-400 flex items-center gap-1.5">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-ping inline-block" />
-            LIVE TELEMETRY ACTIVE
+            {t('impact_telemetry')}
           </span>
         </div>
 
@@ -72,26 +75,26 @@ export const ImpactSection = () => {
           <CounterMetric
             value={20000}
             suffix="+"
-            label="Indian Standards (IS)"
-            description="Comprehensive national standards corpus catalogued with automated clause-level semantic embeddings and Gazette mirror updates."
+            label={t('impact_is_label')}
+            description={t('impact_is_desc')}
           />
           <CounterMetric
             value={150}
             suffix="+"
-            label="Mandatory QCO Schemes"
-            description="Active Quality Control Orders enforced across consumer, industrial, and electrical product categories nationwide."
+            label={t('impact_qco_label')}
+            description={t('impact_qco_desc')}
           />
           <CounterMetric
             value={100}
             suffix="%"
-            label="Grounded Precision"
-            description="Zero-hallucination statutory verification with exact clause citation hashes and cryptographic audit ledgers."
+            label={t('impact_precision_label')}
+            description={t('impact_precision_desc')}
           />
           <CounterMetric
             value={11}
             suffix=" Subsystems"
-            label="Statutory Architecture"
-            description="End-to-end regulatory pipeline integrating multilingual Indic NLP, laboratory dispatch, and citizen anti-counterfeit scanning."
+            label={t('impact_arch_label')}
+            description={t('impact_arch_desc')}
           />
         </div>
       </div>

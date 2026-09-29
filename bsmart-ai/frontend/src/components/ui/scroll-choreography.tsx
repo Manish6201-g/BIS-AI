@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/context/LanguageContext";
 import { 
   ShieldCheck, 
   CheckCircle2, 
@@ -62,10 +63,14 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
   images,
   captions,
   className,
-  badge = "05.CHOREOGRAPHY — CITIZEN STATUTORY PROOF MATRIX",
-  title = "CHOREOGRAPHED REGULATORY PROOFS",
-  subtitle = "Scroll down as the 4 statutory verification quadrants animate and converge into the central national authenticity emblem."
+  badge,
+  title,
+  subtitle
 }) => {
+  const { t } = useLanguage();
+  const displayBadge = badge || t('choreo_badge') || "05.CHOREOGRAPHY — CITIZEN STATUTORY PROOF MATRIX";
+  const displayTitle = title || t('choreo_title') || "CHOREOGRAPHED REGULATORY PROOFS";
+  const displaySubtitle = subtitle || t('choreo_subtitle') || "Scroll down as the 4 statutory verification quadrants animate and converge into the central national authenticity emblem.";
   const containerRef = useRef<HTMLDivElement>(null);
   const [smoothProgress, setSmoothProgress] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -239,10 +244,10 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
           <div className="space-y-0.5">
             <div className="inline-flex items-center space-x-2 px-2.5 py-0.5 rounded-full border border-zinc-700 bg-zinc-900 font-mono text-[10px] tracking-widest text-zinc-300 uppercase shadow-xs">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span>{badge}</span>
+              <span>{displayBadge}</span>
             </div>
             <h3 className="editorial-headline text-lg sm:text-2xl font-black uppercase tracking-tight text-white leading-tight">
-              {title}
+              {displayTitle}
             </h3>
           </div>
 
@@ -258,7 +263,7 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
                   : "bg-zinc-900 text-zinc-400 border-zinc-800 hover:text-white"
               )}
             >
-              01 SPREAD
+              {t('choreo_step1') || "01 SPREAD"}
             </button>
 
             <button
@@ -271,7 +276,7 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
                   : "bg-zinc-900 text-zinc-400 border-zinc-800 hover:text-white"
               )}
             >
-              02 DANCE
+              {t('choreo_step2') || "02 DANCE"}
             </button>
 
             <button
@@ -284,7 +289,7 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
                   : "bg-zinc-900 text-zinc-400 border-zinc-800 hover:text-white"
               )}
             >
-              03 CONVERGE
+              {t('choreo_step3') || "03 CONVERGE"}
             </button>
 
             <button
@@ -298,7 +303,7 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
               )}
             >
               <Sparkles className="w-3 h-3 text-amber-400" />
-              <span>04 HERO EXPAND</span>
+              <span>{t('choreo_step4') || "04 HERO EXPAND"}</span>
             </button>
 
             {/* Auto Play Toggle */}
