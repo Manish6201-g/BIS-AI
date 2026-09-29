@@ -111,26 +111,31 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
     return () => cancelAnimationFrame(animationFrameId);
   }, []);
 
-  // Viewport Intersection & In-view Scroll Progress
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Exact Pinned Scroll Progress Tracking
   useEffect(() => {
     const handleScroll = () => {
       if (isPlaying || !containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
-      const viewportH = window.innerHeight;
+      const stickyTop = isMobile ? 80 : 96; // matches top-20 (80px) and sm:top-24 (96px)
+      const cardH = cardRef.current ? cardRef.current.offsetHeight : (window.innerHeight - stickyTop - 16);
+      const totalPinnedScroll = containerRef.current.offsetHeight - cardH;
       
-      // When top of card is at 80% viewport to when bottom leaves top
-      const start = viewportH * 0.85;
-      const end = -rect.height * 0.3;
-      const totalDist = start - end;
-      const current = start - rect.top;
-      const p = Math.max(0, Math.min(1, current / totalDist));
+      if (totalPinnedScroll <= 0) {
+        targetProgressRef.current = 0;
+        return;
+      }
+      
+      const currentPinnedScroll = stickyTop - rect.top;
+      const p = Math.max(0, Math.min(1, currentPinnedScroll / totalPinnedScroll));
       targetProgressRef.current = p;
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [isPlaying]);
+  }, [isPlaying, isMobile]);
 
   // Automated Animation Playback
   useEffect(() => {
@@ -205,14 +210,18 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
     <div
       ref={containerRef}
       className={cn("relative w-full", className)}
+      style={{
+        height: isMobile ? '180vh' : '200vh'
+      }}
     >
-      {/* Choreography Cinema Viewport */}
+      {/* Sticky Choreography Cinema Viewport */}
       <div
-        className="w-full overflow-hidden rounded-[24px] sm:rounded-[32px] border border-zinc-300 bg-zinc-950 text-white flex flex-col justify-between p-4 sm:p-6 shadow-2xl relative"
+        ref={cardRef}
+        className="sticky top-20 sm:top-24 w-full overflow-hidden rounded-[24px] sm:rounded-[32px] border border-zinc-300 bg-zinc-950 text-white flex flex-col justify-between p-4 sm:p-6 shadow-2xl z-20"
         style={{
-          height: isMobile ? '70vh' : 'min(780px, calc(100vh - 6.5rem))',
-          maxHeight: '800px',
-          minHeight: isMobile ? '420px' : '540px',
+          height: isMobile ? 'calc(100vh - 5.5rem)' : 'calc(100vh - 7rem)',
+          maxHeight: isMobile ? '640px' : '820px',
+          minHeight: isMobile ? '440px' : '560px',
         }}
       >
         
