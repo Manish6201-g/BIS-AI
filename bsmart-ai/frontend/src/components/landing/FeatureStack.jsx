@@ -305,7 +305,7 @@ export const FeatureStack = () => {
           }
         } else {
           ce.style.opacity = Math.min(Q * 4, 1).toFixed(3);
-          const se = 180 - 202 * Q;
+          const se = 180 * (1 - Q);
           ce.style.transformOrigin = "50% 100%";
           ce.style.transform = `rotate(${se}deg)`;
         }
