@@ -211,7 +211,7 @@ export const ScrollChoreography: React.FC<ScrollChoreographyProps> = ({
       ref={containerRef}
       className={cn("relative w-full", className)}
       style={{
-        height: isMobile ? '180vh' : '200vh'
+        height: isMobile ? '130vh' : '145vh'
       }}
     >
       {/* Sticky Choreography Cinema Viewport */}

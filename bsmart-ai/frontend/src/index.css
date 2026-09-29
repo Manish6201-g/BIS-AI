@@ -148,7 +148,7 @@ body {
    Kinetic Exact Scroll Stack Card Styles
    ========================================================= */
 .scroll-stack-inner {
-  padding: 4vh 0 25vh;
+  padding: 4vh 0 15vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -156,7 +156,7 @@ body {
 
 @media (min-width: 1024px) {
   .scroll-stack-inner {
-    padding: 10vh 0 45vh;
+    padding: 8vh 0 25vh;
   }
 }
 

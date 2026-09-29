@@ -241,8 +241,8 @@ export const PhilosophyPortal = () => {
 
     if (contentRef.current && sectionRef.current) {
       const contentHeight = contentRef.current.scrollHeight;
-      // Responsive scroll room for portal aperture animation
-      const scrollPadding = mobile ? 0.8 : 1.2;
+      // Compact responsive scroll room for portal aperture animation
+      const scrollPadding = mobile ? 0.55 : 0.7;
       const totalH = vh * scrollPadding + contentHeight;
       sectionRef.current.style.height = `${totalH}px`;
       sectionRef.current.style.minHeight = `${totalH}px`;
@@ -312,7 +312,7 @@ export const PhilosophyPortal = () => {
           contentEl.style.transform = 'scale(1)';
           boxEl.style.overflow = 'hidden';
         } else {
-          const zoomDuration = isMobile ? vh * 0.8 : vh * 1.2;
+          const zoomDuration = isMobile ? vh * 0.55 : vh * 0.7;
           const H = Math.min(Math.max(P / zoomDuration, 0), 1);
 
           if (H < 1) {
@@ -365,7 +365,7 @@ export const PhilosophyPortal = () => {
     <section
       ref={sectionRef}
       className="relative bg-white text-black font-sans z-30"
-      style={{ minHeight: isMobile ? '180vh' : '220vh' }}
+      style={{ minHeight: isMobile ? '155vh' : '170vh' }}
     >
       <div id="domains-anchor" style={{ position: 'absolute', top: '120vh', left: 0, height: '1px', width: '1px', pointerEvents: 'none' }} />
 

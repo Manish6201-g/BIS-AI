@@ -172,7 +172,7 @@ export const FeatureStack = () => {
     const te = (X - me) / 2;
     const fe = te - (ca.stackPosition - ca.scaleEndPosition) * X;
     const V = P[z.length - 1] - fe;
-    const B = isMobile ? X * 0.9 : X * 1.2;
+    const B = isMobile ? X * 0.5 : X * 0.65;
 
     let Q = 0;
     if (N > V) {
@@ -556,8 +556,8 @@ export const FeatureStack = () => {
           ))}
         </div>
 
-        {/* Kinetic Exact Scroll Stack End: responsive spacer for complete ring rotation */}
-        <div ref={endRef} className={`scroll-stack-end pointer-events-none ${isMobile ? 'h-[90vh]' : 'h-[120vh]'}`} />
+        {/* Kinetic Exact Scroll Stack End: compact responsive spacer */}
+        <div ref={endRef} className={`scroll-stack-end pointer-events-none ${isMobile ? 'h-[40vh]' : 'h-[65vh]'}`} />
       </div>
 
       {/* Kinetic Exact Kinetic Animation Layer (Mobile: S-Curve Snake Path, Desktop: Rotating Arc Wheel) */}
