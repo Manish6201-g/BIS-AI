@@ -221,14 +221,13 @@ export const FeatureStack = () => {
 
       if (Q > 0) {
         if (isMobile) {
-          const ge = Math.pow(Q, 1.4);
-          const Te = -ge * 1200;
-          const Ie = Math.max(0.65, 1 - ge * 0.35);
-          const We = Math.max(0, 1 - Math.pow(Q, 2));
-          he.style.transformOrigin = `50% ${se}px`;
-          he.style.transform = `translate3d(0, 0, ${Te}px) scale(${Ie.toFixed(3)})`;
-          he.style.opacity = We.toFixed(3);
-          if (Q >= 1) he.style.visibility = "hidden";
+          // Mobile Cards Departure: Cards scale down and fade out cleanly between Q = 0 and Q = 0.28
+          const cardExitProgress = Math.min(Q / 0.28, 1);
+          const cardOpacity = Math.max(0, 1 - cardExitProgress);
+          const cardScale = Math.max(0.85, 1 - 0.15 * cardExitProgress);
+          he.style.transform = `translate3d(0, 0, 0) scale(${cardScale.toFixed(3)})`;
+          he.style.opacity = cardOpacity.toFixed(3);
+          if (cardExitProgress >= 1) he.style.visibility = "hidden";
           else he.style.visibility = "visible";
         } else {
           const ge = Math.pow(Q, 1.5);
@@ -256,32 +255,42 @@ export const FeatureStack = () => {
         ce.style.display = "none";
         ce.style.visibility = "hidden";
       } else if (Q > 0) {
-        ce.style.display = "block";
-        ce.style.visibility = "visible";
-
         if (isMobile) {
-          // Mobile S-Curve Snake Path: Smooth hardware-accelerated drawing with zero lag
-          ce.style.opacity = Math.min(Q * 3.5, 1).toFixed(3);
-          ce.style.transform = "translate3d(0, 0, 0)";
+          // Mobile S-Curve Snake Path: ONLY appears AFTER cards have completely disappeared (Q > 0.28)
+          if (Q <= 0.28) {
+            ce.style.display = "none";
+            ce.style.visibility = "hidden";
+            ce.style.opacity = "0";
+          } else {
+            ce.style.display = "block";
+            ce.style.visibility = "visible";
+            // Smoothly fade in snake path container between Q = 0.28 and Q = 0.42
+            const snakeFadeProgress = Math.min((Q - 0.28) / 0.14, 1);
+            ce.style.opacity = snakeFadeProgress.toFixed(3);
+            ce.style.transform = "translate3d(0, 0, 0)";
 
-          const L = snakePathRef.current;
-          const Y = snakeLengthRef.current || 3850;
-          if (L) {
-            const strokeProgress = Math.min(Math.max((Q - 0.05) / 0.85, 0), 1);
-            L.style.strokeDashoffset = `${(Y * (1 - strokeProgress)).toFixed(1)}`;
+            const L = snakePathRef.current;
+            const Y = snakeLengthRef.current || 3850;
+            if (L) {
+              // Draw snake stroke from Q = 0.35 to Q = 0.95
+              const strokeProgress = Math.min(Math.max((Q - 0.35) / 0.60, 0), 1);
+              L.style.strokeDashoffset = `${(Y * (1 - strokeProgress)).toFixed(1)}`;
 
-            const updateNodeOpacity = (nodeRef, active) => {
-              if (nodeRef.current) {
-                nodeRef.current.style.opacity = active ? "1" : "0.35";
-              }
-            };
-            updateNodeOpacity(node1Ref, strokeProgress >= 0.12);
-            updateNodeOpacity(node2Ref, strokeProgress >= 0.35);
-            updateNodeOpacity(node3Ref, strokeProgress >= 0.60);
-            updateNodeOpacity(node4Ref, strokeProgress >= 0.85);
+              const updateNodeOpacity = (nodeRef, active) => {
+                if (nodeRef.current) {
+                  nodeRef.current.style.opacity = active ? "1" : "0.35";
+                }
+              };
+              updateNodeOpacity(node1Ref, strokeProgress >= 0.12);
+              updateNodeOpacity(node2Ref, strokeProgress >= 0.38);
+              updateNodeOpacity(node3Ref, strokeProgress >= 0.65);
+              updateNodeOpacity(node4Ref, strokeProgress >= 0.90);
+            }
           }
         } else {
           // Desktop Rotating Kinetic Arc Wheel (stops at 180 degrees total rotation)
+          ce.style.display = "block";
+          ce.style.visibility = "visible";
           ce.style.opacity = Math.min(Q * 3.5, 1).toFixed(3);
           const se = 180 * (1 - Q);
           ce.style.transformOrigin = "50% 100%";
