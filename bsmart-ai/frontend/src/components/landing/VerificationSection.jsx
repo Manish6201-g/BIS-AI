@@ -755,97 +755,157 @@ export const VerificationSection = () => {
   };
 
   useGSAP(() => {
-    gsap.from('.verif-header-content', {
-      y: 35,
-      opacity: 0,
-      duration: 0.8,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: 'top 80%',
-        once: true,
-      }
-    });
+    // Refresh ScrollTrigger so all positions are exact
+    ScrollTrigger.refresh();
 
-    gsap.from('.verif-quick-box', {
-      y: 40,
-      opacity: 0,
-      duration: 0.8,
-      ease: 'power3.out',
-      delay: 0.1,
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: 'top 80%',
-        once: true,
-      }
-    });
-
-    gsap.from('.verif-card', {
-      y: 40,
-      opacity: 0,
-      duration: 0.8,
-      stagger: 0.15,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: '.verif-grid',
-        start: 'top 75%',
-        once: true,
-      }
-    });
-
-    gsap.from('.verif-05a-header', {
-      y: 30,
-      opacity: 0,
-      duration: 0.8,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: '.verif-05a-section',
-        start: 'top 80%',
-        once: true,
-      }
-    });
-
-    if (sectionRef.current?.querySelector('.verif-categories-grid')) {
-      gsap.from('.verif-category-card', {
-        y: 45,
-        opacity: 0,
-        scale: 0.95,
-        duration: 0.6,
-        stagger: 0.07,
-        ease: 'back.out(1.2)',
-        scrollTrigger: {
-          trigger: '.verif-categories-grid',
-          start: 'top 82%',
-          once: true,
+    // 01. Header Content
+    const headerEl = sectionRef.current?.querySelector('.verif-header-content');
+    if (headerEl) {
+      gsap.fromTo(headerEl,
+        { y: 25, opacity: 0.6 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.6,
+          ease: 'power2.out',
+          clearProps: 'all',
+          scrollTrigger: {
+            trigger: headerEl,
+            start: 'top 95%',
+            once: true,
+          }
         }
-      });
+      );
     }
 
-    gsap.from('.verif-05b-header', {
-      y: 30,
-      opacity: 0,
-      duration: 0.8,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: '.verif-05b-section',
-        start: 'top 82%',
-        once: true,
-      }
-    });
+    // 02. Quick Verifier Box
+    const quickBoxEl = sectionRef.current?.querySelector('.verif-quick-box');
+    if (quickBoxEl) {
+      gsap.fromTo(quickBoxEl,
+        { y: 25, opacity: 0.6 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.6,
+          delay: 0.05,
+          ease: 'power2.out',
+          clearProps: 'all',
+          scrollTrigger: {
+            trigger: quickBoxEl,
+            start: 'top 95%',
+            once: true,
+          }
+        }
+      );
+    }
 
-    gsap.from('.verif-step-card', {
-      y: 40,
-      opacity: 0,
-      scale: 0.96,
-      duration: 0.65,
-      stagger: 0.1,
-      ease: 'back.out(1.2)',
-      scrollTrigger: {
-        trigger: '.verif-steps-grid',
-        start: 'top 85%',
-        once: true,
-      }
-    });
+    // 03. Dual Interactive Verification Simulators (ISI & Gold) - NEVER left invisible at opacity 0!
+    const verifGridEl = sectionRef.current?.querySelector('.verif-grid');
+    const verifCards = sectionRef.current?.querySelectorAll('.verif-card');
+    if (verifGridEl && verifCards && verifCards.length) {
+      gsap.fromTo(verifCards,
+        { y: 25, opacity: 0.7 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: 'power2.out',
+          clearProps: 'all',
+          scrollTrigger: {
+            trigger: verifGridEl,
+            start: 'top 95%',
+            once: true,
+          }
+        }
+      );
+    }
+
+    // 04. Section 05.A Header
+    const header05a = sectionRef.current?.querySelector('.verif-05a-header');
+    if (header05a) {
+      gsap.fromTo(header05a,
+        { y: 20, opacity: 0.7 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.6,
+          ease: 'power2.out',
+          clearProps: 'all',
+          scrollTrigger: {
+            trigger: header05a,
+            start: 'top 95%',
+            once: true,
+          }
+        }
+      );
+    }
+
+    // 05. Categories Grid Cards
+    const catGrid = sectionRef.current?.querySelector('.verif-categories-grid');
+    const catCards = sectionRef.current?.querySelectorAll('.verif-category-card');
+    if (catGrid && catCards && catCards.length) {
+      gsap.fromTo(catCards,
+        { y: 25, opacity: 0.7, scale: 0.98 },
+        {
+          y: 0,
+          opacity: 1,
+          scale: 1,
+          duration: 0.5,
+          stagger: 0.05,
+          ease: 'power2.out',
+          clearProps: 'all',
+          scrollTrigger: {
+            trigger: catGrid,
+            start: 'top 95%',
+            once: true,
+          }
+        }
+      );
+    }
+
+    // 06. Section 05.B Header
+    const header05b = sectionRef.current?.querySelector('.verif-05b-header');
+    if (header05b) {
+      gsap.fromTo(header05b,
+        { y: 20, opacity: 0.7 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.6,
+          ease: 'power2.out',
+          clearProps: 'all',
+          scrollTrigger: {
+            trigger: header05b,
+            start: 'top 95%',
+            once: true,
+          }
+        }
+      );
+    }
+
+    // 07. Step Cards
+    const stepGrid = sectionRef.current?.querySelector('.verif-steps-grid');
+    const stepCards = sectionRef.current?.querySelectorAll('.verif-step-card');
+    if (stepGrid && stepCards && stepCards.length) {
+      gsap.fromTo(stepCards,
+        { y: 25, opacity: 0.7, scale: 0.98 },
+        {
+          y: 0,
+          opacity: 1,
+          scale: 1,
+          duration: 0.5,
+          stagger: 0.08,
+          ease: 'power2.out',
+          clearProps: 'all',
+          scrollTrigger: {
+            trigger: stepGrid,
+            start: 'top 95%',
+            once: true,
+          }
+        }
+      );
+    }
   }, { scope: sectionRef, dependencies: [scannerViewMode] });
 
   const activeIsi = ISI_SAMPLES[isiIdx];

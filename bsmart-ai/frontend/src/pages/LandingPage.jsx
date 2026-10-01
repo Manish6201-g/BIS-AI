@@ -17,12 +17,20 @@ gsap.registerPlugin(ScrollTrigger);
 
 export const LandingPage = () => {
   useEffect(() => {
-    // Refresh ScrollTrigger calculations after initial mount and font render
-    const timer = setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, 200);
+    // Refresh ScrollTrigger calculations after initial mount, images, and font render
+    const t1 = setTimeout(() => ScrollTrigger.refresh(), 200);
+    const t2 = setTimeout(() => ScrollTrigger.refresh(), 600);
+    const t3 = setTimeout(() => ScrollTrigger.refresh(), 1200);
 
-    return () => clearTimeout(timer);
+    const handleLoad = () => ScrollTrigger.refresh();
+    window.addEventListener('load', handleLoad);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      window.removeEventListener('load', handleLoad);
+    };
   }, []);
 
   return (
