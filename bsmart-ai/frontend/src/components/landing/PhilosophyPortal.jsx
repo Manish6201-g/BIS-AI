@@ -220,22 +220,12 @@ export const PhilosophyPortal = () => {
     const { w: boxW, h: boxH } = getBoxDimensions(vw);
     let pathString = '';
 
-    if (mobile) {
-      // Mobile straight vertical connection from center (Matches mobile video)
-      const startX = vw / 2;
-      const startY = -10;
-      const endX = vw / 2;
-      const endY = vh / 2 - boxH / 2;
-      pathString = `M ${startX},${startY} L ${endX},${endY}`;
-    } else {
-      // Desktop curved arc connection from kinetic arc wheel (Matches desktop video)
-      const scale = vw / 3000;
-      const startX = (1500 + 1100 * Math.cos((196 * Math.PI) / 180)) * scale;
-      const endX = vw / 2 - boxW / 2;
-      const endY = vh / 2;
-      const radius = 1100 * scale;
-      pathString = `M ${startX},0 A ${radius},${radius} 0 0,0 ${endX},${endY}`;
-    }
+    // Center vertical connection from Section 03 snake path exit
+    const startX = vw / 2;
+    const startY = -10;
+    const endX = vw / 2;
+    const endY = vh / 2 - boxH / 2;
+    pathString = `M ${startX},${startY} L ${endX},${endY}`;
 
     if (pathRef.current) {
       pathRef.current.setAttribute('d', pathString);
